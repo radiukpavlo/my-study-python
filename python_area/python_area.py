@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 from scipy.integrate import simps, trapz
 
+
 class AreaCalculator:
     """
     A class to calculate areas using different numerical integration methods.
