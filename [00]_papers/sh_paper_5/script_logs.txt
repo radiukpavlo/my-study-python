@@ -1,0 +1,18 @@
+2025-05-18 17:11:20,443 - FakeNewsSimulation - INFO - === Starting Script Execution ===
+2025-05-18 17:11:20,446 - FakeNewsSimulation - INFO - Simulating FakeNewsNet data (num_points=1000, seed_offset=0)...
+2025-05-18 17:11:20,446 - FakeNewsSimulation - DEBUG - Generated 1000 labels with fake ratio=0.5 (Fake=1, Real=0).
+2025-05-18 17:11:20,455 - FakeNewsSimulation - DEBUG - Generated embeddings shape=(1000, 30) for t-SNE, aiming for ~30% overlap.
+2025-05-18 17:11:20,457 - FakeNewsSimulation - DEBUG - Created baseline/proposed scores. Baseline target AUC ~93.0%, Proposed target AUC ~93.5%
+2025-05-18 17:11:20,458 - FakeNewsSimulation - INFO - Simulating Ukrainian data (num_points=1000, seed_offset=0)...
+2025-05-18 17:11:20,458 - FakeNewsSimulation - DEBUG - Generated 1000 labels with fake ratio=0.3 (Fake=1, Real=0).
+2025-05-18 17:11:20,469 - FakeNewsSimulation - DEBUG - Generated embeddings shape=(1000, 30) for t-SNE, aiming for ~30% overlap.
+2025-05-18 17:11:20,470 - FakeNewsSimulation - DEBUG - Created baseline/proposed scores. Baseline target AUC ~92.0%, Proposed target AUC ~92.6%
+2025-05-18 17:11:20,470 - FakeNewsSimulation - INFO - Performing t-SNE for sh_05_fig_3a_tsne_fnn.svg with 1000 points.
+2025-05-18 17:11:22,767 - FakeNewsSimulation - INFO - Saved t-SNE figure: sh_05_fig_3a_tsne_fnn.svg
+2025-05-18 17:11:22,768 - FakeNewsSimulation - INFO - Performing t-SNE for sh_05_fig_3b_tsne_ukr.svg with 1000 points.
+2025-05-18 17:11:24,535 - FakeNewsSimulation - INFO - Saved t-SNE figure: sh_05_fig_3b_tsne_ukr.svg
+2025-05-18 17:11:24,535 - FakeNewsSimulation - INFO - Plotting Precision-Recall for sh_05_fig_4a_pr_curve_fnn.svg with 1000 points.
+2025-05-18 17:11:24,798 - FakeNewsSimulation - INFO - Saved PR curve figure: sh_05_fig_4a_pr_curve_fnn.svg
+2025-05-18 17:11:24,799 - FakeNewsSimulation - INFO - Plotting Precision-Recall for sh_05_fig_4b_pr_curve_ukr.svg with 1000 points.
+2025-05-18 17:11:25,116 - FakeNewsSimulation - INFO - Saved PR curve figure: sh_05_fig_4b_pr_curve_ukr.svg
+2025-05-18 17:11:25,116 - FakeNewsSimulation - INFO - === Script Execution Completed Successfully ===
