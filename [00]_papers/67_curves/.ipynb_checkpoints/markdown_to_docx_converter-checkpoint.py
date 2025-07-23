@@ -191,8 +191,8 @@ def main():
     3. Converts the translated content to DOCX format
     """
     # Define input and output file paths
-    input_markdown_file = "input_markdown.md"
-    output_docx_file = "method_docx.docx"
+    input_markdown_file = "journals.md"
+    output_docx_file = "journals_doc.docx"
     
     try:
         # Step 1: Read Markdown content from external file
