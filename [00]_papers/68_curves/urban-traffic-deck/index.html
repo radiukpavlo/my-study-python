@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+    DEVELOPER GUIDE: Individual Figure Sizing
+    ========================================
+    
+    Each figure can be individually sized by modifying the CSS custom properties in the style attributes:
+    
+    For CONTAINER sizing (figure box):
+    - --container-width: Controls the width of the figure container (e.g., "100%", "400px")
+    - --container-height: Controls the height of the figure container (e.g., "220px", "300px")
+    
+    For IMAGE sizing (actual image):
+    - --img-width: Controls the image width (e.g., "500px", "600px")
+    - --img-height: Controls the image height (e.g., "170px", "200px")
+    
+    Example usage:
+    <div class="figure-placeholder" style="--container-width: 80%; --container-height: 300px;">
+        <img src="image.png" style="--img-width: 600px; --img-height: 200px;">
+    </div>
+    
+    Each figure is labeled with:
+    - data-figure-id: Unique identifier (fig1, fig2, etc.)
+    - data-figure-name: Descriptive name for easy identification
+    
+    Available Figure IDs:
+    - fig1: Temporal Distribution of Traffic Patterns
+    - fig2: System Architecture
+    - fig3: AI Control System Overview
+    - fig4: Khmelnytskyi Transport Network
+    - fig5: Clustering Quality Metrics Comparison
+    - fig6: CO₂ Emission Comparison Across Methods
+    - fig7: University Logo
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U_CAN: Ukraine towards Carbon Neutrality</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            overflow: hidden;
+            background-color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Slide container for navigation */
+        .slide-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            flex-direction: column;
+            color: #2C3E50;
+            background-color: #f9f9f9;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* Navigation indicator */
+        .slide-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        /* Navigation instructions */
+        .nav-instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+
+
+
+        /* Title Slide Styles */
+        .slide.title-slide {
+            background: linear-gradient(135deg, rgba(27, 158, 119, 0.9), rgba(44, 62, 80, 0.95)), url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80');
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+        }
+
+        .title-slide .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 80px;
+        }
+
+        .title-slide .main-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.1;
+            color: #ffffff;
+        }
+
+        .title-slide .subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: #E69F00;
+            line-height: 1.2;
+        }
+
+        .title-slide .approach-container {
+            display: flex;
+            margin-top: 30px;
+            gap: 30px;
+        }
+
+        .title-slide .approach {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid #E69F00;
+        }
+
+        .title-slide .approach-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #E69F00;
+            display: flex;
+            align-items: center;
+        }
+
+        .title-slide .approach-title i {
+            margin-right: 8px;
+        }
+
+        .title-slide .approach-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .title-slide .footer {
+            padding: 20px 80px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Standard Content Slide Layout */
+        .header {
+            padding: 20px 50px 10px;
+            background-color: #1B9E77;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .header .title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 20px 50px;
+            gap: 30px;
+            height: calc(720px - 60px - 40px);
+            /* Total height minus header and slide number */
+            overflow: hidden;
+        }
+
+        .left-column,
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 8px;
+        }
+
+        .point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .point-icon {
+            color: #E69F00;
+            margin-right: 10px;
+            font-size: 14px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .point-text {
+            font-size: 16px;
+            line-height: 1.3;
+        }
+
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+
+        /* CSS Custom Properties for adjustable figure dimensions */
+        :root {
+            --figure-container-width: 100%;
+            --figure-container-height: 220px;
+            --figure-image-width: 500px;
+            --figure-image-height: 170px;
+        }
+
+        /* Figure styling with adjustable dimensions */
+        .figure-placeholder {
+            width: var(--figure-container-width);
+            height: var(--figure-container-height);
+            background-color: #ffffff;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .figure-placeholder img {
+            width: var(--figure-image-width);
+            height: var(--figure-image-height);
+            max-width: 100%;
+            max-height: calc(var(--container-height, var(--figure-container-height)) - 40px);
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        /* CSS custom properties for individual figures */
+        .figure-placeholder[style*="--container-width"] {
+            width: var(--container-width, var(--figure-container-width));
+        }
+
+        .figure-placeholder[style*="--container-height"] {
+            height: var(--container-height, var(--figure-container-height));
+        }
+
+        .figure-placeholder img[style*="--img-width"] {
+            width: var(--img-width, var(--figure-image-width));
+        }
+
+        .figure-placeholder img[style*="--img-height"] {
+            height: var(--img-height, var(--figure-image-height));
+        }
+
+        .figure-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+            color: #2C3E50;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .figure-caption {
+            font-size: 12px;
+            color: #7D7D7D;
+            margin-top: 4px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        .custom-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 8px 6px;
+            font-size: 13px;
+        }
+
+        .custom-table td {
+            padding: 6px 4px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .custom-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .custom-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+
+        .best-value {
+            color: #1B9E77;
+            font-weight: 700;
+        }
+
+        .stat-box {
+            background-color: rgba(27, 158, 119, 0.1);
+            border-left: 4px solid #1B9E77;
+            padding: 12px;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1B9E77;
+        }
+
+        .stat-text {
+            font-size: 14px;
+            color: #2C3E50;
+            line-height: 1.3;
+        }
+
+        .info-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-box-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #2C3E50;
+        }
+
+        .info-box-desc {
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            background-color: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Contact slide specific styles */
+        .contact-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .contact-card .name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 15px;
+        }
+
+        .author-list-item {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .author-list-item i {
+            color: #E69F00;
+            margin-right: 10px;
+            font-size: 10px;
+        }
+
+        .institution-card {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .institution-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .institution-icon {
+            font-size: 24px;
+            color: #1B9E77;
+            margin-right: 15px;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .contact-info i {
+            width: 30px;
+            color: #1B9E77;
+            font-size: 16px;
+        }
+
+        /* Slide number indicator */
+        .slide-number {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Navigation indicators -->
+        <div class="slide-indicator">
+            <span id="current-slide">1</span> / <span id="total-slides">8</span>
+        </div>
+        <div class="nav-instructions">
+            Press SPACE to navigate
+        </div>
+
+
+
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide active" id="slide1">
+            <div class="content">
+                <h1 class="main-title">U_CAN: Ukraine towards Carbon Neutrality</h1>
+                <h2 class="subtitle">Integrating Adaptive Cascade Clustering and AI-Driven Traffic Control for Emissions
+                    Reduction</h2>
+                <div class="approach-container">
+                    <div class="approach">
+                        <div class="approach-title"><i class="fas fa-brain"></i>Traffic Pattern Recognition</div>
+                        <div class="approach-content">A novel <span class="highlight">adaptive cascade clustering</span>
+                            method to automatically identify distinct urban traffic patterns with high fidelity and
+                            accuracy.</div>
+                    </div>
+                    <div class="approach">
+                        <div class="approach-title"><i class="fas fa-traffic-light"></i>Intelligent Signal Control</div>
+                        <div class="approach-content">An AI-driven traffic signal optimization system using Deep
+                            Reinforcement Learning to <span class="highlight">reduce CO₂ emissions</span> and improve
+                            traffic flow.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div>Technical Presentation</div>
+                <div>Combining Research from Pavlyshyn et al. & Ryzhanskyi et al.</div>
+            </div>
+            <div class="slide-number">1</div>
+        </div>
+
+        <!-- Slide 2: Background and Motivation -->
+        <div class="slide" id="slide2">
+            <div class="header">
+                <h1 class="title">Background and Motivation</h1>
+            </div>
+            <div class="content">
+                <div class="left-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-smog"></i>The Urban Transportation Challenge</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Urban traffic is a primary source of greenhouse gas emissions,
+                                significantly impacting air quality and climate change.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Inefficient traffic management, especially static signal timing,
+                                leads to increased congestion, fuel consumption, and CO₂ emissions.</div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-cogs"></i>Technical Hurdles</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Existing analytical methods often lack the adaptability to
+                                autonomously detect the <span class="highlight">complex, dynamic structure</span> of
+                                traffic patterns.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">There is a need for intelligent systems that can balance multiple
+                                objectives: <span class="highlight">reducing emissions</span>, minimizing delays, and
+                                ensuring fair traffic flow.</div>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">18%</div>
+                        <div class="stat-text">Demonstrated potential CO₂ emission reduction from AI-driven traffic
+                            control in simulations.</div>
+                    </div>
+                </div>
+                <div class="right-column">
+                    <!-- Figure 1: Temporal Distribution - Developers can adjust these CSS custom properties -->
+                    <div class="figure-placeholder" style="--container-width: 100%; --container-height: 500px;"
+                        data-figure-id="fig1" data-figure-name="Temporal Distribution">
+                        <img src="figure_pavlyshyn_8.png" alt="Temporal Distribution of Traffic Scenarios"
+                            style="--img-width: 600px; --img-height: 500px;">
+                        <div class="figure-title">Figure: Temporal Distribution of Traffic Patterns</div>
+                        <!-- <div class="figure-caption">SUGGESTION: Replace with **Figure 8 from Pavlyshyn et al.** This figure effectively illustrates the dynamic, non-overlapping traffic patterns over a day, highlighting the need for adaptive control.</div> -->
+                    </div>
+                    <div class="section" style="margin-top: 20px;">
+                        <h2 class="section-title"><i class="fas fa-leaf"></i>Alignment with National Goals</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">This research directly supports Ukraine's commitment to the EU Green
+                                Deal and its goal of achieving <span class="highlight">carbon neutrality</span>.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Provides a data-driven foundation for developing smarter, more
+                                sustainable urban mobility solutions.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">2</div>
+        </div>
+
+        <!-- Slide 3: Methodology Part 1: Adaptive Cascade Clustering -->
+        <div class="slide" id="slide3">
+            <div class="header">
+                <h1 class="title">Methodology 1: Adaptive Cascade Clustering</h1>
+            </div>
+            <div class="content">
+                <div class="left-column">
+                    <div class="info-box">
+                        <h3 class="info-box-title">Algorithm Architecture</h3>
+                        <p class="info-box-desc">A novel hybrid approach that synergizes two clustering methods. First,
+                            <span class="highlight">HDBSCAN</span> identifies the core structure and optimal number of
+                            clusters in the traffic data. Then, <span class="highlight">k-means</span> is used with
+                            informed initialization to refine the cluster boundaries, improving compactness.
+                        </p>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-balance-scale"></i>Weighted Voting Mechanism</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Automatically selects the optimal clustering result (HDBSCAN,
+                                k-means, or hybrid) based on data characteristics like noise and density.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Evaluates results using a composite score of quality metrics (e.g.,
+                                V-measure, Silhouette Score, stability), ensuring robustness and adaptability.</div>
+                        </div>
+                    </div>
+                    <!-- Figure 2: System Architecture - Developers can adjust these CSS custom properties -->
+                    <div class="figure-placeholder" style="--container-width: 100%; --container-height: 300px;"
+                        data-figure-id="fig2" data-figure-name="System Architecture">
+                        <img src="figure_pavlyshyn_1.png" alt="Adaptive Cascade Clustering Architecture"
+                            style="--img-width: 500px; --img-height: 300px;">
+                        <div class="figure-title">Figure: System Architecture</div>
+                        <!-- <div class="figure-caption">SUGGESTION: Replace with **Figure 1 from Pavlyshyn et al.**, which shows the proposed adaptive cascade clustering architecture from data acquisition to final output.</div> -->
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-chart-bar"></i>Clustering Performance (Aggregated
+                            Data)</h2>
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>HDBSCAN</th>
+                                    <th>k-means (K=5)</th>
+                                    <th class="best-value">Cascade Approach</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>V-measure (Accuracy)</td>
+                                    <td>0.79</td>
+                                    <td>0.73</td>
+                                    <td class="best-value">0.79-0.82 (+4%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Adjusted Rand Index (ARI)</td>
+                                    <td>0.73</td>
+                                    <td>0.70</td>
+                                    <td class="best-value">>0.73</td>
+                                </tr>
+                                <tr>
+                                    <td>Silhouette Score (Compactness)</td>
+                                    <td>0.52</td>
+                                    <td>0.57</td>
+                                    <td class="best-value">0.57-0.59 (+13%)</td>
+                                </tr>
+                                <tr>
+                                    <td>Temporal Coherence</td>
+                                    <td class="best-value">0.94</td>
+                                    <td>0.89</td>
+                                    <td class="best-value">0.94</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-shield-alt"></i>Robustness to Noise (ARI Drop at 35%
+                            Noise)</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">k-means Performance: Degrades significantly with a <span
+                                    class="highlight">21-24%</span> drop.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Cascade (HDBSCAN-led): Much more robust, with only an <span
+                                    class="highlight">11%</span> drop, inheriting the strengths of density-based
+                                clustering.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">3</div>
+        </div>
+
+        <!-- Slide 4: Methodology Part 2: AI-Driven Traffic Signal Control -->
+        <div class="slide" id="slide4">
+            <div class="header">
+                <h1 class="title">Methodology 2: AI-Driven Traffic Signal Control</h1>
+            </div>
+            <div class="content">
+                <div class="left-column">
+                    <div class="info-box">
+                        <h3 class="info-box-title">Deep Reinforcement Learning (DRL)</h3>
+                        <p class="info-box-desc">An AI agent learns to control traffic signals by interacting with a
+                            simulated environment (SUMO). It aims to maximize a cumulative reward, making decisions that
+                            lead to optimal outcomes for the entire system.</p>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-cogs"></i>Model Components</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text"><span class="highlight">State:</span> The agent observes the current
+                                traffic state, including queue lengths, vehicle positions, and the identified traffic
+                                pattern from the clustering model.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text"><span class="highlight">Action:</span> The agent chooses the next
+                                traffic light phase to activate.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text"><span class="highlight">Reward:</span> A multi-objective function
+                                that rewards reducing CO₂ emissions and travel time, while penalizing long queues and
+                                waiting times.</div>
+                        </div>
+                    </div>
+                    <!-- Figure 3: AI Control System - Developers can adjust these CSS custom properties -->
+                    <div class="figure-placeholder" style="--container-width: 100%; --container-height: 350px;"
+                        data-figure-id="fig3" data-figure-name="AI Control System">
+                        <img src="figure_ryzhanskyi_1.png" alt="AI Control System Overview"
+                            style="--img-width: 500px; --img-height: 350px;">
+                        <div class="figure-title">Figure: AI Control System Overview</div>
+                        <!-- <div class="figure-caption">SUGGESTION: Replace with **Figure 1 from Ryzhanskyi et al.**, which provides a high-level schematic of the AI control approach, from data input to traffic control settings.</div> -->
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-link"></i>Integration with Clustering</h2>
+                        <p class="point-text" style="margin-bottom: 20px;">The traffic patterns identified by the <span
+                                class="highlight">Adaptive Cascade Clustering</span> algorithm serve as a crucial part
+                            of the state input for the DRL agent. This allows the AI to apply tailored, pre-learned
+                            strategies for different system-wide conditions (e.g., 'morning peak', 'off-peak',
+                            'weekend'), leading to faster, more effective optimization.</p>
+                    </div>
+                    <div class="chart-container" id="chartContainer4">
+                        <canvas id="co2ReductionLearningChart"></canvas>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-code-branch"></i>Algorithm: Independent Deep
+                            Q-Network (IDQN)</h2>
+                        <p class="point-text">Each intersection is controlled by its own DRL agent, allowing for
+                            decentralized and scalable control across a large urban network. This approach balances
+                            local optimization with overall network efficiency.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">4</div>
+        </div>
+
+        <!-- Slide 5: Experimental Setup -->
+        <div class="slide" id="slide5">
+            <div class="header">
+                <h1 class="title">Experimental Setup & Simulation</h1>
+            </div>
+            <div class="content">
+                <div class="left-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-cogs"></i>Simulation Environment</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Microscopic traffic simulation performed using <span
+                                    class="highlight">SUMO (Simulation of Urban MObility)</span>.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Data processing and analysis handled with Python libraries including
+                                Pandas, Scikit-learn, and Hdbscan.</div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-map-marked-alt"></i>Transport Network Model</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">A high-fidelity model of <span class="highlight">Khmelnytskyi,
+                                    Ukraine</span>, featuring a mixed radial-concentric topology.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">The model includes <span class="highlight">15 major
+                                    intersections</span> and a total road length of <span class="highlight">45.7
+                                    km</span>.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Simulation parameters were calibrated using historical traffic data
+                                to ensure realistic dynamics.</div>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">132</div>
+                        <div class="stat-text">Distinct time-stamped observations generated from a continuous 22-hour
+                            simulation for analysis.</div>
+                    </div>
+                </div>
+                <div class="right-column">
+                    <!-- Figure 4: Transport Network - Developers can adjust these CSS custom properties -->
+                    <div class="figure-placeholder" style="--container-width: 100%; --container-height: 400px;"
+                        data-figure-id="fig4" data-figure-name="Transport Network">
+                        <!-- <i class="fas fa-project-diagram fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i> -->
+                        <img src="figure_network.png" alt="Khmelnytskyi Transport Network"
+                            style="--img-width: 500px; --img-height: 400px;">
+                        <div class="figure-title">Figure: Khmelnytskyi Transport Network</div>
+                        <!-- <div class="figure-caption">SUGGESTION: Create a schematic representation of the Khmelnytskyi network based on the description in Pavlyshyn et al. to visually represent the simulation area.</div> -->
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-vial"></i>Experimental Scenarios</h2>
+                        <p class="point-text" style="margin-bottom: 10px;">Comprehensive evaluation scenarios covering:
+                        </p>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li class="point" style="margin-bottom: 6px;"><i
+                                    class="fas fa-chevron-right point-icon"></i>
+                                <div class="point-text">Morning and evening peak hours</div>
+                            </li>
+                            <li class="point" style="margin-bottom: 6px;"><i
+                                    class="fas fa-chevron-right point-icon"></i>
+                                <div class="point-text">Mixed/random traffic modes</div>
+                            </li>
+                            <li class="point" style="margin-bottom: 6px;"><i
+                                    class="fas fa-chevron-right point-icon"></i>
+                                <div class="point-text">Low activity intervals</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">5</div>
+        </div>
+
+        <!-- Slide 6: Key Results & Performance Analysis -->
+        <div class="slide" id="slide6">
+            <div class="header">
+                <h1 class="title">Key Results & Performance Analysis</h1>
+            </div>
+            <div class="content">
+                <div class="left-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-chart-line"></i>Overall Impact</h2>
+                        <div class="point"><i class="fas fa-leaf point-icon" style="color: #1B9E77;"></i>
+                            <div class="point-text">The integrated system demonstrated a <span class="highlight">18%
+                                    reduction in total CO₂ emissions</span> compared to baseline and other advanced
+                                methods.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-check-circle point-icon"></i>
+                            <div class="point-text">Achieved a scenario identification accuracy of up to <span
+                                    class="highlight">95.0%</span>, ensuring the correct control strategy is applied at
+                                the right time.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-tachometer-alt point-icon"></i>
+                            <div class="point-text">Improved traffic flow by reducing average vehicle travel time
+                                significantly, with the proposed method being <span class="highlight">~18% faster</span>
+                                than the next best DRL approach.</div>
+                        </div>
+                    </div>
+                    <!-- Figure 5: Clustering Metrics - Developers can adjust these CSS custom properties -->
+                    <div class="figure-placeholder" style="--container-width: 100%; --container-height: 350px;"
+                        data-figure-id="fig5" data-figure-name="Clustering Metrics">
+                        <img src="figure_pavlyshyn_6.png" alt="Comparison of Clustering Metrics"
+                            style="--img-width: 500px; --img-height: 350px;">
+                        <div class="figure-title">Figure: Clustering Quality Metrics Comparison</div>
+                        <!-- <div class="figure-caption">SUGGESTION: Replace with **Figure 6 from Pavlyshyn et al.**, a bar chart that clearly highlights the trade-offs and strengths of different clustering algorithms.</div> -->
+                    </div>
+                </div>
+                <div class="right-column">
+                    <!-- Figure 6: CO₂ Emission Comparison - Developers can adjust these CSS custom properties -->
+                    <div class="figure-placeholder" style="--container-width: 100%; --container-height: 350px;"
+                        data-figure-id="fig6" data-figure-name="CO₂ Emission Comparison">
+                        <img src="figure_ryzhanskyi_4.png" alt="CO₂ Emission Comparison"
+                            style="--img-width: 500px; --img-height: 350px;">
+                        <div class="figure-title">Figure: CO₂ Emission Comparison Across Methods</div>
+                        <!-- <div class="figure-caption">SUGGESTION: Replace with **Figure 4 from Ryzhanskyi et al.** This is the most critical result, showing the superior performance of the proposed approach ("Ours") in reducing CO₂ emissions over 100 learning cycles.</div> -->
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-table"></i>Performance Comparison</h2>
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Approach</th>
+                                    <th>Avg. Travel Time (s)</th>
+                                    <th>Avg. Queue Length</th>
+                                    <th>Total CO₂ (mg)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MaxPressure [28]</td>
+                                    <td>253.86</td>
+                                    <td>0.11</td>
+                                    <td>1.450e+12</td>
+                                </tr>
+                                <tr>
+                                    <td>MPLight [29]</td>
+                                    <td>133.42</td>
+                                    <td>3.34</td>
+                                    <td>1.050e+12</td>
+                                </tr>
+                                <tr>
+                                    <td>IDQN [30]</td>
+                                    <td>80.08</td>
+                                    <td>1.68</td>
+                                    <td>9.442e+11</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="highlight">U_CAN (Ours)</span></td>
+                                    <td class="best-value">65.48</td>
+                                    <td class="best-value">1.05</td>
+                                    <td class="best-value">8.544e+11</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">6</div>
+        </div>
+
+        <!-- Slide 7: Conclusions and Implementation Roadmap -->
+        <div class="slide" id="slide7">
+            <div class="header">
+                <h1 class="title">Conclusions & Implementation Roadmap</h1>
+            </div>
+            <div class="content">
+                <div class="left-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-star"></i>Key Contributions & Findings</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">This research validates a powerful, integrated approach that <span
+                                    class="highlight">synergistically combines</span> advanced clustering with AI
+                                control to significantly reduce urban traffic emissions.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">The adaptive cascade model is a more <span class="highlight">robust,
+                                    accurate, and automated</span> solution for traffic pattern recognition than
+                                standalone algorithms.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">The results demonstrate a clear path toward building more <span
+                                    class="highlight">intelligent, responsive, and sustainable</span> urban transport
+                                systems.</div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-rocket"></i>Future Work</h2>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Transition from simulation to <span class="highlight">real-world
+                                    deployment</span> using live city sensor and camera networks.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Explore advanced <span class="highlight">Graph Neural Network
+                                    (GNN)</span> architectures for richer, context-aware feature representation.</div>
+                        </div>
+                        <div class="point"><i class="fas fa-circle point-icon"></i>
+                            <div class="point-text">Expand the model to include <span class="highlight">multi-modal
+                                    transport</span> (public transit, pedestrians, cyclists) for holistic city
+                                optimization.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-tasks"></i>Implementation Roadmap</h2>
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Phase</th>
+                                    <th>Activity</th>
+                                    <th>Timeline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><b>Phase 1</b></td>
+                                    <td>Algorithm Refinement & Pilot Data Integration</td>
+                                    <td>12 Months</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Phase 2</b></td>
+                                    <td>Pilot Deployment in Khmelnytskyi & Kyiv</td>
+                                    <td>18 Months</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Phase 3</b></td>
+                                    <td>National Scaling & Policy Integration</td>
+                                    <td>36 Months</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-handshake"></i>Stakeholder Engagement</h2>
+                        <p class="point-text">Successful implementation requires collaboration between municipal
+                            governments, transport authorities, technology partners, and research institutions to
+                            integrate this system into existing urban infrastructure and policy frameworks.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">7</div>
+        </div>
+
+        <!-- Slide 8: Authors & Contact Information -->
+        <div class="slide" id="slide8">
+            <div class="header">
+                <h1 class="title">Authors & Contact Information</h1>
+            </div>
+            <div class="content">
+                <div class="left-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-users"></i>Research Team</h2>
+                        <div class="contact-card">
+                            <p class="author-list-item"><i class="fas fa-circle"></i> <b>Pavlo Radiuk</b> (Corresponding
+                                Author)</p>
+                            <p class="author-list-item"><i class="fas fa-circle"></i> Oleksander Ryzhanskyi</p>
+                            <p class="author-list-item"><i class="fas fa-circle"></i> Vitaliy Pavlyshyn</p>
+                            <p class="author-list-item"><i class="fas fa-circle"></i> Eduard Manziuk</p>
+                            <p class="author-list-item"><i class="fas fa-circle"></i> Oleksander Barmak</p>
+                            <p class="author-list-item"><i class="fas fa-circle"></i> Iurii Krak</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-building"></i>Affiliated Institutions</h2>
+                        <div class="institution-card">
+                            <i class="fas fa-university institution-icon"></i>
+                            <div class="institution-name">Khmelnytskyi National University (main)</div>
+                        </div>
+                        <div class="institution-card">
+                            <i class="fas fa-university institution-icon"></i>
+                            <div class="institution-name">Taras Shevchenko National University of Kyiv</div>
+                        </div>
+                        <div class="institution-card">
+                            <i class="fas fa-university institution-icon"></i>
+                            <div class="institution-name">V.M. Glushkov Institute of Cybernetics</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="section">
+                        <h2 class="section-title"><i class="fas fa-envelope"></i>Contact Details</h2>
+                        <div class="contact-card">
+                            <p class="name">For inquiries, please contact:</p>
+                            <div class="contact-info">
+                                <i class="fas fa-user"></i>
+                                <span><b>Pavlo Radiuk</b></span>
+                            </div>
+                            <div class="contact-info">
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:radiukp@khmnu.edu.ua"
+                                    style="color: #1B9E77; text-decoration: none;">radiukp@khmnu.edu.ua</a>
+                            </div>
+                            <div class="contact-info">
+                                <i class="fas fa-phone"></i>
+                                <span>+380-97-854-9146</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Figure 7: University Logo - Developers can adjust these CSS custom properties -->
+                    <div class="figure-placeholder" style="--container-width: 100%; --container-height: 350px;"
+                        data-figure-id="fig7" data-figure-name="University Logo">
+                        <div class="image-container">
+                            <img src="figure_khmnu.png" alt="Khmelnytskyi National University"
+                                style="--img-width: 500px; --img-height: 350px;">
+                        </div>
+                        <div class="figure-title">Khmelnytskyi National University, Khmelnytskyi, Ukraine</div>
+                        <!-- <div class="figure-caption">Khmelnytskyi National University, Khmelnytskyi, Ukraine</div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">8</div>
+        </div>
+
+    </div> <!-- End slide-container -->
+
+    <script>
+        // Slide navigation functionality
+        let currentSlide = 0;
+        const totalSlides = 8;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(n) {
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            // Ensure slide number is within bounds
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+
+            // Show current slide
+            slides[currentSlide].classList.add('active');
+
+            // Update indicator
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            if (currentSlide >= totalSlides) currentSlide = 0;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            if (currentSlide < 0) currentSlide = totalSlides - 1;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (event) {
+            switch (event.code) {
+                case 'Space':
+                case 'ArrowRight':
+                case 'ArrowDown':
+                    event.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    event.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    event.preventDefault();
+                    currentSlide = 0;
+                    showSlide(currentSlide);
+                    break;
+                case 'End':
+                    event.preventDefault();
+                    currentSlide = totalSlides - 1;
+                    showSlide(currentSlide);
+                    break;
+            }
+        });
+
+
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize slide navigation
+            showSlide(0);
+
+            // Initialize figure controls
+            updateFigureDimensions();
+
+
+
+            // Chart for Slide 4
+            const ctx4 = document.getElementById('co2ReductionLearningChart');
+            if (ctx4) {
+                new Chart(ctx4.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: [0, 20, 40, 60, 80, 100],
+                        datasets: [{
+                            label: 'CO₂ Emissions (Normalized)',
+                            data: [1.0, 0.95, 0.88, 0.84, 0.82, 0.82],
+                            borderColor: '#1B9E77',
+                            backgroundColor: 'rgba(27, 158, 119, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { title: { display: true, text: 'CO₂ Reduction Over Learning Cycles', font: { size: 16, weight: 'bold' } } },
+                        scales: { y: { beginAtZero: false, title: { display: true, text: 'Emission Level' } } }
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chart for Slide 4
+            const ctx4 = document.getElementById('co2ReductionLearningChart');
+            if (ctx4) {
+                new Chart(ctx4.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: [0, 20, 40, 60, 80, 100],
+                        datasets: [{
+                            label: 'CO₂ Emissions (Normalized)',
+                            data: [1.0, 0.95, 0.88, 0.84, 0.82, 0.82],
+                            borderColor: '#1B9E77',
+                            backgroundColor: 'rgba(27, 158, 119, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { title: { display: true, text: 'CO₂ Reduction Over Learning Cycles', font: { size: 16, weight: 'bold' } } },
+                        scales: { y: { beginAtZero: false, title: { display: true, text: 'Emission Level' } } }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
