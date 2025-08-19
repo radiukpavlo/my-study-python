@@ -237,7 +237,7 @@
         .point {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .point-icon {
@@ -250,7 +250,7 @@
 
         .point-text {
             font-size: 16px;
-            line-height: 1.3;
+            line-height: 1.45;
         }
 
         .highlight {
@@ -492,6 +492,94 @@
             font-weight: 600;
             z-index: 100;
         }
+
+        /* One-line takeaway per slide */
+        .slide-takeaway {
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            bottom: 45px;
+            background: rgba(27, 158, 119, 0.08);
+            border-left: 4px solid #1B9E77;
+            padding: 10px 12px;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+            color: #2C3E50;
+        }
+
+        /* Tables: right-align numeric columns except first */
+        .custom-table th:nth-child(n+2),
+        .custom-table td:nth-child(n+2) {
+            text-align: right;
+        }
+
+        /* Progress bar at bottom-right (clickable) */
+        .progress-bar {
+            position: fixed;
+            bottom: 20px;
+            right: 130px;
+            display: flex;
+            gap: 6px;
+            z-index: 1001;
+        }
+        .progress-segment {
+            width: 14px;
+            height: 6px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .progress-segment.active {
+            background: #1B9E77;
+        }
+
+        /* Overview overlay (press 'O') */
+        .overview-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            z-index: 1002;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .overview-grid {
+            background: #ffffff;
+            max-width: 1000px;
+            width: 90%;
+            border-radius: 10px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .overview-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .overview-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: #1B9E77;
+        }
+        .overview-item.active {
+            border-color: #1B9E77;
+            box-shadow: 0 4px 12px rgba(27, 158, 119, 0.15);
+        }
+        .overview-index {
+            font-size: 12px;
+            color: #7D7D7D;
+            margin-bottom: 6px;
+        }
+        .overview-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2C3E50;
+        }
     </style>
 </head>
 
@@ -521,17 +609,26 @@
                             accuracy.</div>
                     </div>
                     <div class="approach">
-                        <div class="approach-title"><i class="fas fa-traffic-light"></i>Intelligent Signal Control</div>
-                        <div class="approach-content">An AI-driven traffic signal optimization system using Deep
-                            Reinforcement Learning to <span class="highlight">reduce CO₂ emissions</span> and improve
-                            traffic flow.</div>
+                        <div class="approach-title"><i class="fas fa-chart-line"></i>Results at a glance</div>
+                        <div class="approach-content">−18% CO₂ vs. best baseline; −18% avg. travel time; 95% pattern ID accuracy.</div>
                     </div>
+                </div>
+                <div class="section" style="margin-top: 24px;">
+                    <h2 class="section-title"><i class="fas fa-list"></i>Agenda</h2>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li class="point"><i class="fas fa-chevron-right point-icon"></i><div class="point-text">Problem & motivation</div></li>
+                        <li class="point"><i class="fas fa-chevron-right point-icon"></i><div class="point-text">Method 1: Adaptive cascade clustering</div></li>
+                        <li class="point"><i class="fas fa-chevron-right point-icon"></i><div class="point-text">Method 2: DRL signal control</div></li>
+                        <li class="point"><i class="fas fa-chevron-right point-icon"></i><div class="point-text">Setup & scenarios</div></li>
+                        <li class="point"><i class="fas fa-chevron-right point-icon"></i><div class="point-text">Key results → Roadmap</div></li>
+                    </ul>
                 </div>
             </div>
             <div class="footer">
                 <div>Technical Presentation</div>
                 <div>Combining Research from Pavlyshyn et al. & Ryzhanskyi et al.</div>
             </div>
+            <!-- <div class="slide-takeaway">Data-driven traffic control to cut CO₂ and delays.</div> -->
             <div class="slide-number">1</div>
         </div>
 
@@ -576,24 +673,23 @@
                     <!-- Figure 1: Temporal Distribution - Developers can adjust these CSS custom properties -->
                     <div class="figure-placeholder" style="--container-width: 100%; --container-height: 500px;"
                         data-figure-id="fig1" data-figure-name="Temporal Distribution">
-                        <img src="figure_pavlyshyn_8.png" alt="Temporal Distribution of Traffic Scenarios"
+                        <img src="figure_pavlyshyn_8.png" alt="Temporal distribution of traffic patterns throughout the day (non-overlapping clusters)"
                             style="--img-width: 600px; --img-height: 500px;">
                         <div class="figure-title">Figure: Temporal Distribution of Traffic Patterns</div>
-                        <!-- <div class="figure-caption">SUGGESTION: Replace with **Figure 8 from Pavlyshyn et al.** This figure effectively illustrates the dynamic, non-overlapping traffic patterns over a day, highlighting the need for adaptive control.</div> -->
+                        <div class="figure-caption">Daily pattern shifts highlight the need for adaptive, context-aware signal strategies.</div>
                     </div>
                     <div class="section" style="margin-top: 20px;">
                         <h2 class="section-title"><i class="fas fa-leaf"></i>Alignment with National Goals</h2>
                         <div class="point"><i class="fas fa-circle point-icon"></i>
-                            <div class="point-text">This research directly supports Ukraine's commitment to the EU Green
-                                Deal and its goal of achieving <span class="highlight">carbon neutrality</span>.</div>
+                            <div class="point-text">Supports EU Green Deal and Ukraine's <span class="highlight">carbon neutrality</span> commitments.</div>
                         </div>
                         <div class="point"><i class="fas fa-circle point-icon"></i>
-                            <div class="point-text">Provides a data-driven foundation for developing smarter, more
-                                sustainable urban mobility solutions.</div>
+                            <div class="point-text">Data-driven foundation for smarter, sustainable urban mobility.</div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- <div class="slide-takeaway">Static timing wastes fuel; adaptive control reduces emissions and delays.</div> -->
             <div class="slide-number">2</div>
         </div>
 
@@ -688,6 +784,7 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="slide-takeaway">Hybrid clustering selects the best of HDBSCAN/k-means for compact, noise-robust patterns.</div> -->
             <div class="slide-number">3</div>
         </div>
 
@@ -751,6 +848,7 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="slide-takeaway">DRL agents adapt phases by pattern to cut CO₂ and shorten queues.</div> -->
             <div class="slide-number">4</div>
         </div>
 
@@ -801,7 +899,7 @@
                         <!-- <i class="fas fa-project-diagram fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i> -->
                         <img src="figure_network.png" alt="Khmelnytskyi Transport Network"
                             style="--img-width: 500px; --img-height: 400px;">
-                        <div class="figure-title">Figure: Khmelnytskyi Transport Network</div>
+                        <div class="figure-title">Figure: Scheme of Transport Network</div>
                         <!-- <div class="figure-caption">SUGGESTION: Create a schematic representation of the Khmelnytskyi network based on the description in Pavlyshyn et al. to visually represent the simulation area.</div> -->
                     </div>
                     <div class="section">
@@ -825,6 +923,7 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="slide-takeaway">Realistic SUMO network and scenarios ensure credible, transferable findings.</div> -->
             <div class="slide-number">5</div>
         </div>
 
@@ -887,31 +986,32 @@
                                     <td>MaxPressure [28]</td>
                                     <td>253.86</td>
                                     <td>0.11</td>
-                                    <td>1.450e+12</td>
+                                    <td>1.45×10^12</td>
                                 </tr>
                                 <tr>
                                     <td>MPLight [29]</td>
                                     <td>133.42</td>
                                     <td>3.34</td>
-                                    <td>1.050e+12</td>
+                                    <td>1.05×10^12</td>
                                 </tr>
                                 <tr>
                                     <td>IDQN [30]</td>
                                     <td>80.08</td>
                                     <td>1.68</td>
-                                    <td>9.442e+11</td>
+                                    <td>9.44×10^11</td>
                                 </tr>
                                 <tr>
                                     <td><span class="highlight">U_CAN (Ours)</span></td>
                                     <td class="best-value">65.48</td>
                                     <td class="best-value">1.05</td>
-                                    <td class="best-value">8.544e+11</td>
+                                    <td class="best-value">8.54×10^11</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+            <!-- <div class="slide-takeaway">−18% CO₂ and −18% travel time vs. best baselines.</div> -->
             <div class="slide-number">6</div>
         </div>
 
@@ -995,6 +1095,7 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="slide-takeaway">Ready for pilot: phased roadmap, risks, and partnerships identified.</div> -->
             <div class="slide-number">7</div>
         </div>
 
@@ -1066,6 +1167,7 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="slide-takeaway">Get in touch to discuss city pilots and data partnerships.</div> -->
             <div class="slide-number">8</div>
         </div>
 
@@ -1076,6 +1178,9 @@
         let currentSlide = 0;
         const totalSlides = 8;
         const slides = document.querySelectorAll('.slide');
+
+        // Progress and overview DOM refs
+        let progressBar, overviewOverlay;
 
         function showSlide(n) {
             // Hide all slides
@@ -1090,6 +1195,18 @@
 
             // Update indicator
             document.getElementById('current-slide').textContent = currentSlide + 1;
+
+            // Update progress bar
+            if (progressBar) {
+                const segments = progressBar.querySelectorAll('.progress-segment');
+                segments.forEach((seg, idx) => seg.classList.toggle('active', idx === currentSlide));
+            }
+
+            // Update overview highlight
+            if (overviewOverlay) {
+                const items = overviewOverlay.querySelectorAll('.overview-item');
+                items.forEach((it, idx) => it.classList.toggle('active', idx === currentSlide));
+            }
         }
 
         function nextSlide() {
@@ -1102,6 +1219,12 @@
             currentSlide--;
             if (currentSlide < 0) currentSlide = totalSlides - 1;
             showSlide(currentSlide);
+        }
+
+        function toggleOverview() {
+            if (!overviewOverlay) return;
+            const visible = overviewOverlay.style.display === 'flex';
+            overviewOverlay.style.display = visible ? 'none' : 'flex';
         }
 
         // Keyboard navigation
@@ -1128,6 +1251,10 @@
                     currentSlide = totalSlides - 1;
                     showSlide(currentSlide);
                     break;
+                case 'KeyO':
+                    event.preventDefault();
+                    toggleOverview();
+                    break;
             }
         });
 
@@ -1139,9 +1266,55 @@
             showSlide(0);
 
             // Initialize figure controls
-            updateFigureDimensions();
+            if (typeof updateFigureDimensions === 'function') {
+                updateFigureDimensions();
+            }
 
+            // Build progress bar
+            progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            for (let i = 0; i < totalSlides; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'progress-segment' + (i === 0 ? ' active' : '');
+                seg.title = `Slide ${i + 1}`;
+                seg.addEventListener('click', () => {
+                    currentSlide = i;
+                    showSlide(currentSlide);
+                });
+                progressBar.appendChild(seg);
+            }
+            document.body.appendChild(progressBar);
 
+            // Build overview overlay
+            overviewOverlay = document.createElement('div');
+            overviewOverlay.className = 'overview-overlay';
+            const grid = document.createElement('div');
+            grid.className = 'overview-grid';
+            slides.forEach((slide, idx) => {
+                const item = document.createElement('div');
+                item.className = 'overview-item' + (idx === 0 ? ' active' : '');
+                const index = document.createElement('div');
+                index.className = 'overview-index';
+                index.textContent = `Slide ${idx + 1}`;
+                const title = document.createElement('div');
+                title.className = 'overview-title';
+                const titleEl = slide.querySelector('.header .title') || slide.querySelector('.main-title');
+                title.textContent = titleEl ? titleEl.textContent : `Slide ${idx + 1}`;
+                item.appendChild(index);
+                item.appendChild(title);
+                item.addEventListener('click', () => {
+                    currentSlide = idx;
+                    showSlide(currentSlide);
+                    toggleOverview();
+                });
+                grid.appendChild(item);
+            });
+            overviewOverlay.appendChild(grid);
+            overviewOverlay.addEventListener('click', (e) => {
+                // Close when clicking outside a card
+                if (e.target === overviewOverlay) toggleOverview();
+            });
+            document.body.appendChild(overviewOverlay);
 
             // Chart for Slide 4
             const ctx4 = document.getElementById('co2ReductionLearningChart');
@@ -1156,7 +1329,8 @@
                             borderColor: '#1B9E77',
                             backgroundColor: 'rgba(27, 158, 119, 0.1)',
                             fill: true,
-                            tension: 0.1
+                            tension: 0.1,
+                            pointStyle: 'rectRot'
                         }]
                     },
                     options: {
@@ -1177,7 +1351,7 @@
                 new Chart(ctx4.getContext('2d'), {
                     type: 'line',
                     data: {
-                        labels: [0, 20, 40, 60, 80, 100],
+                        labels: [0, 20, 40, 60, 80, 100W],
                         datasets: [{
                             label: 'CO₂ Emissions (Normalized)',
                             data: [1.0, 0.95, 0.88, 0.84, 0.82, 0.82],
