@@ -5,13 +5,13 @@ An interactive, single-page presentation that showcases a data-driven approach t
 ## Live Demo
 
 - GitHub Pages (recommended)
-  https://radiukpavlo.github.io/my-study-python/
+  https://radiukpavlo.github.io/my-study-python/blob/main/%5B00%5D_papers/68_curves/urban-traffic-deck/index.html
 
 - Direct Preview (no Pages setup required)
-  https://htmlpreview.github.io/?https://github.com/radiukpavlo/my-study-python/blob/main/index.html
+  https://htmlpreview.github.io/?https://github.com/radiukpavlo/my-study-python/blob/main/%5B00%5D_papers/68_curves/urban-traffic-deck/index.html
 
 - Alternative (RawGitHack)
-  https://raw.githack.com/radiukpavlo/my-study-python/main/index.html
+  https://raw.githack.com/radiukpavlo/my-study-python/main/%5B00%5D_papers/68_curves/urban-traffic-deck/index.html
 
 If a link returns 404, give it a minute after pushing changes, then refresh.
 
