@@ -1,0 +1,3158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U_CAN: Ukraine towards Carbon Neutrality</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(27, 158, 119, 0.9), rgba(44, 62, 80, 0.95)), 
+                        url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 80px;
+        }
+        .title {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            color: #ffffff;
+        }
+        .subtitle {
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #E69F00;
+            line-height: 1.3;
+        }
+        .approach-container {
+            display: flex;
+            margin-top: 30px;
+            gap: 30px;
+        }
+        .approach {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid #E69F00;
+        }
+        .approach-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #E69F00;
+            display: flex;
+            align-items: center;
+        }
+        .approach-title i {
+            margin-right: 10px;
+        }
+        .approach-content {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .footer {
+            padding: 20px 80px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="content">
+            <h1 class="title">U_CAN: Ukraine towards Carbon Neutrality</h1>
+            <h2 class="subtitle">Integrating Adaptive Cascade Clustering and AI-Driven Traffic Control for Emissions Reduction</h2>
+            
+            <div class="approach-container">
+                <div class="approach">
+                    <div class="approach-title">
+                        <i class="fas fa-brain"></i>
+                        Traffic Pattern Recognition
+                    </div>
+                    <div class="approach-content">
+                        High-fidelity <span class="highlight">adaptive cascade clustering</span> for urban traffic pattern identification
+                    </div>
+                </div>
+                
+                <div class="approach">
+                    <div class="approach-title">
+                        <i class="fas fa-traffic-light"></i>
+                        Intelligent Signal Control
+                    </div>
+                    <div class="approach-content">
+                        AI-driven traffic signal optimization for <span class="highlight">reduced emissions</span> and improved flow
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div>Technical Presentation</div>
+            <div>Combining Research from Pavlyshyn et al. & Ryzhanskyi et al.</div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Background and Motivation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px 70px;
+            gap: 40px;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .point-icon {
+            color: #E69F00;
+            margin-right: 12px;
+            font-size: 18px;
+            margin-top: 3px;
+        }
+        .point-text {
+            font-size: 20px;
+            line-height: 1.4;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .figure-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #7D7D7D;
+        }
+        .figure-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        .stat-box {
+            background-color: rgba(27, 158, 119, 0.1);
+            border-left: 4px solid #1B9E77;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1B9E77;
+        }
+        .stat-text {
+            font-size: 18px;
+            color: #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">Research Background and Motivation</h1>
+        </div>
+        <div class="content">
+            <div class="left-column">
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-smog"></i>
+                        Urban Transportation Emissions
+                    </h2>
+                    <div class="point">
+                        <i class="fas fa-circle point-icon"></i>
+                        <div class="point-text">
+                            Major CO<sub>2</sub> contributor: <span class="highlight">25-30%</span> of total emissions
+                        </div>
+                    </div>
+                    <div class="point">
+                        <i class="fas fa-circle point-icon"></i>
+                        <div class="point-text">
+                            Inefficient traffic management increases fuel consumption
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        Technical Challenges
+                    </h2>
+                    <div class="point">
+                        <i class="fas fa-circle point-icon"></i>
+                        <div class="point-text">
+                            <span class="highlight">High dimensionality</span> of traffic data
+                        </div>
+                    </div>
+                    <div class="point">
+                        <i class="fas fa-circle point-icon"></i>
+                        <div class="point-text">
+                            Complex <span class="highlight">temporal dynamics</span> and patterns
+                        </div>
+                    </div>
+                    <div class="point">
+                        <i class="fas fa-circle point-icon"></i>
+                        <div class="point-text">
+                            Spatial heterogeneity across urban environments
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-number">2050</div>
+                    <div class="stat-text">Ukraine's target year for carbon neutrality</div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="chart-container">
+                    <canvas id="emissionsChart"></canvas>
+                </div>
+                
+                <div class="figure-placeholder">
+                    <i class="fas fa-chart-pie fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i>
+                    <div class="figure-title">Figure 1: Urban CO<sub>2</sub> Emission Sources in Ukraine</div>
+                    <div class="figure-caption">Placeholder for figure from manuscript showing breakdown of urban CO<sub>2</sub> sources by sector</div>
+                </div>
+                
+                <div class="section" style="margin-top: 20px;">
+                    <h2 class="section-title">
+                        <i class="fas fa-leaf"></i>
+                        EU Green Deal Alignment
+                    </h2>
+                    <div class="point">
+                        <i class="fas fa-circle point-icon"></i>
+                        <div class="point-text">
+                            Ukraine's commitment to <span class="highlight">climate neutrality</span>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <i class="fas fa-circle point-icon"></i>
+                        <div class="point-text">
+                            Need for data-driven urban mobility solutions
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('emissionsChart').getContext('2d');
+            const emissionsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Transport', 'Industry', 'Residential', 'Commercial', 'Other'],
+                    datasets: [{
+                        label: 'CO₂ Emissions by Sector (%)',
+                        data: [28, 35, 18, 12, 7],
+                        backgroundColor: [
+                            '#1B9E77',
+                            '#E69F00',
+                            '#2C3E50',
+                            '#7D7D7D',
+                            '#A9A9A9'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'CO₂ Emissions by Sector in Ukraine',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 40,
+                            title: {
+                                display: true,
+                                text: 'Percentage (%)'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methodology Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 70px;
+        }
+        .framework-diagram {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .layer {
+            width: 22%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        .layer-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        .layer-1 .layer-icon { color: #1B9E77; }
+        .layer-2 .layer-icon { color: #E69F00; }
+        .layer-3 .layer-icon { color: #2C3E50; }
+        .layer-4 .layer-icon { color: #7D7D7D; }
+        
+        .layer-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .layer-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .layer-connector {
+            position: absolute;
+            top: 50%;
+            right: -15%;
+            width: 30%;
+            height: 2px;
+            background-color: #7D7D7D;
+        }
+        .layer-connector::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid #7D7D7D;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .comparison-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 15px;
+        }
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .method-diagram {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+        }
+        .method-diagram-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .diagram-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .diagram-component {
+            width: 160px;
+            height: 120px;
+            background-color: rgba(27, 158, 119, 0.1);
+            border: 2px solid #1B9E77;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+        }
+        .diagram-component-icon {
+            font-size: 24px;
+            color: #1B9E77;
+            margin-bottom: 8px;
+        }
+        .diagram-component-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .diagram-arrow {
+            width: 60px;
+            height: 2px;
+            background-color: #7D7D7D;
+            position: relative;
+        }
+        .diagram-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid #7D7D7D;
+        }
+        .vertical-arrow {
+            position: absolute;
+            width: 2px;
+            height: 30px;
+            background-color: #7D7D7D;
+            left: 50%;
+            bottom: -30px;
+        }
+        .vertical-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 8px solid #7D7D7D;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">Methodology Overview</h1>
+        </div>
+        <div class="content">
+            <div class="method-diagram">
+                <div class="method-diagram-title">Integrated Technical Framework</div>
+                <div class="diagram-content">
+                    <div class="diagram-component">
+                        <i class="fas fa-database diagram-component-icon"></i>
+                        <div class="diagram-component-text">Data Collection</div>
+                        <div class="vertical-arrow"></div>
+                    </div>
+                    <div class="diagram-arrow"></div>
+                    <div class="diagram-component">
+                        <i class="fas fa-brain diagram-component-icon"></i>
+                        <div class="diagram-component-text">Pattern Recognition</div>
+                        <div class="vertical-arrow"></div>
+                    </div>
+                    <div class="diagram-arrow"></div>
+                    <div class="diagram-component">
+                        <i class="fas fa-cogs diagram-component-icon"></i>
+                        <div class="diagram-component-text">Decision Support</div>
+                        <div class="vertical-arrow"></div>
+                    </div>
+                    <div class="diagram-arrow"></div>
+                    <div class="diagram-component">
+                        <i class="fas fa-city diagram-component-icon"></i>
+                        <div class="diagram-component-text">Implementation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="framework-diagram">
+                <div class="layer layer-1">
+                    <i class="fas fa-database layer-icon"></i>
+                    <h3 class="layer-title">Data Collection</h3>
+                    <p class="layer-content">Traffic sensors, simulation models, historical data</p>
+                    <div class="layer-connector"></div>
+                </div>
+                
+                <div class="layer layer-2">
+                    <i class="fas fa-brain layer-icon"></i>
+                    <h3 class="layer-title">Pattern Recognition</h3>
+                    <p class="layer-content">Adaptive cascade clustering for traffic pattern identification</p>
+                    <div class="layer-connector"></div>
+                </div>
+                
+                <div class="layer layer-3">
+                    <i class="fas fa-cogs layer-icon"></i>
+                    <h3 class="layer-title">Decision Support</h3>
+                    <p class="layer-content">AI-driven traffic signal optimization algorithms</p>
+                    <div class="layer-connector"></div>
+                </div>
+                
+                <div class="layer layer-4">
+                    <i class="fas fa-city layer-icon"></i>
+                    <h3 class="layer-title">Implementation</h3>
+                    <p class="layer-content">Real-world deployment in urban environments</p>
+                </div>
+            </div>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Accuracy</th>
+                        <th>Computational Efficiency</th>
+                        <th>Scalability</th>
+                        <th>Emissions Reduction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Traditional Fixed-Time Signals</td>
+                        <td>Low</td>
+                        <td>High</td>
+                        <td>Limited</td>
+                        <td>0-5%</td>
+                    </tr>
+                    <tr>
+                        <td>Actuated Signals</td>
+                        <td>Medium</td>
+                        <td>Medium</td>
+                        <td>Medium</td>
+                        <td>5-10%</td>
+                    </tr>
+                    <tr>
+                        <td>Standard Clustering + Optimization</td>
+                        <td>Medium-High</td>
+                        <td>Low</td>
+                        <td>Medium</td>
+                        <td>10-15%</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">U_CAN Approach</span></td>
+                        <td><span class="highlight">High</span></td>
+                        <td><span class="highlight">Medium-High</span></td>
+                        <td><span class="highlight">High</span></td>
+                        <td><span class="highlight">15-25%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Cascade Clustering Algorithm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px 70px;
+            gap: 40px;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .parameter {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .parameter-icon {
+            color: #E69F00;
+            margin-right: 12px;
+            font-size: 18px;
+            margin-top: 3px;
+        }
+        .parameter-text {
+            font-size: 20px;
+            line-height: 1.4;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .figure-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #7D7D7D;
+            margin-bottom: 20px;
+        }
+        .figure-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .comparison-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px 8px;
+            font-size: 16px;
+        }
+        .comparison-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 16px;
+        }
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+        .algorithm-box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .algorithm-icon {
+            font-size: 36px;
+            color: #1B9E77;
+            margin-right: 20px;
+        }
+        .algorithm-content {
+            flex: 1;
+        }
+        .algorithm-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2C3E50;
+        }
+        .algorithm-description {
+            font-size: 18px;
+            line-height: 1.4;
+        }
+        .chart-container {
+            width: 100%;
+            height: 220px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">Adaptive Cascade Clustering Algorithm</h1>
+        </div>
+        <div class="content">
+            <div class="left-column">
+                <div class="algorithm-box">
+                    <i class="fas fa-project-diagram algorithm-icon"></i>
+                    <div class="algorithm-content">
+                        <h3 class="algorithm-title">Algorithm Architecture</h3>
+                        <p class="algorithm-description">
+                            Combines <span class="highlight">HDBSCAN</span> and <span class="highlight">k-means</span> clustering with weighted voting mechanism
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-sliders-h"></i>
+                        Technical Parameters
+                    </h2>
+                    <div class="parameter">
+                        <i class="fas fa-circle parameter-icon"></i>
+                        <div class="parameter-text">
+                            Minimum cluster size: <span class="highlight">5-15 points</span>
+                        </div>
+                    </div>
+                    <div class="parameter">
+                        <i class="fas fa-circle parameter-icon"></i>
+                        <div class="parameter-text">
+                            Cluster selection method: <span class="highlight">Excess of Mass</span>
+                        </div>
+                    </div>
+                    <div class="parameter">
+                        <i class="fas fa-circle parameter-icon"></i>
+                        <div class="parameter-text">
+                            Distance metrics: <span class="highlight">Euclidean, Manhattan</span>
+                        </div>
+                    </div>
+                    <div class="parameter">
+                        <i class="fas fa-circle parameter-icon"></i>
+                        <div class="parameter-text">
+                            Dynamic feature weighting for temporal and spatial attributes
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="figure-placeholder">
+                    <i class="fas fa-sitemap fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i>
+                    <div class="figure-title">Figure 2: Cascade Clustering Process Flow</div>
+                    <div class="figure-caption">Placeholder for figure showing the cascade clustering process with HDBSCAN and k-means integration</div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>V-measure</th>
+                            <th>Silhouette Score</th>
+                            <th>Davies-Bouldin Index</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>HDBSCAN</td>
+                            <td>0.72</td>
+                            <td>0.65</td>
+                            <td>0.81</td>
+                        </tr>
+                        <tr>
+                            <td>k-means</td>
+                            <td>0.68</td>
+                            <td>0.70</td>
+                            <td>0.75</td>
+                        </tr>
+                        <tr>
+                            <td>DBSCAN</td>
+                            <td>0.65</td>
+                            <td>0.62</td>
+                            <td>0.88</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">Adaptive Cascade</span></td>
+                            <td><span class="highlight">0.82</span></td>
+                            <td><span class="highlight">0.78</span></td>
+                            <td><span class="highlight">0.63</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section" style="margin-top: 20px;">
+                    <h2 class="section-title">
+                        <i class="fas fa-balance-scale"></i>
+                        Weighted Voting Mechanism
+                    </h2>
+                    <div class="parameter">
+                        <i class="fas fa-circle parameter-icon"></i>
+                        <div class="parameter-text">
+                            Selects optimal algorithm based on <span class="highlight">data characteristics</span>
+                        </div>
+                    </div>
+                    <div class="parameter">
+                        <i class="fas fa-circle parameter-icon"></i>
+                        <div class="parameter-text">
+                            Considers cluster compactness, separation, and stability
+                        </div>
+                    </div>
+                    <div class="parameter">
+                        <i class="fas fa-circle parameter-icon"></i>
+                        <div class="parameter-text">
+                            Adapts to changing traffic patterns in real-time
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            const performanceChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['V-measure', 'Silhouette Score', 'Stability', 'Speed', 'Scalability'],
+                    datasets: [
+                        {
+                            label: 'HDBSCAN',
+                            data: [0.72, 0.65, 0.85, 0.60, 0.70],
+                            backgroundColor: 'rgba(44, 62, 80, 0.2)',
+                            borderColor: 'rgba(44, 62, 80, 0.8)',
+                            pointBackgroundColor: 'rgba(44, 62, 80, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(44, 62, 80, 1)'
+                        },
+                        {
+                            label: 'k-means',
+                            data: [0.68, 0.70, 0.65, 0.90, 0.85],
+                            backgroundColor: 'rgba(230, 159, 0, 0.2)',
+                            borderColor: 'rgba(230, 159, 0, 0.8)',
+                            pointBackgroundColor: 'rgba(230, 159, 0, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(230, 159, 0, 1)'
+                        },
+                        {
+                            label: 'Adaptive Cascade',
+                            data: [0.82, 0.78, 0.88, 0.75, 0.90],
+                            backgroundColor: 'rgba(27, 158, 119, 0.2)',
+                            borderColor: 'rgba(27, 158, 119, 0.8)',
+                            pointBackgroundColor: 'rgba(27, 158, 119, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(27, 158, 119, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 1
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Algorithm Performance Comparison',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Traffic Signal Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px 70px;
+            gap: 40px;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .component {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .component-icon {
+            color: #E69F00;
+            margin-right: 12px;
+            font-size: 18px;
+            margin-top: 3px;
+        }
+        .component-text {
+            font-size: 20px;
+            line-height: 1.4;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .figure-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #7D7D7D;
+            margin-bottom: 20px;
+        }
+        .figure-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        .control-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .control-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+        .control-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 16px;
+        }
+        .control-table tr:last-child td {
+            border-bottom: none;
+        }
+        .control-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+        .module-box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .module-icon {
+            font-size: 36px;
+            color: #1B9E77;
+            margin-right: 20px;
+        }
+        .module-content {
+            flex: 1;
+        }
+        .module-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2C3E50;
+        }
+        .module-description {
+            font-size: 18px;
+            line-height: 1.4;
+        }
+        .chart-container {
+            width: 100%;
+            height: 220px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .architecture-diagram {
+            width: 100%;
+            height: 250px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .arch-level {
+            position: absolute;
+            width: 90%;
+            left: 5%;
+            height: 60px;
+            background-color: rgba(27, 158, 119, 0.2);
+            border: 2px solid #1B9E77;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .level-network {
+            top: 20px;
+        }
+        .level-corridor {
+            top: 100px;
+        }
+        .level-intersection {
+            top: 180px;
+        }
+        .arch-arrow {
+            position: absolute;
+            width: 2px;
+            height: 30px;
+            background-color: #7D7D7D;
+            left: 50%;
+        }
+        .arrow-down-1 {
+            top: 80px;
+        }
+        .arrow-down-2 {
+            top: 160px;
+        }
+        .arch-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 8px solid #7D7D7D;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">AI-Driven Traffic Signal Control</h1>
+        </div>
+        <div class="content">
+            <div class="left-column">
+                <div class="module-box">
+                    <i class="fas fa-balance-scale module-icon"></i>
+                    <div class="module-content">
+                        <h3 class="module-title">Multi-Objective Optimization</h3>
+                        <p class="module-description">
+                            Balances <span class="highlight">traffic flow</span>, <span class="highlight">emissions reduction</span>, and <span class="highlight">travel time</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        Technical Components
+                    </h2>
+                    <div class="component">
+                        <i class="fas fa-circle component-icon"></i>
+                        <div class="component-text">
+                            <span class="highlight">Prediction Module:</span> LSTM networks for traffic flow forecasting
+                        </div>
+                    </div>
+                    <div class="component">
+                        <i class="fas fa-circle component-icon"></i>
+                        <div class="component-text">
+                            <span class="highlight">Optimization Module:</span> Genetic algorithms for signal timing
+                        </div>
+                    </div>
+                    <div class="component">
+                        <i class="fas fa-circle component-icon"></i>
+                        <div class="component-text">
+                            <span class="highlight">Control Module:</span> Real-time signal adjustment system
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <div class="arch-level level-network">Network Level Control</div>
+                    <div class="arch-arrow arrow-down-1"></div>
+                    <div class="arch-level level-corridor">Corridor Level Control</div>
+                    <div class="arch-arrow arrow-down-2"></div>
+                    <div class="arch-level level-intersection">Intersection Level Control</div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="figure-placeholder">
+                    <i class="fas fa-network-wired fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i>
+                    <div class="figure-title">Figure 3: AI Control System Architecture</div>
+                    <div class="figure-caption">Placeholder for figure showing the AI control system architecture with integration to adaptive cascade clustering</div>
+                </div>
+                
+                <table class="control-table">
+                    <thead>
+                        <tr>
+                            <th>Control Parameter</th>
+                            <th>Optimization Range</th>
+                            <th>Constraints</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cycle Time</td>
+                            <td>60-180 seconds</td>
+                            <td>Min pedestrian crossing time</td>
+                        </tr>
+                        <tr>
+                            <td>Green Split</td>
+                            <td>15%-85%</td>
+                            <td>Min/max green per phase</td>
+                        </tr>
+                        <tr>
+                            <td>Offset</td>
+                            <td>0-100% of cycle</td>
+                            <td>Network coordination</td>
+                        </tr>
+                        <tr>
+                            <td>Phase Sequence</td>
+                            <td>Multiple options</td>
+                            <td>Safety constraints</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section" style="margin-top: 20px;">
+                    <h2 class="section-title">
+                        <i class="fas fa-link"></i>
+                        Integration with Clustering
+                    </h2>
+                    <div class="component">
+                        <i class="fas fa-circle component-icon"></i>
+                        <div class="component-text">
+                            Pattern-based signal timing from <span class="highlight">adaptive cascade clustering</span>
+                        </div>
+                    </div>
+                    <div class="component">
+                        <i class="fas fa-circle component-icon"></i>
+                        <div class="component-text">
+                            Dynamic parameter adjustment based on traffic pattern identification
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experimental Setup and Data Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px 70px;
+            gap: 40px;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .data-point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .data-icon {
+            color: #E69F00;
+            margin-right: 12px;
+            font-size: 18px;
+            margin-top: 3px;
+        }
+        .data-text {
+            font-size: 20px;
+            line-height: 1.4;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .figure-placeholder {
+            width: 100%;
+            height: 280px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #7D7D7D;
+            margin-bottom: 20px;
+        }
+        .figure-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .data-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+        .data-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 16px;
+        }
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        .data-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .stat-box {
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin: 0 5px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1B9E77;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #2C3E50;
+        }
+        .data-type-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .data-type-icon {
+            font-size: 24px;
+            color: #1B9E77;
+            margin-right: 15px;
+        }
+        .data-type-content {
+            flex: 1;
+        }
+        .data-type-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+        .calibration-box {
+            background-color: rgba(27, 158, 119, 0.1);
+            border-left: 4px solid #1B9E77;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+        .calibration-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 10px;
+        }
+        .calibration-text {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">Experimental Setup and Data Collection</h1>
+        </div>
+        <div class="content">
+            <div class="left-column">
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Transport Network Model
+                    </h2>
+                    <div class="data-point">
+                        <i class="fas fa-circle data-icon"></i>
+                        <div class="data-text">
+                            <span class="highlight">Khmelnytskyi</span> high-fidelity simulation model
+                        </div>
+                    </div>
+                    <div class="data-point">
+                        <i class="fas fa-circle data-icon"></i>
+                        <div class="data-text">
+                            <span class="highlight">15</span> major traffic light-controlled intersections
+                        </div>
+                    </div>
+                    <div class="data-point">
+                        <i class="fas fa-circle data-icon"></i>
+                        <div class="data-text">
+                            <span class="highlight">45.7 km</span> of road length
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-database"></i>
+                        Data Collection
+                    </h2>
+                    <div class="data-point">
+                        <i class="fas fa-circle data-icon"></i>
+                        <div class="data-text">
+                            <span class="highlight">22-hour</span> data collection period
+                        </div>
+                    </div>
+                    <div class="data-point">
+                        <i class="fas fa-circle data-icon"></i>
+                        <div class="data-text">
+                            <span class="highlight">10-minute</span> intervals
+                        </div>
+                    </div>
+                    <div class="data-point">
+                        <i class="fas fa-circle data-icon"></i>
+                        <div class="data-text">
+                            Captures both <span class="highlight">static metrics</span> and <span class="highlight">dynamic properties</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calibration-box">
+                    <h3 class="calibration-title">Calibration Methodology</h3>
+                    <p class="calibration-text">
+                        Historical traffic count data with <span class="highlight">92%</span> accuracy validation against ground truth measurements
+                    </p>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="figure-placeholder">
+                    <i class="fas fa-project-diagram fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i>
+                    <div class="figure-title">Figure 4: Khmelnytskyi Transport Network Model</div>
+                    <div class="figure-caption">Placeholder for figure showing the transport network model with 15 intersections and road segments</div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-table"></i>
+                        Dataset Characteristics
+                    </h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Total Observations</td>
+                                <td>1,980</td>
+                            </tr>
+                            <tr>
+                                <td>Features per Observation</td>
+                                <td>24</td>
+                            </tr>
+                            <tr>
+                                <td>Temporal Coverage</td>
+                                <td>6:00 - 4:00 (next day)</td>
+                            </tr>
+                            <tr>
+                                <td>Validation Split</td>
+                                <td>70% training, 30% testing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="section" style="margin-top: 20px;">
+                    <h2 class="section-title">
+                        <i class="fas fa-stream"></i>
+                        Data Types
+                    </h2>
+                    <div class="data-type-box">
+                        <i class="fas fa-car data-type-icon"></i>
+                        <div class="data-type-content">
+                            <div class="data-type-title">Traffic Volume</div>
+                        </div>
+                    </div>
+                    <div class="data-type-box">
+                        <i class="fas fa-tachometer-alt data-type-icon"></i>
+                        <div class="data-type-content">
+                            <div class="data-type-title">Vehicle Speed</div>
+                        </div>
+                    </div>
+                    <div class="data-type-box">
+                        <i class="fas fa-traffic-light data-type-icon"></i>
+                        <div class="data-type-content">
+                            <div class="data-type-title">Signal Timing</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <div class="stat-value">132</div>
+                        <div class="stat-label">Time Intervals</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Features</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">92%</div>
+                        <div class="stat-label">Calibration Accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Metrics and Comparative Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px 70px;
+            gap: 40px;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .metric {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+        .metric-icon {
+            font-size: 24px;
+            color: #E69F00;
+            margin-right: 15px;
+        }
+        .metric-content {
+            flex: 1;
+        }
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1B9E77;
+        }
+        .metric-label {
+            font-size: 16px;
+            color: #2C3E50;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .figure-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #7D7D7D;
+            margin-bottom: 20px;
+        }
+        .figure-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .results-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px 8px;
+            font-size: 16px;
+        }
+        .results-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 16px;
+        }
+        .results-table tr:last-child td {
+            border-bottom: none;
+        }
+        .results-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+        .chart-container {
+            width: 100%;
+            height: 220px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .best-value {
+            color: #1B9E77;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">Performance Metrics and Comparative Results</h1>
+        </div>
+        <div class="content">
+            <div class="left-column">
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-brain"></i>
+                        Clustering Performance
+                    </h2>
+                    <div class="metric">
+                        <i class="fas fa-chart-line metric-icon"></i>
+                        <div class="metric-content">
+                            <div class="metric-value">0.79-0.82</div>
+                            <div class="metric-label">V-measure for pattern identification</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <i class="fas fa-compress-alt metric-icon"></i>
+                        <div class="metric-content">
+                            <div class="metric-value">4-13%</div>
+                            <div class="metric-label">Improvement in cluster compactness</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <i class="fas fa-check-circle metric-icon"></i>
+                        <div class="metric-content">
+                            <div class="metric-value">92.8-95.0%</div>
+                            <div class="metric-label">Scenario identification accuracy</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-traffic-light"></i>
+                        Traffic Control Performance
+                    </h2>
+                    <div class="metric">
+                        <i class="fas fa-leaf metric-icon"></i>
+                        <div class="metric-content">
+                            <div class="metric-value">18%</div>
+                            <div class="metric-label">Reduction in CO<sub>2</sub> emissions</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <i class="fas fa-hourglass-half metric-icon"></i>
+                        <div class="metric-content">
+                            <div class="metric-value">22%</div>
+                            <div class="metric-label">Reduction in average waiting time</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <i class="fas fa-tachometer-alt metric-icon"></i>
+                        <div class="metric-content">
+                            <div class="metric-value">15%</div>
+                            <div class="metric-label">Improvement in traffic flow efficiency</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="figure-placeholder">
+                    <i class="fas fa-chart-bar fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i>
+                    <div class="figure-title">Figure 5: Comparative Performance Metrics</div>
+                    <div class="figure-caption">Placeholder for figure showing comparative performance metrics across different methods</div>
+                </div>
+                
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Peak Hours</th>
+                            <th>Off-Peak</th>
+                            <th>Special Events</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fixed-Time Control</td>
+                            <td>Baseline</td>
+                            <td>Baseline</td>
+                            <td>Baseline</td>
+                        </tr>
+                        <tr>
+                            <td>Actuated Control</td>
+                            <td>+8%</td>
+                            <td>+12%</td>
+                            <td>+5%</td>
+                        </tr>
+                        <tr>
+                            <td>Standard Clustering</td>
+                            <td>+14%</td>
+                            <td>+16%</td>
+                            <td>+10%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">U_CAN Approach</span></td>
+                            <td class="best-value">+22%</td>
+                            <td class="best-value">+25%</td>
+                            <td class="best-value">+18%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="chart-container">
+                    <canvas id="performanceComparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('performanceComparisonChart').getContext('2d');
+            const performanceComparisonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['CO₂ Reduction', 'Waiting Time Reduction', 'Flow Efficiency'],
+                    datasets: [
+                        {
+                            label: 'Fixed-Time',
+                            data: [0, 0, 0],
+                            backgroundColor: '#7D7D7D',
+                            borderWidth: 0
+                        },
+                        {
+                            label: 'Actuated',
+                            data: [8, 12, 10],
+                            backgroundColor: '#2C3E50',
+                            borderWidth: 0
+                        },
+                        {
+                            label: 'Standard Clustering',
+                            data: [12, 16, 13],
+                            backgroundColor: '#E69F00',
+                            borderWidth: 0
+                        },
+                        {
+                            label: 'U_CAN',
+                            data: [18, 22, 15],
+                            backgroundColor: '#1B9E77',
+                            borderWidth: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Performance Comparison by Method (%)',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Improvement (%)'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO2 Emission Reduction Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px 70px;
+            gap: 40px;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .method-box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .method-icon {
+            font-size: 36px;
+            color: #1B9E77;
+            margin-right: 20px;
+            margin-top: 5px;
+        }
+        .method-content {
+            flex: 1;
+        }
+        .method-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+        }
+        .method-description {
+            font-size: 18px;
+            line-height: 1.4;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .figure-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #7D7D7D;
+            margin-bottom: 20px;
+        }
+        .figure-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        .emission-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .emission-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+        .emission-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 16px;
+        }
+        .emission-table tr:last-child td {
+            border-bottom: none;
+        }
+        .emission-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+        .chart-container {
+            width: 100%;
+            height: 220px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .metrics-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .metric-box {
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin: 0 5px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1B9E77;
+        }
+        .metric-label {
+            font-size: 16px;
+            color: #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">CO2 Emission Reduction Analysis</h1>
+        </div>
+        <div class="content">
+            <div class="left-column">
+                <div class="method-box">
+                    <i class="fas fa-calculator method-icon"></i>
+                    <div class="method-content">
+                        <h3 class="method-title">Emission Modeling Approach</h3>
+                        <p class="method-description">
+                            Combines <span class="highlight">COPERT methodology</span> with real-world traffic data to calculate emissions based on vehicle type, speed, and acceleration patterns
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="metrics-container">
+                    <div class="metric-box">
+                        <div class="metric-value">18%</div>
+                        <div class="metric-label">CO₂ Reduction</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">12%</div>
+                        <div class="metric-label">NOx Reduction</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">9%</div>
+                        <div class="metric-label">PM Reduction</div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Spatial Distribution Analysis
+                    </h2>
+                    <div class="method-description" style="margin-bottom: 15px;">
+                        Identified emission <span class="highlight">hotspots</span> at major intersections and corridors with highest reduction potential
+                    </div>
+                    <div class="method-description">
+                        Correlation analysis shows <span class="highlight">strong relationship</span> between traffic pattern improvements and emission reductions (R² = 0.86)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="figure-placeholder">
+                    <i class="fas fa-map fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i>
+                    <div class="figure-title">Figure 6: Emission Reduction Maps</div>
+                    <div class="figure-caption">Placeholder for figure showing spatial distribution of emission reductions across the network with hotspots identification</div>
+                </div>
+                
+                <table class="emission-table">
+                    <thead>
+                        <tr>
+                            <th>Vehicle Type</th>
+                            <th>Operating Condition</th>
+                            <th>CO₂ Factor (g/km)</th>
+                            <th>Reduction Potential</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Passenger Cars</td>
+                            <td>Free Flow</td>
+                            <td>120</td>
+                            <td>15-20%</td>
+                        </tr>
+                        <tr>
+                            <td>Passenger Cars</td>
+                            <td>Congested</td>
+                            <td>280</td>
+                            <td>20-25%</td>
+                        </tr>
+                        <tr>
+                            <td>Heavy Duty</td>
+                            <td>Free Flow</td>
+                            <td>750</td>
+                            <td>10-15%</td>
+                        </tr>
+                        <tr>
+                            <td>Heavy Duty</td>
+                            <td>Congested</td>
+                            <td>1450</td>
+                            <td>15-20%</td>
+                        </tr>
+                        <tr>
+                            <td>Public Transport</td>
+                            <td>Mixed</td>
+                            <td>420</td>
+                            <td>12-18%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="chart-container">
+                    <canvas id="emissionReductionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('emissionReductionChart').getContext('2d');
+            const emissionReductionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Peak Hours', 'Off-Peak', 'Special Events'],
+                    datasets: [
+                        {
+                            label: 'CO₂ Reduction (%)',
+                            data: [22, 15, 18],
+                            backgroundColor: '#1B9E77',
+                            borderWidth: 0
+                        },
+                        {
+                            label: 'NOx Reduction (%)',
+                            data: [15, 10, 12],
+                            backgroundColor: '#E69F00',
+                            borderWidth: 0
+                        },
+                        {
+                            label: 'PM Reduction (%)',
+                            data: [12, 7, 9],
+                            backgroundColor: '#2C3E50',
+                            borderWidth: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Emission Reduction by Traffic Scenario',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Reduction (%)'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implementation Roadmap and Integration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px 70px;
+            gap: 40px;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .phase-box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .phase-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #1B9E77;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .phase-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            padding-left: 30px;
+        }
+        .phase-description {
+            font-size: 18px;
+            line-height: 1.4;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .figure-placeholder {
+            width: 100%;
+            height: 220px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #7D7D7D;
+            margin-bottom: 20px;
+        }
+        .figure-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        .milestone-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .milestone-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+        .milestone-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 16px;
+        }
+        .milestone-table tr:last-child td {
+            border-bottom: none;
+        }
+        .milestone-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+        .integration-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+        .integration-icon {
+            font-size: 24px;
+            color: #E69F00;
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        .integration-content {
+            flex: 1;
+        }
+        .integration-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 5px;
+        }
+        .integration-description {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        .stakeholder-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stakeholder {
+            flex: 1;
+            min-width: calc(50% - 15px);
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .stakeholder-icon {
+            font-size: 24px;
+            color: #1B9E77;
+            margin-right: 15px;
+        }
+        .stakeholder-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">Implementation Roadmap and Integration</h1>
+        </div>
+        <div class="content">
+            <div class="left-column">
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-tasks"></i>
+                        Three-Phase Implementation
+                    </h2>
+                    <div class="phase-box">
+                        <div class="phase-number">1</div>
+                        <h3 class="phase-title">Algorithm Refinement & Validation</h3>
+                        <p class="phase-description">
+                            Optimize clustering and control algorithms with <span class="highlight">real-world data</span> from pilot cities
+                        </p>
+                    </div>
+                    <div class="phase-box">
+                        <div class="phase-number">2</div>
+                        <h3 class="phase-title">Pilot Deployment</h3>
+                        <p class="phase-description">
+                            Implement in <span class="highlight">3 Ukrainian cities</span> with comprehensive monitoring
+                        </p>
+                    </div>
+                    <div class="phase-box">
+                        <div class="phase-number">3</div>
+                        <h3 class="phase-title">National Scaling</h3>
+                        <p class="phase-description">
+                            Expand nationwide with <span class="highlight">smart city integration</span> and continuous optimization
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-handshake"></i>
+                        Stakeholder Engagement
+                    </h2>
+                    <div class="stakeholder-container">
+                        <div class="stakeholder">
+                            <i class="fas fa-city stakeholder-icon"></i>
+                            <div class="stakeholder-text">Transportation Authorities</div>
+                        </div>
+                        <div class="stakeholder">
+                            <i class="fas fa-leaf stakeholder-icon"></i>
+                            <div class="stakeholder-text">Environmental Agencies</div>
+                        </div>
+                        <div class="stakeholder">
+                            <i class="fas fa-drafting-compass stakeholder-icon"></i>
+                            <div class="stakeholder-text">Urban Planners</div>
+                        </div>
+                        <div class="stakeholder">
+                            <i class="fas fa-university stakeholder-icon"></i>
+                            <div class="stakeholder-text">Research Institutions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="figure-placeholder">
+                    <i class="fas fa-project-diagram fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i>
+                    <div class="figure-title">Figure 7: Implementation Roadmap</div>
+                    <div class="figure-caption">Placeholder for figure showing the implementation roadmap with timeline and key milestones</div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-plug"></i>
+                        Technical Integration Requirements
+                    </h2>
+                    <div class="integration-item">
+                        <i class="fas fa-microchip integration-icon"></i>
+                        <div class="integration-content">
+                            <h3 class="integration-title">Hardware Specifications</h3>
+                            <p class="integration-description">Edge computing devices, traffic sensors, communication infrastructure</p>
+                        </div>
+                    </div>
+                    <div class="integration-item">
+                        <i class="fas fa-code integration-icon"></i>
+                        <div class="integration-content">
+                            <h3 class="integration-title">Software Interfaces</h3>
+                            <p class="integration-description">APIs for traffic management systems, data exchange protocols</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="milestone-table">
+                    <thead>
+                        <tr>
+                            <th>Phase</th>
+                            <th>Key Milestones</th>
+                            <th>Success Metrics</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Phase 1</td>
+                            <td>Algorithm validation, simulation testing</td>
+                            <td>Accuracy > 90%, Efficiency gain > 15%</td>
+                        </tr>
+                        <tr>
+                            <td>Phase 2</td>
+                            <td>Pilot deployment, monitoring system</td>
+                            <td>Emissions reduction > 15%, User satisfaction > 80%</td>
+                        </tr>
+                        <tr>
+                            <td>Phase 3</td>
+                            <td>National rollout, smart city integration</td>
+                            <td>Coverage > 70% urban areas, System uptime > 95%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conclusions and Future Work</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #2C3E50;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            background-color: #1B9E77;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 30px 70px;
+            gap: 40px;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1B9E77;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .contribution-box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .contribution-icon {
+            font-size: 36px;
+            color: #1B9E77;
+            margin-right: 20px;
+            margin-top: 5px;
+        }
+        .contribution-content {
+            flex: 1;
+        }
+        .contribution-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+        }
+        .contribution-description {
+            font-size: 18px;
+            line-height: 1.4;
+        }
+        .highlight {
+            color: #E69F00;
+            font-weight: 600;
+        }
+        .figure-placeholder {
+            width: 100%;
+            height: 220px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #7D7D7D;
+            margin-bottom: 20px;
+        }
+        .figure-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2C3E50;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+        .recommendations-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .recommendations-table th {
+            background-color: #1B9E77;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+        .recommendations-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 16px;
+        }
+        .recommendations-table tr:last-child td {
+            border-bottom: none;
+        }
+        .recommendations-table tr:nth-child(even) {
+            background-color: rgba(27, 158, 119, 0.05);
+        }
+        .future-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+        }
+        .future-icon {
+            font-size: 24px;
+            color: #E69F00;
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        .future-content {
+            flex: 1;
+        }
+        .future-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 5px;
+        }
+        .future-description {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        .key-finding {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            background-color: rgba(27, 158, 119, 0.1);
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        .finding-icon {
+            font-size: 24px;
+            color: #1B9E77;
+            margin-right: 15px;
+        }
+        .finding-text {
+            font-size: 18px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1 class="title">Conclusions and Future Work</h1>
+        </div>
+        <div class="content">
+            <div class="left-column">
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-star"></i>
+                        Main Contributions
+                    </h2>
+                    <div class="contribution-box">
+                        <i class="fas fa-brain contribution-icon"></i>
+                        <div class="contribution-content">
+                            <h3 class="contribution-title">Adaptive Cascade Clustering</h3>
+                            <p class="contribution-description">
+                                Novel algorithm for <span class="highlight">high-fidelity traffic pattern recognition</span> with improved accuracy
+                            </p>
+                        </div>
+                    </div>
+                    <div class="contribution-box">
+                        <i class="fas fa-traffic-light contribution-icon"></i>
+                        <div class="contribution-content">
+                            <h3 class="contribution-title">AI-Driven Traffic Control</h3>
+                            <p class="contribution-description">
+                                Integrated system for <span class="highlight">emission reduction</span> through intelligent signal optimization
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-line"></i>
+                        Key Findings
+                    </h2>
+                    <div class="key-finding">
+                        <i class="fas fa-check-circle finding-icon"></i>
+                        <div class="finding-text">
+                            <span class="highlight">18%</span> CO₂ reduction with improved traffic flow
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <i class="fas fa-check-circle finding-icon"></i>
+                        <div class="finding-text">
+                            <span class="highlight">92.8-95.0%</span> scenario identification accuracy
+                        </div>
+                    </div>
+                    <div class="key-finding">
+                        <i class="fas fa-check-circle finding-icon"></i>
+                        <div class="finding-text">
+                            Scalable approach for diverse urban contexts
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="figure-placeholder">
+                    <i class="fas fa-chart-pie fa-3x" style="color: #7D7D7D; margin-bottom: 15px;"></i>
+                    <div class="figure-title">Figure 8: Project Impact Summary</div>
+                    <div class="figure-caption">Placeholder for figure summarizing the project impact on emissions, traffic efficiency, and scalability</div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-rocket"></i>
+                        Future Research Directions
+                    </h2>
+                    <div class="future-item">
+                        <i class="fas fa-charging-station future-icon"></i>
+                        <div class="future-content">
+                            <h3 class="future-title">EV Integration</h3>
+                            <p class="future-description">Integration with electric vehicle charging infrastructure</p>
+                        </div>
+                    </div>
+                    <div class="future-item">
+                        <i class="fas fa-bus future-icon"></i>
+                        <div class="future-content">
+                            <h3 class="future-title">Multi-modal Optimization</h3>
+                            <p class="future-description">Coordinated optimization across transportation modes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="recommendations-table">
+                    <thead>
+                        <tr>
+                            <th>Stakeholder</th>
+                            <th>Recommendations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Municipalities</td>
+                            <td>Prioritize smart traffic infrastructure in urban planning</td>
+                        </tr>
+                        <tr>
+                            <td>Transportation Agencies</td>
+                            <td>Adopt data-driven approaches for traffic management</td>
+                        </tr>
+                        <tr>
+                            <td>Environmental Regulators</td>
+                            <td>Incorporate traffic optimization in emission reduction strategies</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
