@@ -10,7 +10,6 @@ for clarity and maintainability.
 
 All text elements in the figures, including titles, labels, ticks, and
 annotations, are rendered in a larger, bold font for maximum readability.
-Capitalization is standardized across all plots for a uniform appearance.
 
 The figures generated are:
 - Figure 2    [61_fig_2_roc_curves.pdf]: Multi-class ROC curves.
@@ -31,7 +30,7 @@ The figures generated are:
 - Figure S1g  [61_fig_s1g_memb_func.pdf]: Individual membership function (Hotspot - Conservative).
 - Figure S1h  [61_fig_s1h_memb_func.pdf]: Individual membership function (Hotspot - Nominal).
 - Figure S1i  [61_fig_s1i_memb_func.pdf]: Individual membership function (Hotspot - Liberal).
-- Figure A1   [61_fig_a1_sens.pdf]: Sensitivity analysis of Fuzzy Inference System.
+- Figure A1   [61_fig_a1.pdf]: Sensitivity analysis of Fuzzy Inference System.
 
 To run this script, ensure all required libraries are installed (`pip install
 matplotlib numpy pandas seaborn scikit-learn`) and execute it from the
@@ -63,22 +62,13 @@ except (ValueError, KeyError):
     matplotlib.rcParams["font.family"] = "serif"
 
 # Set font sizes and weights for all common text elements.
+# All figures will use consistent font sizes for professional appearance
 FONT_SIZE_TITLE = 20
 FONT_SIZE_LABEL = 18
 FONT_SIZE_TICKS = 16
 FONT_SIZE_LEGEND = 16
 FONT_SIZE_ANNOT = 16
 FONT_SIZE_ANNOT_SMALL = 14  # For smaller annotations (e.g., workflow boxes)
-
-# Larger font sizes specifically for membership function plots
-MEMBERSHIP_FONT_SIZE_TITLE = 32
-MEMBERSHIP_FONT_SIZE_LABEL = 28
-MEMBERSHIP_FONT_SIZE_TICKS = 24
-
-# Larger font sizes for the smaller panels in the membership function grid
-MEMBERSHIP_FONT_SIZE_TITLE_PANEL = 22
-MEMBERSHIP_FONT_SIZE_LABEL_PANEL = 20
-MEMBERSHIP_FONT_SIZE_TICKS_PANEL = 18
 
 # Apply consistent font sizes across all figures for professional appearance
 matplotlib.rcParams.update({
@@ -236,15 +226,16 @@ def generate_stepped_roc_curves() -> plt.Figure:
     ax.set(
         xlim=[0.0, 1.0], ylim=[0.0, 1.05],
         xlabel='False Positive Rate', ylabel='True Positive Rate',
-        title='Multi-Class Receiver Operating Characteristic (ROC)'
+        title='Multi-Class Receiver Operating Characteristic'
     )
-
+    
+    # Make all fonts larger for ROC curves
     ax.tick_params(axis='both', which='major', labelsize=FONT_SIZE_LABEL)
     ax.set_xlabel(ax.get_xlabel(), fontsize=FONT_SIZE_TITLE)
     ax.set_ylabel(ax.get_ylabel(), fontsize=FONT_SIZE_TITLE)
     ax.set_title(ax.get_title(), fontsize=FONT_SIZE_TITLE + 4)
     ax.legend(loc="lower right", fontsize=FONT_SIZE_LABEL)
-
+    
     fig.tight_layout()
     return fig
 
@@ -269,7 +260,7 @@ def generate_latency_distribution(latencies: np.ndarray) -> plt.Figure:
     )
     sns.kdeplot(latencies, color="blue", linewidth=3.0, ax=ax)
     ax.set(
-        xlabel="Inference Latency (ms)", ylabel="Density",
+        xlabel="Inference latency (ms)", ylabel="Density",
         title="Inference Latency Distribution"
     )
     sns.despine(ax=ax)
@@ -299,6 +290,7 @@ def generate_f1_bar_chart(
     fig, ax = plt.subplots(figsize=(8, 6))
     bar_colors = ["#4c72b0", "#55a868", "#c44e52"]
 
+    # Ensure grid lines appear behind bars
     ax.set_axisbelow(True)
 
     bars = ax.bar(
@@ -309,8 +301,8 @@ def generate_f1_bar_chart(
     )
 
     ax.set(
-        ylim=(0.85, 0.98), ylabel=r"$F_1$-Score", xlabel="Defect Class",
-        title=r"Per-Class $F_1$-Scores with 95% CI"
+        ylim=(0.85, 0.98), ylabel=r"$F_{1}$-score", xlabel="Defect class",
+        title=r"Per-class $F_1$-scores with 95% CI"
     )
     for bar, score, ci_val in zip(bars, f1_scores, cis):
         height = bar.get_height()
@@ -346,9 +338,10 @@ def generate_map_heatmap(
         columns=list(ensemble_sizes)
     )
     fig, ax = plt.subplots(figsize=(10, 5))
-
+    
+    # Ensure grid lines appear behind heatmap
     ax.set_axisbelow(True)
-
+    
     sns.heatmap(
         data_frame, annot=True, fmt=".1f", cmap="viridis",
         vmin=88.0, vmax=93.0, linewidths=1.0, linecolor="white", ax=ax,
@@ -356,8 +349,8 @@ def generate_map_heatmap(
         cbar=True
     )
     ax.set(
-        xlabel="Ensemble Size (Number of Models)", ylabel="",
-        title="Effect of Ensemble Size on Detection mAP@.5"
+        xlabel="Ensemble size (number of models)", ylabel="",
+        title="Effect of Ensemble Size on Detection mAP"
     )
     ax.set_yticks([])
     cbar = ax.collections[0].colorbar
@@ -388,19 +381,21 @@ def generate_confusion_matrix(
     df_matrix = pd.DataFrame(matrix, index=labels, columns=labels)
     sns.heatmap(
         df_matrix, annot=True, fmt="d", cmap="Blues", ax=ax,
-        annot_kws={"fontsize": FONT_SIZE_LABEL, "fontweight": "bold"},
+        annot_kws={"fontsize": FONT_SIZE_LABEL, "fontweight": "bold"},  # Larger annotation font
         cbar=True,
     )
     ax.set(
-        xlabel="Predicted Label", ylabel="Actual Label",
+        xlabel="Predicted label", ylabel="Actual label",
         title="Confusion Matrix for Criticality Assessment"
     )
-
+    
+    # Make all fonts larger for confusion matrix
     ax.tick_params(axis='both', which='major', labelsize=FONT_SIZE_LABEL)
     ax.set_xlabel(ax.get_xlabel(), fontsize=FONT_SIZE_TITLE)
     ax.set_ylabel(ax.get_ylabel(), fontsize=FONT_SIZE_TITLE)
     ax.set_title(ax.get_title(), fontsize=FONT_SIZE_TITLE + 4)
-
+    
+    # Disable grid for confusion matrix
     ax.grid(False)
     cbar = ax.collections[0].colorbar
     cbar.set_label("Number of Samples", weight="bold", fontsize=FONT_SIZE_LABEL)
@@ -453,14 +448,14 @@ def generate_reliability_curves() -> plt.Figure:
         mces.append(mce)
 
     legend_title = (
-        f"Avg. ECE={np.mean(eces):.3f}, Avg. MCE={np.mean(mces):.3f}"
+        f"Avg ECE={np.mean(eces):.3f}, Avg MCE={np.mean(mces):.3f}"
     )
     ax.set(
         xlim=(0, 1), ylim=(0, 1),
-        xlabel="Predicted Probability", ylabel="Empirical Accuracy",
+        xlabel="Predicted probability", ylabel="Empirical accuracy",
         title="Reliability Diagrams"
     )
-
+    # Make legend smaller for reliability curves
     ax.legend(
         title=legend_title, fontsize=FONT_SIZE_ANNOT_SMALL,
         title_fontproperties={'weight': 'bold', 'size': FONT_SIZE_ANNOT_SMALL}
@@ -485,9 +480,11 @@ def generate_domain_shift_plot() -> plt.Figure:
         mean=[1.2, -0.2], cov=[[0.8, -0.15], [-0.15, 0.7]], size=800
     )
     fig, ax = plt.subplots(figsize=(8, 6))
-
+    
+    # Ensure grid lines appear behind scatter points
     ax.set_axisbelow(True)
-
+    
+    # Make dots slightly larger for better visibility
     ax.scatter(a[:, 0], a[:, 1], s=25, alpha=0.7, label="AQUADA-GO (RGB)")
     ax.scatter(b[:, 0], b[:, 1], s=25, alpha=0.7, label="Thermal WTB (RGB-T)")
     ax.set(
@@ -523,12 +520,12 @@ def generate_3d_twin_workflow() -> plt.Figure:
     _draw_workflow_box(ax, x3, y, w, h, "3D Digital Twin\nOverlay & Decisions")
 
     arrow_props = dict(width=0.005, head_width=0.03, head_length=0.1, fc='k', ec='k')
-    ax.add_patch(FancyArrow(x0 + w, y + h / 2, gap - 0.1, 0, **arrow_props))
-    ax.add_patch(FancyArrow(x1 + w, y + h / 2, gap - 0.1, 0, **arrow_props))
-    ax.add_patch(FancyArrow(x2 + w, y + h / 2, gap - 0.1, 0, **arrow_props))
+    ax.add_patch(FancyArrow(x0 + w, y + h/2, gap-0.1, 0, **arrow_props))
+    ax.add_patch(FancyArrow(x1 + w, y + h/2, gap-0.1, 0, **arrow_props))
+    ax.add_patch(FancyArrow(x2 + w, y + h/2, gap-0.1, 0, **arrow_props))
 
     arrow_props_diag = dict(width=0.003, head_width=0.02, head_length=0.08, fc='k', ec='k')
-    ax.add_patch(FancyArrow(x1 + w / 2, y - 0.3, (x2 - x1) / 2, 0.65, **arrow_props_diag))
+    ax.add_patch(FancyArrow(x1 + w/2, y-0.3, (x2-x1)/2, 0.65, **arrow_props_diag))
 
     ax.set(xlim=(0, 7.7), ylim=(-0.3, 1.0))
     fig.suptitle("Workflow from UAV Acquisition to Digital Twin", y=0.95)
@@ -540,29 +537,28 @@ def _generate_membership_panel(
     kind: str, params: tuple, title: str, x_label: str
 ) -> np.ndarray:
     """Render a single membership function panel to a NumPy array."""
+    # Define a smaller style for individual panels using consistent font sizes
     panel_style = {
         "font.weight": "bold", "axes.labelweight": "bold",
-        "axes.titleweight": "bold",
-        "axes.titlesize": MEMBERSHIP_FONT_SIZE_TITLE_PANEL,
-        "axes.labelsize": MEMBERSHIP_FONT_SIZE_LABEL_PANEL,
-        "xtick.labelsize": MEMBERSHIP_FONT_SIZE_TICKS_PANEL,
-        "ytick.labelsize": MEMBERSHIP_FONT_SIZE_TICKS_PANEL,
+        "axes.titleweight": "bold", "axes.titlesize": FONT_SIZE_ANNOT,
+        "axes.labelsize": FONT_SIZE_LABEL, "xtick.labelsize": FONT_SIZE_TICKS, "ytick.labelsize": FONT_SIZE_TICKS,
     }
     with plt.style.context(panel_style):
-        fig, ax = plt.subplots(figsize=(5, 4), dpi=150)
+        fig, ax = plt.subplots(figsize=(4, 3), dpi=150)
         x = np.linspace(0, 1, 1000)
         func_map = {"trap": _trapezoid, "tri": _triangle, "gauss": _gaussian}
         y = func_map[kind](x, *params)
 
-        ax.plot(x, y, linewidth=2.5)
+        ax.plot(x, y, linewidth=2.0)
         ax.set(
             xlabel=x_label, ylabel="Membership", title=title,
             xlim=(0, 1), ylim=(0, 1.05)
         )
         ax.grid(True, linewidth=0.5, alpha=0.5)
-        fig.tight_layout(pad=0.8)
+        fig.tight_layout()
 
         fig.canvas.draw()
+        # Convert canvas to numpy array and drop alpha channel for RGB
         img_array = np.asarray(fig.canvas.buffer_rgba())[:, :, :3]
         plt.close(fig)
     return img_array
@@ -570,33 +566,33 @@ def _generate_membership_panel(
 
 def _get_membership_panel_definitions() -> list[dict[str, Any]]:
     """Get the definitions for all membership function panels.
-
+    
     Returns
     -------
     list[dict[str, Any]]
         List of panel definitions with kind, params, title, and x_label.
     """
     return [
-        {"kind": "trap", "params": (0.55, 0.70, 0.95, 1.00), "title": "Crack - Conservative", "x_label": "Normalized Size"},
-        {"kind": "trap", "params": (0.45, 0.60, 0.90, 1.00), "title": "Crack - Nominal", "x_label": "Normalized Size"},
-        {"kind": "trap", "params": (0.30, 0.45, 0.80, 0.95), "title": "Crack - Liberal", "x_label": "Normalized Size"},
-        {"kind": "tri", "params": (0.60, 0.78, 0.98), "title": "Erosion - Conservative", "x_label": "Normalized Area"},
-        {"kind": "tri", "params": (0.45, 0.65, 0.90), "title": "Erosion - Nominal", "x_label": "Normalized Area"},
-        {"kind": "tri", "params": (0.25, 0.50, 0.80), "title": "Erosion - Liberal", "x_label": "Normalized Area"},
-        {"kind": "gauss", "params": (0.85, 0.08), "title": "Hotspot - Conservative", "x_label": r"Normalized $\Delta$T"},
-        {"kind": "gauss", "params": (0.75, 0.10), "title": "Hotspot - Nominal", "x_label": r"Normalized $\Delta$T"},
-        {"kind": "gauss", "params": (0.60, 0.12), "title": "Hotspot - Liberal", "x_label": r"Normalized $\Delta$T"},
+        {"kind": "trap", "params": (0.55, 0.70, 0.95, 1.00), "title": "Crack - Conservative", "x_label": "Normalized size"},
+        {"kind": "trap", "params": (0.45, 0.60, 0.90, 1.00), "title": "Crack - Nominal", "x_label": "Normalized size"},
+        {"kind": "trap", "params": (0.30, 0.45, 0.80, 0.95), "title": "Crack - Liberal", "x_label": "Normalized size"},
+        {"kind": "tri", "params": (0.60, 0.78, 0.98), "title": "Erosion - Conservative", "x_label": "Normalized area"},
+        {"kind": "tri", "params": (0.45, 0.65, 0.90), "title": "Erosion - Nominal", "x_label": "Normalized area"},
+        {"kind": "tri", "params": (0.25, 0.50, 0.80), "title": "Erosion - Liberal", "x_label": "Normalized area"},
+        {"kind": "gauss", "params": (0.85, 0.08), "title": "Hotspot - Conservative", "x_label": "Normalized DT"},
+        {"kind": "gauss", "params": (0.75, 0.10), "title": "Hotspot - Nominal", "x_label": "Normalized DT"},
+        {"kind": "gauss", "params": (0.60, 0.12), "title": "Hotspot - Liberal", "x_label": "Normalized DT"},
     ]
 
 
 def generate_individual_membership_function(panel_index: int) -> plt.Figure:
-    """Generate a single membership function plot with large fonts.
-
+    """Generate a single membership function plot.
+    
     Parameters
     ----------
     panel_index : int
         Index of the panel to generate (0-8).
-
+        
     Returns
     -------
     plt.Figure
@@ -604,25 +600,21 @@ def generate_individual_membership_function(panel_index: int) -> plt.Figure:
     """
     panel_definitions = _get_membership_panel_definitions()
     if not (0 <= panel_index < len(panel_definitions)):
-        raise ValueError(f"Panel index must be between 0 and {len(panel_definitions) - 1}")
-
+        raise ValueError(f"Panel index must be between 0 and {len(panel_definitions)-1}")
+    
     panel_def = panel_definitions[panel_index]
-
+    
     fig, ax = plt.subplots(figsize=(8, 6))
     x = np.linspace(0, 1, 1000)
     func_map = {"trap": _trapezoid, "tri": _triangle, "gauss": _gaussian}
     y = func_map[panel_def["kind"]](x, *panel_def["params"])
 
     ax.plot(x, y, linewidth=3.0, color='#1f77b4')
-
-    ax.set_xlabel(panel_def["x_label"], fontsize=MEMBERSHIP_FONT_SIZE_LABEL)
-    ax.set_ylabel("Membership", fontsize=MEMBERSHIP_FONT_SIZE_LABEL)
-    ax.set_title(panel_def["title"], fontsize=MEMBERSHIP_FONT_SIZE_TITLE)
-    ax.tick_params(axis='both', which='major', labelsize=MEMBERSHIP_FONT_SIZE_TICKS)
-
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1.05)
-
+    ax.set(
+        xlabel=panel_def["x_label"], ylabel="Membership", 
+        title=panel_def["title"],
+        xlim=(0, 1), ylim=(0, 1.05)
+    )
     ax.grid(True, linewidth=0.8, alpha=0.7)
     fig.tight_layout()
     return fig
@@ -686,6 +678,7 @@ def main() -> None:
 
     rng = np.random.default_rng(seed=42)
 
+    # A dictionary mapping figure generation functions to their filenames.
     figures_to_generate = {
         "61_fig_2_roc_curves.pdf": generate_stepped_roc_curves,
         "61_fig_3a_distrib.pdf": lambda: generate_latency_distribution(
@@ -711,14 +704,15 @@ def main() -> None:
         "61_fig_6_tsne.pdf": generate_domain_shift_plot,
         "61_fig_7_3dworkflow.pdf": generate_3d_twin_workflow,
         "61_fig_s1_memb_func.pdf": generate_membership_grid,
-        "61_fig_a1_sens.pdf": generate_sensitivity_plot,
+        "61_fig_a1.pdf": generate_sensitivity_plot,
     }
 
+    # Add individual membership function figures
     panel_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
-
+    
     def make_membership_func(index):
         return lambda: generate_individual_membership_function(index)
-
+    
     for i, letter in enumerate(panel_letters):
         filename = "61_fig_s1" + letter + "_memb_func.pdf"
         figures_to_generate[filename] = make_membership_func(i)
