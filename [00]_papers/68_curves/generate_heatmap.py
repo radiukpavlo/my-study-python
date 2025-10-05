@@ -13,13 +13,13 @@ import numpy as np
 # Reset and configure rcParams for smaller text but larger plotted objects
 # Make all text bold (including math text)
 plt.rcParams.update({
-    'font.size': 16,
+    'font.size': 18,
     'font.weight': 'bold',
     'axes.labelweight': 'bold',
-    'axes.titlesize': 18,
+    'axes.titlesize': 20,
     'axes.titleweight': 'bold',
-    'legend.fontsize': 16,
-    'legend.title_fontsize': 16,
+    'legend.fontsize': 18,
+    'legend.title_fontsize': 18,
     'mathtext.default': 'bf',
 })
 
@@ -67,7 +67,7 @@ def project_points(weight_array: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
 def create_axes(
     labels: List[str],
-    label_fontsize: int = 14,
+    label_fontsize: int = 16,
     edge_colors: str = 'black',
     linewidth: float = TRIANGLE_LINEWIDTH,
 ):
@@ -260,11 +260,11 @@ def generate_and_save_heatmap() -> None:
             r"$\beta$ (Stability / Temporal Coherence)",
             r"$\gamma$ (Separability / Calinski-Harabasz)"
         ],
-        label_fontsize=18,
+        label_fontsize=20,
         edge_colors='black',
         linewidth=TRIANGLE_LINEWIDTH,
     )
-    fig.set_size_inches(12, 11)
+    fig.set_size_inches(13, 11)
     # fig.suptitle(
     #     "Weight Sensitivity Analysis for the Voting Mechanism",
     #     fontsize=18,
@@ -298,12 +298,12 @@ def generate_and_save_heatmap() -> None:
         shrink=0.82,
     )
     cbar.set_ticklabels(['HDBSCAN-first', 'k-means-first', 'Hybrid'])
-    cbar.ax.tick_params(labelsize=14)
+    cbar.ax.tick_params(labelsize=16)
     for t in cbar.ax.get_yticklabels():
         t.set_fontweight('bold')
     cbar.set_label(
         r"Selected Strategy ($\delta_{\text{tolerance}} = 0.03$)",
-        size=14,
+        size=16,
         fontweight='bold',
     )
 
@@ -325,7 +325,7 @@ def generate_and_save_heatmap() -> None:
         frameon=True,
         edgecolor='black',
         facecolor='white',
-        prop={'weight': 'bold', 'size': 16},
+        prop={'weight': 'bold', 'size': 18},
     )
     legend.get_frame().set_alpha(0.9)
 
