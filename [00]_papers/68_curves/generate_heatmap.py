@@ -42,7 +42,7 @@ TRIANGLE_VERTICES = np.array([
 LABEL_OFFSET_X = 0.08
 LABEL_OFFSET_Y = 0.07
 # Inset bottom-edge labels (alpha/beta) toward the center of the base
-EDGE_LABEL_INSET = 0.15
+EDGE_LABEL_INSET = 0.1
 
 # Visual scaling factors for larger objects
 TRIANGLE_LINEWIDTH = 3.0
@@ -256,9 +256,9 @@ def generate_and_save_heatmap() -> None:
 
     fig, ax = create_axes(
         labels=[
-            r"$\alpha$ (Compactness / Silhouette)",
-            r"$\beta$ (Stability / Temporal Coherence)",
-            r"$\gamma$ (Separability / Calinski-Harabasz)"
+            r"$\mathit{\alpha}$ (Compactness / Silhouette)",
+            r"$\mathit{\beta}$ (Stability / Temporal Coherence)",
+            r"$\mathit{\gamma}$ (Separability / Calinski-Harabasz)"
         ],
         label_fontsize=20,
         edge_colors='black',
@@ -295,14 +295,13 @@ def generate_and_save_heatmap() -> None:
         ticks=[0, 1, 2],
         fraction=0.04,
         pad=0.02,
-        shrink=0.82,
     )
     cbar.set_ticklabels(['HDBSCAN-first', 'k-means-first', 'Hybrid'])
     cbar.ax.tick_params(labelsize=16)
     for t in cbar.ax.get_yticklabels():
         t.set_fontweight('bold')
     cbar.set_label(
-        r"Selected Strategy ($\delta_{\text{tolerance}} = 0.03$)",
+        r"Selected Strategy ($\mathit{\delta}_{\text{tolerance}} = 0.03$)",
         size=16,
         fontweight='bold',
     )
@@ -331,6 +330,22 @@ def generate_and_save_heatmap() -> None:
 
     # Tight layout without extra margins
     fig.tight_layout(pad=0.0)
+
+    # Re-position the colorbar after tight layout so it matches the triangle height.
+    fig.canvas.draw()
+    axis_ylim = ax.get_ylim()
+    axis_height = axis_ylim[1] - axis_ylim[0]
+    triangle_height = TRIANGLE_VERTICES[2, 1]  # apex height inside the axis
+    height_ratio = triangle_height / axis_height if axis_height else 1.0
+    cbar_bbox = cbar.ax.get_position()
+    new_height = cbar_bbox.height * height_ratio
+    vertical_offset = (cbar_bbox.height - new_height) / 2.0
+    cbar.ax.set_position([
+        cbar_bbox.x0,
+        cbar_bbox.y0 + vertical_offset,
+        cbar_bbox.width,
+        new_height,
+    ])
 
     output_dir = Path(__file__).resolve().parent / 'img'
     output_dir.mkdir(parents=True, exist_ok=True)
