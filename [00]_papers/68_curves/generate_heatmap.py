@@ -49,6 +49,7 @@ TRIANGLE_LINEWIDTH = 3.0
 GRID_LINEWIDTH = 1.2
 GRID_ALPHA = 0.6
 MARKER_SIZE = 450
+EXPORT_DPI = 600
 
 
 def project_point(weights: WeightsTuple) -> Tuple[float, float]:
@@ -349,11 +350,17 @@ def generate_and_save_heatmap() -> None:
 
     output_dir = Path(__file__).resolve().parent / 'img'
     output_dir.mkdir(parents=True, exist_ok=True)
-    png_path = output_dir / 'appendix_b_weight_sensitivity.png'
+    png_path = Path(__file__).resolve().parent / '68_fig_a1.png'
     pdf_path = Path(__file__).resolve().parent / '68_fig_a1.pdf'
 
-    fig.savefig(png_path, dpi=300, bbox_inches='tight', pad_inches=0.0)
-    fig.savefig(pdf_path, format='pdf', bbox_inches='tight', pad_inches=0.0)
+    fig.savefig(png_path, dpi=EXPORT_DPI, bbox_inches='tight', pad_inches=0.0)
+    fig.savefig(
+        pdf_path,
+        format='pdf',
+        dpi=EXPORT_DPI,
+        bbox_inches='tight',
+        pad_inches=0.0,
+    )
 
     strategy_labels = ['HDBSCAN-first', 'k-means-first', 'Hybrid']
     counts = {label: int(np.count_nonzero(strategy_codes == idx))
