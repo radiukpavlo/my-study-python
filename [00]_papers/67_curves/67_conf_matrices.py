@@ -1,0 +1,131 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import seaborn as sns
+from typing import List, Dict, Any
+
+def plot_confusion_matrix(matrix: np.ndarray, labels: List[str], filename: str):
+    """
+    Generates and saves a publication-quality confusion matrix plot with
+    custom number formatting, styled to match the provided PDF examples.
+
+    Args:
+        matrix (np.ndarray): The confusion matrix data.
+        labels (List[str]): The class labels for the x and y axes.
+        filename (str): The path to save the output PDF file.
+    """
+    # --- 1. Setup Plot Style and Font ---
+    plt.style.use('default')
+    font_properties = {
+        'family': 'sans-serif',
+        'size': 16,
+        'weight': 'bold'
+    }
+    plt.rc('font', **font_properties)
+    plt.rc('axes', titlesize=18)
+    plt.rc('xtick', labelsize=14)
+    plt.rc('ytick', labelsize=14)
+
+    # --- 2. Create the Heatmap Plot ---
+    fig, (ax, cbar_ax) = plt.subplots(
+        nrows=1,
+        ncols=2,
+        figsize=(7, 6),
+        gridspec_kw={
+            'width_ratios': [20, 1],
+            'wspace': 0.08
+        },
+        constrained_layout=True
+    )
+
+    sns.heatmap(
+        matrix,
+        annot=True,
+        fmt='d',  # Use integer formatting
+        cmap='Blues',
+        linewidths=0.5,
+        linecolor='gray',
+        cbar=True,
+        xticklabels=labels,
+        yticklabels=labels,
+        ax=ax,
+        cbar_ax=cbar_ax,
+        annot_kws={"size": 18, "weight": "bold"},
+    )
+
+    # --- 3. Customize Annotation Colors ---
+    # Set a threshold for when to switch text color from black to white
+    color_threshold = matrix.max() * 0.6
+    
+    # Iterate through text objects to set color based on background
+    for text_obj in ax.texts:
+        # The text object's text is the data value as a string
+        data_value = int(text_obj.get_text())
+        if data_value > color_threshold:
+            text_obj.set_color('white')
+        else:
+            text_obj.set_color('black')
+        text_obj.set_weight('bold')
+
+    # --- 4. Finalize and Save Plot ---
+    ax.set_xlabel('Predicted label', fontsize=16, weight='bold')
+    ax.set_ylabel('True label', fontsize=16, weight='bold')
+    
+    # Rotate labels for better readability, similar to the source PDF
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, va='center')
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+    for tick_label in ax.get_xticklabels() + ax.get_yticklabels():
+        tick_label.set_fontweight('bold')
+
+    cbar_ax.tick_params(labelsize=14)
+    for label in cbar_ax.get_yticklabels():
+        label.set_fontweight('bold')
+    cbar_ax.set_ylabel('')
+
+    fig.savefig(filename, format='pdf')
+    plt.close(fig) # Close the figure to free memory
+    print(f"Confusion matrix plot successfully saved as '{filename}'")
+
+
+if __name__ == '__main__':
+    # Data extracted from Figures 9a-f in the provided PDF
+    confusion_matrices_data: List[Dict[str, Any]] = [
+        {
+            "filename": "67_fig_09a.pdf",
+            "labels": ['People', 'Vehicles'],
+            "matrix": np.array([[979, 18], [14, 3757]])
+        },
+        {
+            "filename": "67_fig_09b.pdf",
+            "labels": ['Trucks', 'Other vehicles'],
+            "matrix": np.array([[590, 56], [39, 2567]])
+        },
+        {
+            "filename": "67_fig_09c.pdf",
+            "labels": ['Van', 'Bus', 'Other vehicles'],
+            "matrix": np.array([[411, 22, 8], [14, 355, 21], [16, 42, 1539]])
+        },
+        {
+            "filename": "67_fig_09d.pdf",
+            "labels": ['People', 'Vehicles'],
+            "matrix": np.array([[989, 28], [34, 3717]])
+        },
+        {
+            "filename": "67_fig_09e.pdf",
+            "labels": ['Trucks', 'Other vehicles'],
+            "matrix": np.array([[601, 61], [23, 2576]])
+        },
+        {
+            "filename": "67_fig_09f.pdf",
+            "labels": ['Van', 'Bus', 'Other vehicles'],
+            "matrix": np.array([[406, 20, 18], [19, 352, 28], [31, 42, 1519]])
+        }
+    ]
+
+    # Generate and save all six confusion matrix plots
+    for data in confusion_matrices_data:
+        plot_confusion_matrix(
+            matrix=data["matrix"],
+            labels=data["labels"],
+            filename=data["filename"]
+        )
