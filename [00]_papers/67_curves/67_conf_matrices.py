@@ -18,25 +18,16 @@ def plot_confusion_matrix(matrix: np.ndarray, labels: List[str], filename: str):
     plt.style.use('default')
     font_properties = {
         'family': 'sans-serif',
-        'size': 16,
+        'size': 18,
         'weight': 'bold'
     }
     plt.rc('font', **font_properties)
-    plt.rc('axes', titlesize=18)
-    plt.rc('xtick', labelsize=14)
-    plt.rc('ytick', labelsize=14)
+    plt.rc('axes', titlesize=20)
+    plt.rc('xtick', labelsize=16)
+    plt.rc('ytick', labelsize=16)
 
     # --- 2. Create the Heatmap Plot ---
-    fig, (ax, cbar_ax) = plt.subplots(
-        nrows=1,
-        ncols=2,
-        figsize=(7, 6),
-        gridspec_kw={
-            'width_ratios': [20, 1],
-            'wspace': 0.08
-        },
-        constrained_layout=True
-    )
+    fig, ax = plt.subplots(figsize=(8, 7))
 
     sns.heatmap(
         matrix,
@@ -49,7 +40,6 @@ def plot_confusion_matrix(matrix: np.ndarray, labels: List[str], filename: str):
         xticklabels=labels,
         yticklabels=labels,
         ax=ax,
-        cbar_ax=cbar_ax,
         annot_kws={"size": 18, "weight": "bold"},
     )
 
@@ -65,24 +55,19 @@ def plot_confusion_matrix(matrix: np.ndarray, labels: List[str], filename: str):
             text_obj.set_color('white')
         else:
             text_obj.set_color('black')
-        text_obj.set_weight('bold')
 
     # --- 4. Finalize and Save Plot ---
-    ax.set_xlabel('Predicted label', fontsize=16, weight='bold')
-    ax.set_ylabel('True label', fontsize=16, weight='bold')
+    ax.set_xlabel('Predicted label', fontsize=18, weight='bold')
+    ax.set_ylabel('True label', fontsize=18, weight='bold')
     
-    # Rotate labels for better readability, similar to the source PDF
-    ax.set_yticklabels(ax.get_yticklabels(), rotation=0, va='center')
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
-    for tick_label in ax.get_xticklabels() + ax.get_yticklabels():
-        tick_label.set_fontweight('bold')
+    # Set labels with bold formatting and horizontal orientation for x-axis
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=90, va='center', weight='bold')
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0, ha='center', weight='bold')
 
-    cbar_ax.tick_params(labelsize=14)
-    for label in cbar_ax.get_yticklabels():
-        label.set_fontweight('bold')
-    cbar_ax.set_ylabel('')
-
-    fig.savefig(filename, format='pdf')
+    # Ensure layout is tight before saving
+    plt.tight_layout()
+    
+    plt.savefig(filename, format='pdf', bbox_inches='tight')
     plt.close(fig) # Close the figure to free memory
     print(f"Confusion matrix plot successfully saved as '{filename}'")
 
