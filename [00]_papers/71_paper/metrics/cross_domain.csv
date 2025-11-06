@@ -1,0 +1,3 @@
+train,test,acc,f1
+PolitiFact,GossipCop,0.62,0.617
+GossipCop,PolitiFact,0.574,0.565

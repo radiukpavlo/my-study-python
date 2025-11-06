@@ -1,0 +1,4 @@
+dataset,delta_p_anchored,delta_p_random,overlap
+LIAR-6,0.213,0.086,0.68
+PolitiFact,0.162,0.06,0.71
+GossipCop,0.146,0.059,0.54

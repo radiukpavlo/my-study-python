@@ -1,0 +1,2 @@
+method,acc,f1,auc,ap,ece,brier
+"XFND (ours, calibrated)",0.791,0.792,0.859,0.866,0.043,0.149

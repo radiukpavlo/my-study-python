@@ -1,0 +1,4 @@
+Structure,DSC_Unet,HD95_Unet_mm,DSC_SKIFSeg,IoU_SKIFSeg,HD95_SKIFSeg_mm,ASSD_SKIFSeg_mm
+LV Cavity,0.942,8.9,0.953,0.911,7.2,1.58
+Myocardium,0.881,9.8,0.899,0.817,7.9,1.74
+RV Cavity,0.915,10.5,0.928,0.866,8.9,1.96

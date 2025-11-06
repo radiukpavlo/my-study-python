@@ -1,0 +1,9 @@
+method,acc,f1,auc,ap,ece,brier
+"SVM (text, Shu2020)",0.58,0.659,,,,
+"LR (text, Shu2020)",0.642,0.633,,,,
+"NB (text, Shu2020)",0.617,0.651,,,,
+"CNN (text, Shu2020)",0.629,0.583,,,,
+"SAF /S (content, Shu2020)",0.654,0.681,,,,
+"SAF /A (social, Shu2020)",0.667,0.619,,,,
+"SAF (fusion, Shu2020)",0.691,0.706,,,,
+"XFND (ours, content-only)",0.728,0.731,0.858,0.841,0.049,0.16799999999999998

@@ -1,0 +1,5 @@
+method,acc,macro_f1,auc_macro_ovr,ece,brier
+Majority (Wang2017),0.208,,,,
+SVM (Wang2017),0.255,,,,
+CNN (Wang2017),0.27,,,,
+"XFND (ours, calibrated)",0.438,0.432,0.762,0.051,0.182

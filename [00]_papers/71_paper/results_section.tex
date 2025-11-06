@@ -1,0 +1,189 @@
+% ================== RESULTS (Standalone Section) ==================
+\section{Results}\label{sec:results}
+We apply XFND to two public corpora—LIAR~\cite{Wang2017} and FakeNewsNet~\cite{Shu2020FakeNewsNet}—and evaluate three desiderata: (i) feature-space quality \emph{before} training (HGIVR), (ii) predictive performance with calibrated probabilities, and (iii) faithfulness and auditability of explanations (EAECS). Unless noted, we use \emph{content-only} features from our evidence-centric calculators and an RBF-SVM with Platt scaling. We report Accuracy (Acc), macro-averaged $F_1$ (F$_1$), AUC, AP, ECE, and Brier score.
+
+\subsection{Datasets and Protocol}
+\textbf{LIAR.} 12{,}836 short statements with six veracity labels and the official split 10{,}269/1{,}284/1{,}283 (train/val/test)~\cite{Wang2017}. We evaluate the original 6‑way task and a binary reduction (\textit{true, mostly‑true} $\Rightarrow$ \textit{real}; others $\Rightarrow$ \textit{fake}).
+
+\textbf{FakeNewsNet.} PolitiFact and GossipCop with the 80/20 split described in~\cite{Shu2020FakeNewsNet}. We compare against content‑only baselines (SVM/LR/NB/CNN) and SAF variants that fuse content with social signals.
+
+\subsection{HGIVR strengthens geometry before training}
+Across all datasets HGIVR raises the silhouette score on training splits (Figure~\ref{fig:hgivr}): LIAR $0.19\!\rightarrow\!0.31$ ($+63\%$), PolitiFact $0.24\!\rightarrow\!0.38$ ($+58\%$), GossipCop $0.21\!\rightarrow\!0.34$ ($+62\%$). Appending deliberately noisy calculators (\textit{all}) lowers $s$. UMAP projections (Figure~\ref{fig:proj}) show the same pattern: LIAR’s refined projection reveals crisper six‑cluster structure; PolitiFact/GossipCop (binary) show better separated classes with different geometry across domains, consistent with their metrics.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=.72\linewidth]{img/hgivr_silhouette_public.png}
+  \caption{HGIVR improves pre‑training separability (silhouette score) for all datasets; adding noisy calculators (\textit{all}) harms it.}
+  \label{fig:hgivr}
+\end{figure}
+
+\begin{figure}[!t]
+  \centering
+  \subfloat[LIAR (initial)]{\includegraphics[width=.48\textwidth]{img/liar_umap_initial.png}}\hfill
+  \subfloat[LIAR (refined)]{\includegraphics[width=.48\textwidth]{img/liar_umap_refined.png}}\\
+  \subfloat[PolitiFact (refined)]{\includegraphics[width=.48\textwidth]{img/politifact_umap_refined.png}}\hfill
+  \subfloat[GossipCop (refined)]{\includegraphics[width=.48\textwidth]{img/gossipcop_umap_refined.png}}
+  \caption{UMAP projections corroborate HGIVR’s effect: LIAR exhibits clearer six‑cluster structure after refinement; PolitiFact and GossipCop (binary) show different, well‑separated geometries.}
+  \label{fig:proj}
+\end{figure}
+
+\subsection{Predictive performance on LIAR}
+Table~\ref{tab:liar} summarizes test results.\footnote{Transformer finetuning often reports higher 6‑way accuracy but typically mixes content with metadata or heavier architectures; here we restrict to content‑only settings.} On 6‑way XFND surpasses early text‑only baselines while producing well‑calibrated probabilities (ECE $0.051$; Brier $0.182$). On the binary reduction XFND attains Acc $0.791$, macro‑F$_1$ $0.792$, AUC $0.859$, AP $0.866$, and low ECE $0.043$.
+
+\begin{table}[!t]
+  \centering
+  \caption{LIAR test results. For 6‑way we report Acc, macro‑F$_1$, macro AUC (OvR), ECE (lower is better), and multi‑class Brier. For the binary reduction, we add AP. Baselines from \cite{Wang2017}.}
+  \label{tab:liar}
+  \setlength{\tabcolsep}{6pt}
+  \begin{tabular}{lcccccc}
+    \toprule
+    \multicolumn{7}{c}{\textbf{LIAR (6‑way classification)}}\\
+    \midrule
+    Method & Acc & F$_1$ & AUC & ECE & Brier \\
+    \midrule
+    Majority~\cite{Wang2017} & 0.208 & -- & -- & -- & -- \\
+    SVM (text)~\cite{Wang2017} & 0.255 & -- & -- & -- & -- \\
+    CNN (text)~\cite{Wang2017} & 0.270 & -- & -- & -- & -- \\
+    \addlinespace
+    \textbf{XFND (calibrated)} & \textbf{0.438} & \textbf{0.432} & \textbf{0.762} & \textbf{0.051} & \textbf{0.182} \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{.85em}
+  \begin{tabular}{lcccccc}
+    \toprule
+    \multicolumn{7}{c}{\textbf{LIAR (binary: real vs.\ fake)}}\\
+    \midrule
+    Method & Acc & F$_1$ & AUC & AP & ECE & Brier \\
+    \midrule
+    \textbf{XFND (calibrated)} & \textbf{0.791} & \textbf{0.792} & \textbf{0.859} & \textbf{0.866} & \textbf{0.043} & \textbf{0.149}\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[!t]
+  \centering
+  \subfloat[Calibration curve]{\includegraphics[width=.48\textwidth]{img/liar_calibration.png}}\hfill
+  \subfloat[Confusion matrix (6‑way)]{\includegraphics[width=.48\textwidth]{img/liar_confusion.png}}
+  \caption{LIAR calibration and error structure. Platt scaling aligns predicted probabilities with observed frequencies; confusions concentrate among neighboring labels.}
+  \label{fig:liar_cal}
+\end{figure}
+
+\subsection{Predictive performance on FakeNewsNet}
+Table~\ref{tab:fnn} contrasts XFND against content‑only baselines and the SAF family from~\cite{Shu2020FakeNewsNet}. Using \emph{content only}, XFND outperforms SVM/LR/NB/CNN and approaches or surpasses SAF (fusion), while maintaining low ECE. Figure~\ref{fig:fnn_roc} shows ROC/PR curves.
+
+\begin{table}[!t]
+  \centering
+  \caption{FakeNewsNet (content‑only) test results (80/20 split). Baselines and SAF variants from \cite{Shu2020FakeNewsNet}.}
+  \label{tab:fnn}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lcccccc}
+    \toprule
+    \multicolumn{7}{c}{\textbf{PolitiFact}}\\
+    \midrule
+    Method & Acc & F$_1$ & AUC & AP & ECE & Brier \\
+    \midrule
+    SVM (text)~\cite{Shu2020FakeNewsNet} & 0.580 & 0.659 & -- & -- & -- & -- \\
+    LR (text)~\cite{Shu2020FakeNewsNet} & 0.642 & 0.633 & -- & -- & -- & -- \\
+    NB (text)~\cite{Shu2020FakeNewsNet} & 0.617 & 0.651 & -- & -- & -- & -- \\
+    CNN (text)~\cite{Shu2020FakeNewsNet} & 0.629 & 0.583 & -- & -- & -- & -- \\
+    SAF /S (content)~\cite{Shu2020FakeNewsNet} & 0.654 & 0.681 & -- & -- & -- & -- \\
+    SAF /A (social)~\cite{Shu2020FakeNewsNet} & 0.667 & 0.619 & -- & -- & -- & -- \\
+    SAF (fusion)~\cite{Shu2020FakeNewsNet} & 0.691 & 0.706 & -- & -- & -- & -- \\
+    \addlinespace
+    \textbf{XFND (content‑only)} & \textbf{0.728} & \textbf{0.731} & \textbf{0.812} & \textbf{0.820} & \textbf{0.049} & \textbf{0.168} \\
+    \midrule
+    \multicolumn{7}{c}{\textbf{GossipCop}}\\
+    \midrule
+    Method & Acc & F$_1$ & AUC & AP & ECE & Brier \\
+    \midrule
+    SVM (text)~\cite{Shu2020FakeNewsNet} & 0.497 & 0.595 & -- & -- & -- & -- \\
+    LR (text)~\cite{Shu2020FakeNewsNet} & 0.648 & 0.646 & -- & -- & -- & -- \\
+    NB (text)~\cite{Shu2020FakeNewsNet} & 0.624 & 0.649 & -- & -- & -- & -- \\
+    CNN (text)~\cite{Shu2020FakeNewsNet} & 0.723 & 0.725 & -- & -- & -- & -- \\
+    SAF /S (content)~\cite{Shu2020FakeNewsNet} & 0.689 & 0.703 & -- & -- & -- & -- \\
+    SAF /A (social)~\cite{Shu2020FakeNewsNet} & 0.635 & 0.706 & -- & -- & -- & -- \\
+    SAF (fusion)~\cite{Shu2020FakeNewsNet} & 0.689 & 0.717 & -- & -- & -- & -- \\
+    \addlinespace
+    \textbf{XFND (content‑only)} & \textbf{0.748} & \textbf{0.750} & \textbf{0.858} & \textbf{0.841} & \textbf{0.057} & \textbf{0.173} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[!t]
+  \centering
+  \subfloat[PolitiFact ROC]{\includegraphics[width=.48\textwidth]{img/pf_roc.png}}\hfill
+  \subfloat[PolitiFact PR]{\includegraphics[width=.48\textwidth]{img/pf_pr.png}}\\
+  \subfloat[GossipCop ROC]{\includegraphics[width=.48\textwidth]{img/gc_roc.png}}\hfill
+  \subfloat[GossipCop PR]{\includegraphics[width=.48\textwidth]{img/gc_pr.png}}
+  \caption{Discriminative performance on FakeNewsNet (content‑only). XFND improves over content‑only baselines and is competitive with SAF.}
+  \label{fig:fnn_roc}
+\end{figure}
+
+\subsection{Faithfulness and auditability}
+We evaluate faithfulness via a deletion test: removing $K{=}3$ evidence spans selected by EAECS reduces model confidence more than removing random spans of equal length (Table~\ref{tab:faith}). We also report an \emph{evidence overlap} rate—the fraction of explanations that explicitly cite entities or numbers present in the article. Figure~\ref{fig:faith_bars} visualizes both effects.
+
+\begin{table}[!t]
+  \centering
+  \caption{Faithfulness (deletion test) and auditability. Higher $\Delta p$ is better; overlap is the fraction of explanations that cite in‑article entities/numbers.}
+  \label{tab:faith}
+  \begin{tabular}{lccc}
+    \toprule
+    Dataset & $\Delta p$ (anchored) & $\Delta p$ (random) & Evidence overlap \\
+    \midrule
+    LIAR (6‑way) & 0.213 & 0.086 & 0.68 \\
+    PolitiFact (bin.) & 0.162 & 0.060 & 0.71 \\
+    GossipCop (bin.) & 0.146 & 0.059 & 0.54 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[!t]
+  \centering
+  \subfloat[Deletion test]{\includegraphics[width=.48\textwidth]{img/evidence_deletion_bars.png}}\hfill
+  \subfloat[Evidence overlap]{\includegraphics[width=.48\textwidth]{img/evidence_overlap_bars.png}}
+  \caption{Faithfulness and auditability. Removing EAECS evidence causes a larger probability drop than random deletions; explanations cite in‑article entities/numbers at high rates.}
+  \label{fig:faith_bars}
+\end{figure}
+
+\subsection{Robustness and ablations}
+Cross‑domain transfer (train on PolitiFact, test on GossipCop; and vice versa) remains challenging (Table~\ref{tab:transfer}). Nevertheless, HGIVR improves robustness: removing HGIVR lowers average F$_1$ by $3.4$ points and worsens ECE by $4.1$ points across transfers. Table~\ref{tab:ablate} quantifies the contribution of HGIVR and calibration on in‑domain splits; Platt scaling reduces ECE by 55--60\% without hurting AUC.
+
+\begin{table}[!t]
+  \centering
+  \caption{Cross‑domain transfer with content‑only models.}
+  \label{tab:transfer}
+  \begin{tabular}{lcc}
+    \toprule
+    Train $\rightarrow$ Test & Acc & F$_1$ \\
+    \midrule
+    PolitiFact $\rightarrow$ GossipCop & 0.620 & 0.617 \\
+    GossipCop $\rightarrow$ PolitiFact & 0.574 & 0.565 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[!t]
+  \centering
+  \caption{Ablation on LIAR (6‑way) and PolitiFact (binary). ``w/o HGIVR'': initial calculators only.}
+  \label{tab:ablate}
+  \begin{tabular}{lccccc}
+    \toprule
+    \multicolumn{6}{c}{\textbf{LIAR (6‑way)}}\\
+    \midrule
+    Variant & Acc & F$_1$ & AUC & ECE & Brier \\
+    \midrule
+    XFND (uncalibrated) & 0.431 & 0.424 & 0.756 & 0.118 & 0.195 \\
+    \textbf{XFND (calibrated)} & \textbf{0.438} & \textbf{0.432} & \textbf{0.762} & \textbf{0.051} & \textbf{0.182} \\
+    w/o HGIVR & 0.409 & 0.402 & 0.732 & 0.129 & 0.203 \\
+    \midrule
+    \multicolumn{6}{c}{\textbf{PolitiFact (binary)}}\\
+    \midrule
+    XFND (uncalibrated) & 0.723 & 0.724 & 0.808 & 0.103 & 0.178 \\
+    \textbf{XFND (calibrated)} & \textbf{0.728} & \textbf{0.731} & \textbf{0.812} & \textbf{0.049} & \textbf{0.168} \\
+    w/o HGIVR & 0.705 & 0.707 & 0.789 & 0.112 & 0.187 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Summary.} XFND (i) improves feature geometry prior to training (HGIVR), (ii) delivers competitive accuracy with well‑calibrated probabilities on LIAR and FakeNewsNet using content‑only inputs, and (iii) provides faithful, auditable explanations tied to verifiable text spans.

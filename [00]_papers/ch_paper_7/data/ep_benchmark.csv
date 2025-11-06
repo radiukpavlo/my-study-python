@@ -1,0 +1,4 @@
+EP,Median_s,P95_s,Memory_GB,PassRate_percent
+CPU,5.3,6.6,3.2,100
+CUDA,0.8,1.1,4.1,97
+DirectML,1.2,1.6,3.8,99
