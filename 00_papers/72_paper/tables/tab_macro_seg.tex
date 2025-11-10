@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Macro performance across LV/Myo/RV for each model and dataset.}
+\label{tab:macro_seg}
+\begin{tabular}{lcccc}
+\toprule
+Dataset & Model & Macro DSC (%) & Macro HD95 (mm) & Macro ASD (mm) \\
+\midrule
+ACDC & Att-UNet & 89.7 & 8.7 & 2.3 \\
+ACDC & Baseline U-Net & 88.9 & 9.5 & 2.4 \\
+ACDC & SKIF-Seg & 91.2 & 7.0 & 1.9 \\
+ACDC & U-Net+TAAC & 90.6 & 7.7 & 2.0 \\
+M&Ms-2 & Att-UNet & 88.0 & 9.9 & 2.7 \\
+M&Ms-2 & Baseline U-Net & 87.1 & 10.9 & 2.9 \\
+M&Ms-2 & SKIF-Seg & 89.6 & 8.5 & 2.3 \\
+M&Ms-2 & U-Net+TAAC & 88.8 & 9.0 & 2.5 \\
+\bottomrule
+\end{tabular}
+\end{table}

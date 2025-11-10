@@ -1,0 +1,25 @@
+Dataset,Model,Structure,DSC(%),HD95(mm),ASD(mm)
+ACDC,Att-UNet,LV,94.8,7.8,2.0
+ACDC,Att-UNet,Myo,85.2,9.6,2.5
+ACDC,Att-UNet,RV,89.1,8.8,2.3
+ACDC,Baseline U-Net,LV,94.2,8.4,2.1
+ACDC,Baseline U-Net,Myo,84.3,10.6,2.7
+ACDC,Baseline U-Net,RV,88.2,9.5,2.5
+ACDC,SKIF-Seg,LV,95.6,6.6,1.7
+ACDC,SKIF-Seg,Myo,87.1,7.3,2.0
+ACDC,SKIF-Seg,RV,91.0,7.0,2.0
+ACDC,U-Net+TAAC,LV,95.2,7.1,1.8
+ACDC,U-Net+TAAC,Myo,86.4,8.1,2.2
+ACDC,U-Net+TAAC,RV,90.2,7.9,2.1
+M&Ms-2,Att-UNet,LV,93.4,9.0,2.5
+M&Ms-2,Att-UNet,Myo,83.4,10.7,2.9
+M&Ms-2,Att-UNet,RV,87.3,10.1,2.8
+M&Ms-2,Baseline U-Net,LV,92.8,9.6,2.6
+M&Ms-2,Baseline U-Net,Myo,82.1,11.8,3.2
+M&Ms-2,Baseline U-Net,RV,86.4,11.2,3.0
+M&Ms-2,SKIF-Seg,LV,94.1,7.9,2.1
+M&Ms-2,SKIF-Seg,Myo,85.3,8.7,2.4
+M&Ms-2,SKIF-Seg,RV,89.4,8.8,2.4
+M&Ms-2,U-Net+TAAC,LV,93.8,8.4,2.3
+M&Ms-2,U-Net+TAAC,Myo,84.4,9.2,2.6
+M&Ms-2,U-Net+TAAC,RV,88.1,9.4,2.6

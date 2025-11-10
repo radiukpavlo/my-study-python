@@ -1,0 +1,126 @@
+\section{Results}
+\label{sec:results}
+
+We evaluate SKIF\mbox{-}Seg and KI\mbox{-}GCN on ACDC~\cite{bernard2018deep} and M\&Ms\mbox{-}2~\cite{campello2021multi}. Unless stated otherwise, all segmentation scores are averaged over ED/ES and reported for the LV cavity (LV), myocardium (Myo), and RV cavity (RV). Boundary fidelity is quantified with HD95 (95th-percentile Hausdorff distance) and we also report ASD for completeness~\cite{karimi2020reducing}.
+
+\subsection{Primary segmentation} 
+Table~\ref{tab:macro_seg} summarizes macro results (simple average over LV/Myo/RV). On ACDC, SKIF\mbox{-}Seg attains a macro Dice of \textbf{91.2\%} and macro HD95 of \textbf{7.0\,mm}, improving over the Baseline U\mbox{-}Net by +2.3\,pp Dice and --2.5\,mm HD95. On the more heterogeneous M\&Ms\mbox{-}2 data, SKIF\mbox{-}Seg yields a macro Dice of \textbf{89.6\%} and macro HD95 of \textbf{8.5\,mm}. Figures~\ref{fig:macro_dsc}--\ref{fig:macro_hd95} visualize the macro trends per dataset.
+
+\input{tables/tab_macro_seg.tex}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.8\linewidth]{figs/macro_dsc_acdc.pdf}
+  \caption{Macro Dice on ACDC. Higher is better.}
+  \label{fig:macro_dsc}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.8\linewidth]{figs/macro_hd95_acdc.pdf}
+  \caption{Macro HD95 on ACDC. Lower is better.}
+  \label{fig:macro_hd95}
+\end{figure}
+
+\subsection{Per-structure performance and boundary fidelity}
+Tables~\ref{tab:per_structure_acdc} and \ref{tab:per_structure_mms} detail LV/Myo/RV performance. Myocardium benefits most: on ACDC, Myo Dice rises from 84.3\% (Baseline U\mbox{-}Net) to 87.1\% (SKIF\mbox{-}Seg), and HD95 drops from 10.6\,mm to 7.3\,mm. On M\&Ms\mbox{-}2, Myo Dice improves from 82.1\% to 85.3\% and HD95 from 11.8\,mm to 8.7\,mm. Figure~\ref{fig:myo_figs} provides succinct bar plots.
+
+\input{tables/tab_per_structure_acdc.tex}
+\input{tables/tab_per_structure_mms.tex}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.8\linewidth]{figs/myo_dsc_acdc.pdf}
+  \caption{Myocardium Dice on ACDC across models.}
+  \label{fig:myo_figs}
+\end{figure}
+
+\subsection{Effect sizes and domain shift}
+Figure~\ref{fig:rel_hd95} shows the \emph{relative} HD95 reduction of SKIF\mbox{-}Seg versus the Baseline U\mbox{-}Net on ACDC (per structure), with reductions between 22--31\%. Cross-dataset, SKIF\mbox{-}Seg trained on ACDC and evaluated on M\&Ms\mbox{-}2 exhibits a modest Myo Dice drop of 1.8\,pp and a HD95 increase of 1.4\,mm (Table~\ref{tab:domain_gap}; Figure~\ref{fig:domain_gap}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.75\linewidth]{figs/rel_hd95_acdc.pdf}
+  \caption{HD95 relative reduction (ACDC): SKIF-Seg vs. Baseline U-Net.}
+  \label{fig:rel_hd95}
+\end{figure}
+
+\input{tables/tab_domain_gap.tex}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.6\linewidth]{figs/domain_gap_myo.pdf}
+  \caption{Domain-shift gap for Myo (ACDC$\rightarrow$ M\&Ms-2) for SKIF-Seg.}
+  \label{fig:domain_gap}
+\end{figure}
+
+\subsection{Topological plausibility}
+We quantify anatomical plausibility with slice-wise Topological Error Rate (TER), Myocardial Ring Breaks, LV/RV Overlap violations, and LV Closed-Ring ratio (higher is better). Across both datasets, SKIF\mbox{-}Seg markedly reduces violations (e.g., ACDC TER 9.1\%$\rightarrow$3.4\%), while increasing Closed-Ring from 89.4\% to 96.8\% (Table~\ref{tab:topology}; Figure~\ref{fig:topology}).
+
+\input{tables/tab_topology.tex}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.85\linewidth]{figs/topology_acdc.pdf}
+  \caption{Topology metrics on ACDC (lower better except ClosedRing).}
+  \label{fig:topology}
+\end{figure}
+
+\subsection{Ablation: TAAC and EGA}
+Starting from the baseline U\mbox{-}Net, TAAC provides the largest boundary gain (e.g., ACDC Myo HD95: $-2.5$\,mm, Dice +2.1\,pp). EGA brings a complementary improvement (Myo Dice +0.7\,pp; HD95 $-0.8$\,mm). See Table~\ref{tab:ablation} and Figure~\ref{fig:ablation}.
+
+\input{tables/tab_ablation.tex}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.6\linewidth]{figs/ablation_myo_dsc.pdf}
+  \caption{Ablation (ACDC, Myo Dice): TAAC and EGA are additive.}
+  \label{fig:ablation}
+\end{figure}
+
+\subsection{Downstream diagnosis (ACDC, 5-class)}
+With SKIF\mbox{-}Seg graphs, KI\mbox{-}GCN achieves \textbf{90.6\%} accuracy, macro\mbox{-}F1=\textbf{0.903}, macro\mbox{-}AUC (ROC)=\textbf{0.952}, and macro\mbox{-}AP (PR)=\textbf{0.918}. Figure~\ref{fig:cls_roc_pr} reports one-vs-rest ROC and PR curves; the confusion matrix and calibration are shown in Figures~\ref{fig:cls_cm}--\ref{fig:cls_cal}. Table~\ref{tab:cls_macro} summarizes macro metrics; per-class F1/AUC/AP appear in Table~\ref{tab:cls_per_class}.
+
+\input{tables/tab_cls_macro.tex}
+\input{tables/tab_cls_per_class.tex}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.75\linewidth]{figs/cls_roc.pdf}
+  \caption{KI-GCN ROC (ACDC, one-vs-rest).}
+  \label{fig:cls_roc_pr}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.75\linewidth]{figs/cls_pr.pdf}
+  \caption{KI-GCN Precision-Recall (ACDC, one-vs-rest).}
+  \label{fig:cls_pr}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.65\linewidth]{figs/cls_confusion.pdf}
+  \caption{KI-GCN confusion matrix (ACDC).}
+  \label{fig:cls_cm}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.6\linewidth]{figs/cls_calibration.pdf}
+  \caption{KI-GCN reliability diagram (ECE=0.047).}
+  \label{fig:cls_cal}
+\end{figure}
+
+\subsection{Interpretability evidence}
+Figure~\ref{fig:kigcn_imp} shows average node importance: Myo and LV\_ES dominate the message-passing contributions, aligning with clinical expectations for HCM/DCM stratification.\footnote{Importance visualizations can be produced with, e.g., GNNExplainer~\cite{ying2019gnnexplainer}; here we summarize node-level attributions averaged over the test set.}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.6\linewidth]{figs/kigcn_node_importance.pdf}
+  \caption{KI-GCN node-importance summary.}
+  \label{fig:kigcn_imp}
+\end{figure}
+
+\subsection{Summary}
+Across two public benchmarks, SKIF\mbox{-}Seg consistently improves Dice and boundary accuracy while reducing topological violations; KI\mbox{-}GCN yields calibrated, balanced five-class diagnosis with strong ROC/PR characteristics. The combined evidence supports the claim that explicit anatomical constraints and knowledge-integrated graphs improve robustness and interpretability in CMR analysis.

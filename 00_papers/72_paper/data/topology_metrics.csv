@@ -1,0 +1,5 @@
+Dataset,Model,TER%,RingBreak%,LV-RV-Overlap%,ClosedRing%
+ACDC,Baseline U-Net,9.1,10.5,2.6,89.4
+ACDC,SKIF-Seg,3.4,4.1,0.6,96.8
+M&Ms-2,Baseline U-Net,12.7,14.9,3.7,86.2
+M&Ms-2,SKIF-Seg,5.1,6.0,0.9,95.1

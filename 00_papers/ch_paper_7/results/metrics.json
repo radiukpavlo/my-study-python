@@ -1,0 +1,43 @@
+{
+  "random_state": 42,
+  "macro": {
+    "roc_auc": 0.9485307810441761,
+    "ap_trapz": 0.8336085740190838,
+    "ap_sklearn": 0.8365010300538815
+  },
+  "micro": {
+    "ap": 0.8865280490992353
+  },
+  "per_class": [
+    {
+      "class": "Class 0",
+      "roc_auc": 0.9494333791208791,
+      "avg_precision": 0.9075509761727357,
+      "prevalence": 0.3466666666666667
+    },
+    {
+      "class": "Class 1",
+      "roc_auc": 0.9818265443892918,
+      "avg_precision": 0.9388328978624539,
+      "prevalence": 0.24944444444444444
+    },
+    {
+      "class": "Class 2",
+      "roc_auc": 0.9746299860278074,
+      "avg_precision": 0.9269564778614199,
+      "prevalence": 0.18166666666666667
+    },
+    {
+      "class": "Class 3",
+      "roc_auc": 0.921656701660591,
+      "avg_precision": 0.782644654851099,
+      "prevalence": 0.12944444444444445
+    },
+    {
+      "class": "Class 4",
+      "roc_auc": 0.9256098947237186,
+      "avg_precision": 0.6265201435216987,
+      "prevalence": 0.09277777777777778
+    }
+  ]
+}
