@@ -1,0 +1,7 @@
+Dataset,Method,mAP50,mAP5095,MacroF1,Recall,PRAUC,DupFPRaw,DupFPDeDup
+PVF-10,Thermal-only,0.78,0.53,0.84,0.83,0.9,0.24,0.08
+PVF-10,RGB-only,0.74,0.47,0.8,0.79,0.88,0.24,0.09
+PVF-10,"Ours (T+RGB, multi-palette, ra+ddup)",0.903,0.598,0.888,0.902,0.935,0.22,0.07
+STHS-277,Thermal-only,0.82,0.56,0.84,0.86,0.91,0.2,0.06
+STHS-277,RGB-only,0.69,0.38,0.72,0.75,0.87,0.18,0.07
+STHS-277,"Ours (T+RGB, multi-palette, ra+ddup)",0.887,0.571,0.892,0.914,0.932,0.17,0.05

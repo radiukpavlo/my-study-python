@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>UAV PV Detections</name>
+    <Placemark>
+      <name>clu_012a: hotspot_single</name>
+      <Point>
+        <coordinates>26.984173,49.407251,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

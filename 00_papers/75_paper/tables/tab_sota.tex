@@ -1,0 +1,17 @@
+
+\begin{table}[!t]
+\centering
+\caption{Comparison with representative detectors on PVF-10 (same training budget).}
+\label{tab:sota}
+\small
+\begin{tabular}{lccc}
+\toprule
+Method & mAP@0.5 & Params (M) & FPS (Jetson)\\
+\midrule
+EfficientDet-D1 & 0.820 & 6.6 & 22\\
+IR-only YOLOv3 & 0.800 & 61.9 & 18\\
+Region-CNN (Aerial) & 0.760 & 14.8 & 12\\
+\textbf{Ours (T+RGB)} & \textbf{0.903} & 8.2 & \textbf{24}\\
+\bottomrule
+\end{tabular}
+\end{table}

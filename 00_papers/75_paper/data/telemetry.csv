@@ -1,0 +1,5 @@
+Dataset,Mode,kB_per_min
+PVF-10,Raw (all frames),14500
+PVF-10,Relevance-only,5400
+STHS-277,Raw (all frames),13200
+STHS-277,Relevance-only,4300

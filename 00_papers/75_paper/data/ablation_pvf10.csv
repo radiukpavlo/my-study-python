@@ -1,0 +1,6 @@
+Dataset,Variant,mAP50,SmallObjRecall
+PVF-10,Thermal-only,0.78,0.77
+PVF-10,RGB-only,0.74,0.69
+PVF-10,T+RGB w/o pal-inv,0.846,0.8
+PVF-10,T+RGB + pal-inv,0.892,0.84
+PVF-10,T+RGB + pal-inv + re-acq,0.903,0.86

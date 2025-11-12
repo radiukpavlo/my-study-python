@@ -1,0 +1,35 @@
+{
+  "site_id": "PV-PLANT-08",
+  "uav": "M300 RTK",
+  "ts_utc": "2025-09-30T10:12:33Z",
+  "detections": [
+    {
+      "id": "clu_012a",
+      "class": "hotspot_single",
+      "conf": 0.91,
+      "temp_C": 82.4,
+      "centroid_wgs84": [
+        49.407251,
+        26.984173
+      ],
+      "polygon_wgs84": [
+        [
+          49.407249,
+          26.98417
+        ],
+        [
+          49.407252,
+          26.984175
+        ],
+        [
+          49.407254,
+          26.984172
+        ]
+      ],
+      "media": {
+        "rgb": "gs://bucket/vid123_03456.jpg",
+        "tiff": "gs://bucket/vid123_03456.tif"
+      }
+    }
+  ]
+}

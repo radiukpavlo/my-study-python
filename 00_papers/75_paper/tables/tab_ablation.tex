@@ -1,0 +1,18 @@
+
+\begin{table}[!t]
+\centering
+\caption{Ablation on PVF-10. Palette-invariance and adaptive re-acquisition contribute complementary gains.}
+\label{tab:ablation}
+\small
+\begin{tabular}{lcc}
+\toprule
+Variant & mAP@0.5 & Small-target recall \\
+\midrule
+Thermal-only & 0.780 & 0.77 \\
+RGB-only & 0.740 & 0.69 \\
+T+RGB w/o pal-inv & 0.846 & 0.80 \\
+T+RGB + pal-inv & 0.892 & 0.84 \\
+T+RGB + pal-inv + re-acq & 0.903 & 0.86 \\
+\bottomrule
+\end{tabular}
+\end{table}
