@@ -173,6 +173,46 @@ def save_ablation_bars() -> None:
     _save_figure(fig, "ablation_pvf10")
 
 
+def save_per_class_ap_pvf10() -> None:
+    """Visualize PVF-10 per-class AP for all sensing modalities."""
+    csv_path = DATA_DIR / "per_class_ap_pvf10.csv"
+    data = pd.read_csv(csv_path)
+    classes = data["Class"]
+    positions = np.arange(len(classes))
+    methods = [
+        ("AP50_Thermal", "Thermal-only", COLOR_CYCLE[0]),
+        ("AP50_RGB", "RGB-only", COLOR_CYCLE[1]),
+        ("AP50_Ours", "Ours (T+RGB)", COLOR_CYCLE[2]),
+    ]
+    width = 0.24
+    fig, ax = _create_axes(figsize=(7.6, 4.4), grid_axis="y")
+    for idx, (column, label, color) in enumerate(methods):
+        offset = (idx - (len(methods) - 1) / 2) * width
+        ax.bar(
+            positions + offset,
+            data[column],
+            width=width * 0.92,
+            label=label,
+            color=color,
+            edgecolor="0.25",
+            linewidth=0.9,
+        )
+    ax.set_xticks(positions)
+    ax.set_xticklabels(classes, rotation=0)
+    ax.set_ylabel("AP@0.5")
+    ax.set_ylim(0.0, 1.02)
+    ax.set_title("PVF-10 per-class AP@0.5")
+    _format_legend(ax, loc="lower right")
+    # Retain the legacy PNG export while also generating vector outputs.
+    # fig.savefig(
+    #     FIG_DIR / "per_class_ap_pvf10.png",
+    #     format="png",
+    #     dpi=mpl.rcParams.get("savefig.dpi", 240),
+    #     bbox_inches="tight",
+    # )
+    _save_figure(fig, "per_class_ap_pvf10")
+
+
 def save_duplication_and_bandwidth_figures() -> None:
     """Visualize duplicate FP mitigation and telemetry savings."""
     overall = pd.read_csv(DATA_DIR / "overall_metrics.csv")
@@ -317,6 +357,7 @@ def main() -> None:
     """Entrypoint for regenerating all figures and tables."""
     save_precision_recall_curves()
     save_ablation_bars()
+    save_per_class_ap_pvf10()
     save_duplication_and_bandwidth_figures()
     save_flight_and_dbscan_figures()
     save_overall_table()
