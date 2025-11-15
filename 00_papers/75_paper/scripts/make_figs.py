@@ -46,6 +46,20 @@ mpl.rcParams.update(
 COLOR_CYCLE = mpl.colormaps["tab10"].colors
 MAJOR_GRID_STYLE = {"color": "0.75", "linewidth": 0.85, "alpha": 0.6}
 MINOR_GRID_STYLE = {"color": "0.87", "linewidth": 0.6, "alpha": 0.4}
+DUP_FP_METHOD_ORDER = ["Thermal-only", "RGB-only", "Ours (T+RGB)"]
+DUP_FP_DISPLAY_LABELS = {
+    "Thermal-only": "Thermal-only",
+    "RGB-only": "RGB-only",
+    "Ours (T+RGB)": "Ours (T + RGB)",
+}
+
+
+def _set_tick_text_regular(ax: mpl.axes.Axes) -> None:
+    """Keep tick labels regular-weight while leaving axis labels bold."""
+    for label in ax.get_xticklabels() + ax.get_xticklabels(minor=True):
+        label.set_fontweight("normal")
+    for label in ax.get_yticklabels() + ax.get_yticklabels(minor=True):
+        label.set_fontweight("normal")
 
 
 def _create_axes(
@@ -80,6 +94,8 @@ def _format_legend(ax: mpl.axes.Axes, **kwargs) -> mpl.legend.Legend | None:
 
 
 def _save_figure(fig: plt.Figure, stem: str) -> None:
+    for axis in fig.axes:
+        _set_tick_text_regular(axis)
     for ext in ("pdf", "svg"):
         fig.savefig(
             FIG_DIR / f"{stem}.{ext}",
@@ -217,7 +233,12 @@ def save_duplication_and_bandwidth_figures() -> None:
     """Visualize duplicate FP mitigation and telemetry savings."""
     overall = pd.read_csv(DATA_DIR / "overall_metrics.csv")
     for dataset in overall["Dataset"].unique():
-        subset = overall[overall["Dataset"] == dataset]
+        subset = (
+            overall[overall["Dataset"] == dataset]
+            .set_index("Method")
+            .reindex(DUP_FP_METHOD_ORDER)
+            .reset_index()
+        )
         fig, ax = _create_axes(figsize=(6.6, 4.1), grid_axis="y")
         positions = np.arange(len(subset))
         width = 0.35
@@ -239,8 +260,9 @@ def save_duplication_and_bandwidth_figures() -> None:
             edgecolor="0.25",
             linewidth=0.9,
         )
+        display_labels = [DUP_FP_DISPLAY_LABELS.get(name, name) for name in subset["Method"]]
         ax.set_xticks(positions)
-        ax.set_xticklabels(subset["Method"], rotation=18, ha="right")
+        ax.set_xticklabels(display_labels, rotation=18, ha="right")
         ax.set_ylabel("Fraction of predictions")
         ax.set_ylim(0.0, max(subset["DupFPRaw"]) * 1.2)
         ax.set_title(f"{dataset}: Duplicate false positives")
