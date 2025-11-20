@@ -19,14 +19,21 @@ DATA_DIR = ROOT / "data"
 for directory in (FIG_DIR, TAB_DIR, DATA_DIR):
     directory.mkdir(parents=True, exist_ok=True)
 
-BASE_FONT_SIZE = mpl.rcParams.get("font.size", 10) + 2
+BASE_FONT_SIZE = mpl.rcParams.get("font.size", 10) + 6
+TITLE_FONT_SIZE = max(int(BASE_FONT_SIZE * 1.25) - 2, BASE_FONT_SIZE)
+COLOR_CYCLE = mpl.colormaps["tab10"].colors
+MAJOR_GRID_STYLE = {"color": "#b7bfcc", "linewidth": 0.95, "alpha": 0.65}
+MINOR_GRID_STYLE = {"color": "#d4d9e1", "linewidth": 0.7, "alpha": 0.5}
+DARK_EDGE_COLOR = "#1f2937"
+DARK_TEXT_COLOR = "#0f172a"
+
 mpl.rcParams.update(
     {
         "font.size": BASE_FONT_SIZE,
         "font.weight": "bold",
         "axes.labelsize": BASE_FONT_SIZE,
         "axes.labelweight": "bold",
-        "axes.titlesize": BASE_FONT_SIZE + 2,
+        "axes.titlesize": TITLE_FONT_SIZE,
         "axes.titleweight": "bold",
         "xtick.labelsize": BASE_FONT_SIZE,
         "ytick.labelsize": BASE_FONT_SIZE,
@@ -34,18 +41,18 @@ mpl.rcParams.update(
         "legend.edgecolor": "0.65",
         "legend.facecolor": "1.0",
         "legend.framealpha": 0.92,
-        "axes.edgecolor": "0.35",
-        "axes.linewidth": 1.05,
-        "grid.color": "0.75",
-        "grid.linewidth": 0.9,
-        "grid.alpha": 0.5,
+        "axes.edgecolor": DARK_EDGE_COLOR,
+        "axes.labelcolor": DARK_TEXT_COLOR,
+        "axes.titlecolor": DARK_TEXT_COLOR,
+        "axes.linewidth": 1.15,
+        "grid.color": MAJOR_GRID_STYLE["color"],
+        "grid.linewidth": MAJOR_GRID_STYLE["linewidth"],
+        "grid.alpha": MAJOR_GRID_STYLE["alpha"],
         "savefig.dpi": 240,
     }
 )
+mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=COLOR_CYCLE)
 
-COLOR_CYCLE = mpl.colormaps["tab10"].colors
-MAJOR_GRID_STYLE = {"color": "0.75", "linewidth": 0.85, "alpha": 0.6}
-MINOR_GRID_STYLE = {"color": "0.87", "linewidth": 0.6, "alpha": 0.4}
 DUP_FP_METHOD_ORDER = ["Thermal-only", "RGB-only", "Ours (T+RGB)"]
 DUP_FP_DISPLAY_LABELS = {
     "Thermal-only": "Thermal-only",
@@ -68,28 +75,32 @@ def _create_axes(
     add_minor: bool = False,
 ) -> Tuple[plt.Figure, mpl.axes.Axes]:
     fig, ax = plt.subplots(figsize=figsize)
+    ax.set_facecolor("#fdfdfb")
     ax.set_axisbelow(True)
+    ax.margins(x=0.03, y=0.02)
     if grid_axis:
         ax.grid(True, axis=grid_axis, **MAJOR_GRID_STYLE)
     if add_minor:
         ax.minorticks_on()
         ax.grid(True, which="minor", axis=grid_axis, **MINOR_GRID_STYLE)
-    ax.tick_params(axis="both", labelsize=BASE_FONT_SIZE - 1, width=1.0)
+    ax.tick_params(axis="both", labelsize=BASE_FONT_SIZE - 1, width=1.05, length=5, color=DARK_EDGE_COLOR)
     for spine in ax.spines.values():
-        spine.set_color("0.35")
-        spine.set_linewidth(1.05)
+        spine.set_color(DARK_EDGE_COLOR)
+        spine.set_linewidth(1.2)
     return fig, ax
 
 
 def _format_legend(ax: mpl.axes.Axes, **kwargs) -> mpl.legend.Legend | None:
+    font_size = kwargs.pop("font_size", BASE_FONT_SIZE)
     legend = ax.legend(**kwargs)
     if legend:
         frame = legend.get_frame()
-        frame.set_linewidth(0.85)
-        frame.set_edgecolor("0.68")
+        frame.set_linewidth(0.95)
+        frame.set_edgecolor(DARK_EDGE_COLOR)
+        frame.set_facecolor("#f8fafc")
         for text in legend.get_texts():
             text.set_fontweight("bold")
-            text.set_fontsize(BASE_FONT_SIZE - 1)
+            text.set_fontsize(font_size)
     return legend
 
 
@@ -130,29 +141,35 @@ def save_precision_recall_curves() -> None:
         ("PVF-10", (0.0, -0.05, 0.12), "pr_curve_pvf10.csv", "pr_pvf10"),
         ("STHS-277", (0.02, -0.08, 0.10), "pr_curve_sths.csv", "pr_sths"),
     ]
-    labels = [
-        ("thermal_only", "Thermal-only", COLOR_CYCLE[0]),
-        ("rgb_only", "RGB-only", COLOR_CYCLE[1]),
-        ("fusion", "Ours (T+RGB)", COLOR_CYCLE[2]),
-    ]
     for dataset, lifts, csv_name, stem in configs:
         csv_path = _write_pr_curve_csv(dataset, lifts, csv_name)
         df = pd.read_csv(csv_path)
         fig, ax = _create_axes(figsize=(6.0, 4.0), grid_axis="both", add_minor=True)
+        labels = [
+            ("thermal_only", "Thermal-only", COLOR_CYCLE[0]),
+            ("rgb_only", "RGB-only", "#ff6b6b" if dataset == "STHS-277" else COLOR_CYCLE[1]),
+            ("fusion", "Ours (T+RGB)", COLOR_CYCLE[2]),
+        ]
         for column, label, color in labels:
             ax.plot(
                 df["recall"],
                 df[column],
                 label=label,
-                linewidth=2.6,
+                linewidth=3.0,
                 color=color,
+                alpha=0.96,
+                marker="o",
+                markersize=5.5,
+                markevery=26,
+                markeredgecolor="white",
             )
         ax.set_xlim(0.0, 1.0)
         ax.set_ylim(0.4, 1.02)
         ax.set_xlabel("Recall")
         ax.set_ylabel("Precision")
-        ax.set_title(f"{dataset}: Precision-Recall")
-        _format_legend(ax, loc="lower left")
+        ax.set_title(f"{dataset}: Precision vs. recall", pad=12)
+        legend_font = BASE_FONT_SIZE - 3 if dataset == "STHS-277" else BASE_FONT_SIZE
+        _format_legend(ax, loc="lower left", font_size=legend_font)
         _save_figure(fig, stem)
 
 
@@ -163,28 +180,31 @@ def save_ablation_bars() -> None:
     fig, ax = _create_axes(figsize=(7.4, 4.4), grid_axis="y")
     positions = np.arange(len(data))
     width = 0.32
-    ax.bar(
+    map_bars = ax.bar(
         positions - width / 2,
         data["mAP50"],
         width=width,
         label="mAP@0.5",
         color=COLOR_CYCLE[3],
-        edgecolor="0.25",
-        linewidth=0.9,
+        edgecolor=DARK_EDGE_COLOR,
+        linewidth=1.05,
     )
-    ax.bar(
+    recall_bars = ax.bar(
         positions + width / 2,
         data["SmallObjRecall"],
         width=width,
         label="Small-target recall",
         color=COLOR_CYCLE[4],
-        edgecolor="0.25",
-        linewidth=0.9,
+        edgecolor=DARK_EDGE_COLOR,
+        linewidth=1.05,
     )
     ax.set_xticks(positions)
     ax.set_xticklabels(data["Variant"], rotation=18, ha="right")
-    ax.set_ylabel("Score")
-    ax.set_title("Ablation study on PVF-10")
+    ax.set_ylabel("Metric value (0-1)")
+    ax.set_ylim(0.0, max(data[["mAP50", "SmallObjRecall"]].max()) * 1.18)
+    ax.bar_label(map_bars, fmt="%.2f", padding=3, fontsize=BASE_FONT_SIZE - 4, color=DARK_TEXT_COLOR)
+    ax.bar_label(recall_bars, fmt="%.2f", padding=3, fontsize=BASE_FONT_SIZE - 4, color=DARK_TEXT_COLOR)
+    ax.set_title("PVF-10 ablation: component contributions", pad=12)
     _format_legend(ax, loc="lower right")
     _save_figure(fig, "ablation_pvf10")
 
@@ -210,14 +230,14 @@ def save_per_class_ap_pvf10() -> None:
             width=width * 0.92,
             label=label,
             color=color,
-            edgecolor="0.25",
-            linewidth=0.9,
+            edgecolor=DARK_EDGE_COLOR,
+            linewidth=1.05,
         )
     ax.set_xticks(positions)
     ax.set_xticklabels(classes, rotation=0)
-    ax.set_ylabel("AP@0.5")
+    ax.set_ylabel("AP@0.5 (IoU threshold = 0.5)")
     ax.set_ylim(0.0, 1.02)
-    ax.set_title("PVF-10 per-class AP@0.5")
+    ax.set_title("PVF-10 per-class AP@0.5", pad=12)
     _format_legend(ax, loc="lower right")
     # Retain the legacy PNG export while also generating vector outputs.
     # fig.savefig(
@@ -242,31 +262,42 @@ def save_duplication_and_bandwidth_figures() -> None:
         fig, ax = _create_axes(figsize=(6.6, 4.1), grid_axis="y")
         positions = np.arange(len(subset))
         width = 0.35
-        ax.bar(
+        raw_bars = ax.bar(
             positions - width / 2,
             subset["DupFPRaw"],
             width=width,
             label="Duplicate FP (raw)",
             color=COLOR_CYCLE[5],
-            edgecolor="0.25",
-            linewidth=0.9,
+            edgecolor=DARK_EDGE_COLOR,
+            linewidth=1.05,
         )
-        ax.bar(
+        dedup_bars = ax.bar(
             positions + width / 2,
             subset["DupFPDeDup"],
             width=width,
             label="Duplicate FP (geo de-dup)",
             color=COLOR_CYCLE[6],
-            edgecolor="0.25",
-            linewidth=0.9,
+            edgecolor=DARK_EDGE_COLOR,
+            linewidth=1.05,
         )
         display_labels = [DUP_FP_DISPLAY_LABELS.get(name, name) for name in subset["Method"]]
         ax.set_xticks(positions)
         ax.set_xticklabels(display_labels, rotation=18, ha="right")
-        ax.set_ylabel("Fraction of predictions")
-        ax.set_ylim(0.0, max(subset["DupFPRaw"]) * 1.2)
-        ax.set_title(f"{dataset}: Duplicate false positives")
-        _format_legend(ax, loc="upper right")
+        ax.set_ylabel("Dup-FP (fraction)")
+        ax.set_ylim(0.0, max(subset["DupFPRaw"]) * 1.22)
+        ax.bar_label(raw_bars, fmt="%.2f", padding=3, fontsize=BASE_FONT_SIZE - 2, color=DARK_TEXT_COLOR)
+        ax.bar_label(dedup_bars, fmt="%.2f", padding=3, fontsize=BASE_FONT_SIZE - 2, color=DARK_TEXT_COLOR)
+        ax.set_title(f"{dataset}: Duplicate false positives", pad=12)
+        legend_font = BASE_FONT_SIZE - 3
+        if dataset == "STHS-277":
+            legend_font = BASE_FONT_SIZE - 4
+        _format_legend(
+            ax,
+            loc="upper center",
+            bbox_to_anchor=(0.5, 1.12),
+            ncol=2,
+            font_size=legend_font,
+        )
         stem = f"dup_fp_{dataset.lower().replace('-', '').replace(' ', '_')}"
         _save_figure(fig, stem)
 
@@ -279,20 +310,22 @@ def save_duplication_and_bandwidth_figures() -> None:
     for idx, dataset in enumerate(datasets):
         subset = telemetry[telemetry["Dataset"] == dataset]
         values = subset.set_index("Mode").reindex(modes)["kB_per_min"]
-        ax.bar(
+        bars = ax.bar(
             mode_positions + (idx - (len(datasets) - 1) / 2) * width,
             values,
             width=width,
             label=dataset,
             color=COLOR_CYCLE[7 + idx],
-            edgecolor="0.25",
-            linewidth=0.9,
+            edgecolor=DARK_EDGE_COLOR,
+            linewidth=1.05,
         )
+        ax.bar_label(bars, fmt="%.0f", padding=3, fontsize=BASE_FONT_SIZE - 2, color=DARK_TEXT_COLOR)
     ax.set_xticks(mode_positions)
     ax.set_xticklabels(modes, rotation=0)
-    ax.set_ylabel("kB per minute")
-    ax.set_title("Bandwidth impact of relevance-only telemetry")
-    _format_legend(ax, loc="upper right")
+    ax.set_ylim(0.0, telemetry["kB_per_min"].max() * 1.18)
+    ax.set_ylabel("kB/min", fontsize=BASE_FONT_SIZE - 2)
+    ax.set_title("Telemetry bandwidth", fontsize=TITLE_FONT_SIZE - 2, pad=10)
+    _format_legend(ax, loc="upper right", font_size=BASE_FONT_SIZE - 2)
     _save_figure(fig, "telemetry_bandwidth")
 
 
@@ -304,12 +337,15 @@ def save_flight_and_dbscan_figures() -> None:
         altitude["Altitude_m"],
         altitude["mAP50"],
         marker="o",
+        markersize=6.5,
+        markeredgecolor="white",
         color=COLOR_CYCLE[8],
-        linewidth=2.4,
+        linewidth=2.8,
     )
     ax_alt.set_xlabel("Altitude (m)")
-    ax_alt.set_ylabel("mAP@0.5")
-    ax_alt.set_title("Detection vs. altitude (speed 5 m/s)")
+    ax_alt.set_ylabel("Mean AP@0.5")
+    ax_alt.set_ylim(0.0, altitude["mAP50"].max() * 1.1)
+    ax_alt.set_title("Detection vs. altitude (speed 5 m/s)", pad=12)
     _save_figure(fig_alt, "altitude_map")
 
     speed = pd.read_csv(DATA_DIR / "flight_speed.csv")
@@ -318,12 +354,15 @@ def save_flight_and_dbscan_figures() -> None:
         speed["Speed_mps"],
         speed["mAP50"],
         marker="o",
+        markersize=6.5,
+        markeredgecolor="white",
         color=COLOR_CYCLE[9],
-        linewidth=2.4,
+        linewidth=2.8,
     )
     ax_spd.set_xlabel("Speed (m/s)")
-    ax_spd.set_ylabel("mAP@0.5")
-    ax_spd.set_title("Detection vs. speed (altitude 10 m)")
+    ax_spd.set_ylabel("Mean AP@0.5")
+    ax_spd.set_ylim(0.0, speed["mAP50"].max() * 1.1)
+    ax_spd.set_title("Detection vs. speed (altitude 10 m)", pad=12)
     _save_figure(fig_spd, "speed_map")
 
     sweep = pd.read_csv(DATA_DIR / "dbscan_sweep.csv")
@@ -335,12 +374,15 @@ def save_flight_and_dbscan_figures() -> None:
             subset["Eps_m"],
             subset["DupFPDeDup"],
             marker="o",
-            linewidth=2.4,
+            markersize=6.0,
+            markeredgecolor="white",
+            linewidth=2.8,
             color=color_map.get(dataset, COLOR_CYCLE[2]),
         )
         ax.set_xlabel("DBSCAN eps (meters)")
-        ax.set_ylabel("Dup-FP after de-dup")
-        ax.set_title(f"{dataset}: Dup-FP vs. DBSCAN eps")
+        ax.set_ylabel("Duplicate FP after geo de-dup (fraction)")
+        ax.set_ylim(0.0, subset["DupFPDeDup"].max() * 1.1)
+        ax.set_title(f"{dataset}: Dup-FP vs. DBSCAN eps", pad=12)
         stem = f"dbscan_{dataset.lower().replace('-', '').replace(' ', '_')}"
         _save_figure(fig, stem)
 
