@@ -147,7 +147,7 @@ def save_precision_recall_curves() -> None:
         fig, ax = _create_axes(figsize=(6.0, 4.0), grid_axis="both", add_minor=True)
         labels = [
             ("thermal_only", "Thermal-only", COLOR_CYCLE[0]),
-            ("rgb_only", "RGB-only", "#ff6b6b" if dataset == "STHS-277" else COLOR_CYCLE[1]),
+            ("rgb_only", "RGB-only", COLOR_CYCLE[1]),
             ("fusion", "Ours (T+RGB)", COLOR_CYCLE[2]),
         ]
         for column, label, color in labels:
@@ -168,7 +168,7 @@ def save_precision_recall_curves() -> None:
         ax.set_xlabel("Recall")
         ax.set_ylabel("Precision")
         ax.set_title(f"{dataset}: Precision vs. recall", pad=12)
-        legend_font = BASE_FONT_SIZE - 3 if dataset == "STHS-277" else BASE_FONT_SIZE
+        legend_font = BASE_FONT_SIZE - 3
         _format_legend(ax, loc="lower left", font_size=legend_font)
         _save_figure(fig, stem)
 
@@ -287,7 +287,7 @@ def save_duplication_and_bandwidth_figures() -> None:
         ax.set_ylim(0.0, max(subset["DupFPRaw"]) * 1.22)
         ax.bar_label(raw_bars, fmt="%.2f", padding=3, fontsize=BASE_FONT_SIZE - 2, color=DARK_TEXT_COLOR)
         ax.bar_label(dedup_bars, fmt="%.2f", padding=3, fontsize=BASE_FONT_SIZE - 2, color=DARK_TEXT_COLOR)
-        ax.set_title(f"{dataset}: Duplicate false positives", pad=12)
+        # ax.set_title(f"{dataset}: Duplicate false positives", pad=12)
         legend_font = BASE_FONT_SIZE - 3
         if dataset == "STHS-277":
             legend_font = BASE_FONT_SIZE - 4
@@ -380,7 +380,7 @@ def save_flight_and_dbscan_figures() -> None:
             color=color_map.get(dataset, COLOR_CYCLE[2]),
         )
         ax.set_xlabel("DBSCAN eps (meters)")
-        ax.set_ylabel("Duplicate FP after geo de-dup (fraction)")
+        ax.set_ylabel("Dup-FP after geo de-dup")
         ax.set_ylim(0.0, subset["DupFPDeDup"].max() * 1.1)
         ax.set_title(f"{dataset}: Dup-FP vs. DBSCAN eps", pad=12)
         stem = f"dbscan_{dataset.lower().replace('-', '').replace(' ', '_')}"
