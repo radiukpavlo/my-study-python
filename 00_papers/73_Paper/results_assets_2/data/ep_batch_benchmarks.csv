@@ -1,0 +1,13 @@
+BatchSize,ExecutionProvider,Seconds_per_volume
+1,CPU,5.3
+2,CPU,5.1
+4,CPU,5.0
+8,CPU,5.0
+1,CUDA,0.8
+2,CUDA,0.55
+4,CUDA,0.42
+8,CUDA,0.35
+1,DirectML,1.2
+2,DirectML,0.8
+4,DirectML,0.62
+8,DirectML,0.52

@@ -1,0 +1,5 @@
+Model,Accuracy_%,MacroF1,Brier,ECE
+Handcrafted+MLP,89.1,0.881,0.12,0.08
+GCN (no knowledge edges),92.7,0.907,0.1,0.06
+KI-GCN (ours),94.0,0.93,0.08,0.04
+KI-GCN + Distillation,94.5,0.94,0.07,0.03

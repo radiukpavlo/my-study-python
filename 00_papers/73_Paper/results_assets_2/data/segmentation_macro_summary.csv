@@ -1,0 +1,3 @@
+Dataset,Baseline_U-Net_DSC,Baseline_U-Net_HD95_mm,SKIF-Seg_DSC,SKIF-Seg_HD95_mm,Delta_DSC,Delta_HD95_mm
+ACDC,0.925,8.27,0.939,6.6,0.014,-1.67
+M&Ms-2,0.913,9.73,0.927,8.0,0.014,-1.73

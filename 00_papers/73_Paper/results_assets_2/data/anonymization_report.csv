@@ -1,0 +1,5 @@
+TagAction,Count
+Removed (patient identifiers),28
+Replaced with hash,16
+Retained (non-PHI),142
+Total Tags Processed,186

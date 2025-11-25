@@ -1,0 +1,8 @@
+{
+  "accuracy_percent": 94.0,
+  "macro_f1": 0.94,
+  "roc_auc_macro": 0.935,
+  "pr_auc_macro": 0.95,
+  "brier": 0.08,
+  "ece": 0.04
+}

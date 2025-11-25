@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-10-26T12:00:00Z",
+  "git_commit": "abc123def",
+  "onnxruntime_ep": "CUDA",
+  "onnx_opset": 17,
+  "datasets": {
+    "acdc": {
+      "n": 100
+    },
+    "mms2": {
+      "n": 350
+    }
+  },
+  "metrics": {
+    "segmentation": {
+      "ACDC": {
+        "macro_dsc": 0.939
+      }
+    },
+    "classification": {
+      "accuracy_percent": 94.0,
+      "macro_f1": 0.94,
+      "roc_auc_macro": 0.935,
+      "pr_auc_macro": 0.95,
+      "brier": 0.08,
+      "ece": 0.04
+    }
+  },
+  "artifacts": {
+    "masks": "nifti/",
+    "figures": "figs/",
+    "tables": "data/"
+  }
+}

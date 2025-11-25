@@ -1,0 +1,7 @@
+Dataset,Structure,DSC_mean,DSC_sd,IoU_mean,IoU_sd,HD95_mm_mean,HD95_mm_sd,ASSD_mm_mean,ASSD_mm_sd
+ACDC,LV Cavity,0.965,0.03,0.932,0.018,5.8,2.2,1.28,0.4
+ACDC,Myocardium,0.912,0.04,0.838,0.024,6.3,2.2,1.39,0.4
+ACDC,RV Cavity,0.941,0.03,0.889,0.018,7.7,2.2,1.69,0.4
+M&Ms-2,LV Cavity,0.953,0.03,0.91,0.018,7.2,3.1,1.58,0.56
+M&Ms-2,Myocardium,0.899,0.04,0.817,0.024,7.9,3.1,1.74,0.56
+M&Ms-2,RV Cavity,0.928,0.03,0.866,0.018,8.9,3.1,1.96,0.56
