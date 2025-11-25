@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate publication-ready figures for results set 1."""
+"""Generate publication-ready figures for results set 2."""
 
 from __future__ import annotations
 
@@ -47,9 +47,13 @@ mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=COLOR_CYCLE)
 SEG = pd.read_csv(DATA_DIR / "segmentation_metrics_proposed.csv")
 DOMAIN = pd.read_csv(DATA_DIR / "domain_shift_dsc.csv")
 CONFUSION = pd.read_csv(DATA_DIR / "confusion_matrix.csv")
-CALIBRATION = pd.read_csv(DATA_DIR / "calibration_bins.csv")
+CAL_PRE = pd.read_csv(DATA_DIR / "calibration_bins_pre.csv")
+CAL_POST = pd.read_csv(DATA_DIR / "calibration_bins_post.csv")
 EXECUTION = pd.read_csv(DATA_DIR / "ep_benchmarks.csv")
-ABLATION = pd.read_csv(DATA_DIR / "ablation_kigcn.csv")
+BATCH = pd.read_csv(DATA_DIR / "ep_batch_benchmarks.csv")
+MACRO = pd.read_csv(DATA_DIR / "segmentation_macro_summary.csv")
+ROC = pd.read_csv(DATA_DIR / "roc_curve_points.csv")
+PR = pd.read_csv(DATA_DIR / "pr_curve_points.csv")
 RNG = np.random.default_rng(seed=42)
 
 
@@ -189,12 +193,10 @@ def plot_confusion_matrix() -> None:
     _save_figure(fig, "results_confusion_matrix")
 
 
-def plot_reliability_diagram() -> None:
-    """Reliability diagram comparing predicted vs. observed accuracy."""
-    bins = CALIBRATION["bin_center"].to_numpy()
-    predicted = CALIBRATION["pred_conf"].to_numpy()
-    observed = CALIBRATION["emp_acc"].to_numpy()
-    width = 0.08
+def plot_reliability_pre_post() -> None:
+    """Reliability diagram before and after temperature scaling."""
+    bins = CAL_PRE["bin_center"].to_numpy()
+    width = 0.07
 
     fig, ax = _create_axes(figsize=(6.4, 5.0), grid_axis="both", add_minor=True)
     ax.plot(
@@ -206,28 +208,36 @@ def plot_reliability_diagram() -> None:
         label="Perfect calibration",
     )
     ax.bar(
-        bins - width / 2,
-        observed,
+        bins - width,
+        CAL_PRE["emp_acc"].to_numpy(),
         width=width,
-        label="Observed",
+        label="Observed (pre)",
         color=COLOR_CYCLE[2],
         edgecolor=EDGE_COLOR,
     )
     ax.bar(
-        bins + width / 2,
-        predicted,
+        bins,
+        CAL_PRE["pred_conf"].to_numpy(),
         width=width,
         label="Predicted",
         color=COLOR_CYCLE[3],
         edgecolor=EDGE_COLOR,
         alpha=0.85,
     )
+    ax.bar(
+        bins + width,
+        CAL_POST["emp_acc"].to_numpy(),
+        width=width,
+        label="Observed (post)",
+        color=COLOR_CYCLE[4],
+        edgecolor=EDGE_COLOR,
+    )
     ax.set_xlabel("Predicted probability")
     ax.set_ylabel("Observed frequency")
     ax.set_ylim(0.0, 1.05)
-    ax.set_title("Reliability diagram")
+    ax.set_title("Reliability before/after temperature scaling")
     _format_legend(ax, loc="upper left")
-    _save_figure(fig, "results_reliability_diagram")
+    _save_figure(fig, "results_reliability_pre_post")
 
 
 def plot_ep_throughput() -> None:
@@ -237,7 +247,7 @@ def plot_ep_throughput() -> None:
     bars = ax.bar(
         x_positions,
         EXECUTION["Median_seconds_per_volume"].values,
-        color=COLOR_CYCLE[4],
+        color=COLOR_CYCLE[5],
         edgecolor=EDGE_COLOR,
         linewidth=1.05,
     )
@@ -249,35 +259,121 @@ def plot_ep_throughput() -> None:
     _save_figure(fig, "results_ep_throughput")
 
 
-def plot_ablation() -> None:
-    """Ablation results for knowledge integration and distillation."""
-    fig, ax = _create_axes(figsize=(7.0, 4.2), grid_axis="y")
-    x_positions = np.arange(len(ABLATION))
-    bars = ax.bar(
-        x_positions,
-        ABLATION["Accuracy_%"].values,
-        color=COLOR_CYCLE[5],
+def plot_batch_throughput() -> None:
+    """Throughput as a function of batch size for each execution provider."""
+    fig, ax = _create_axes(figsize=(6.4, 4.3), grid_axis="both", add_minor=True)
+    for index, provider in enumerate(("CPU", "CUDA", "DirectML")):
+        subset = BATCH[BATCH["ExecutionProvider"] == provider]
+        ax.plot(
+            subset["BatchSize"].to_numpy(),
+            subset["Seconds_per_volume"].to_numpy(),
+            marker="o",
+            markersize=6.0,
+            markeredgecolor="white",
+            linewidth=2.2,
+            label=provider,
+            color=COLOR_CYCLE[index],
+        )
+    ax.set_xlabel("Batch size")
+    ax.set_ylabel("Seconds per volume")
+    ax.set_title("Throughput vs. batch size by execution provider")
+    _format_legend(ax, loc="upper right")
+    _save_figure(fig, "results_throughput_batch")
+
+
+def plot_segmentation_macro_bars() -> None:
+    """Macro segmentation accuracy for baseline vs. SKIF-Seg."""
+    fig, ax = _create_axes(figsize=(6.6, 4.4), grid_axis="y")
+    x_positions = np.arange(len(MACRO))
+    width = 0.34
+    bars_baseline = ax.bar(
+        x_positions - width / 2,
+        MACRO["Baseline_U-Net_DSC"].values,
+        width=width,
+        label="U-Net",
+        color=COLOR_CYCLE[6],
+        edgecolor=EDGE_COLOR,
+        linewidth=1.05,
+    )
+    bars_skif = ax.bar(
+        x_positions + width / 2,
+        MACRO["SKIF-Seg_DSC"].values,
+        width=width,
+        label="SKIF-Seg",
+        color=COLOR_CYCLE[7],
         edgecolor=EDGE_COLOR,
         linewidth=1.05,
     )
     ax.set_xticks(x_positions)
-    ax.set_xticklabels(
-        ABLATION["Model"].values, rotation=18, ha="right"
+    ax.set_xticklabels(MACRO["Dataset"].values)
+    ax.set_ylabel("Macro Dice (LV / Myo / RV)")
+    ax.set_title("Macro segmentation accuracy by dataset")
+    ax.bar_label(bars_baseline, fmt="%.2f", padding=3)
+    ax.bar_label(bars_skif, fmt="%.2f", padding=3)
+    _format_legend(ax, loc="upper left")
+    _save_figure(fig, "results_seg_macro_bars")
+
+
+def plot_roc_curve() -> None:
+    """Macro ROC curve derived from CSV data."""
+    fig, ax = _create_axes(figsize=(5.9, 5.3), grid_axis="both", add_minor=True)
+    fpr = ROC["FPR"].to_numpy()
+    tpr = ROC["TPR"].to_numpy()
+    sort_idx = np.argsort(fpr)
+    auc_score = np.trapezoid(tpr[sort_idx], fpr[sort_idx])
+
+    ax.plot([0, 1], [0, 1], linestyle="--", color="#4b5563", linewidth=1.1)
+    ax.plot(
+        fpr,
+        tpr,
+        label=f"ROC (AUC = {auc_score:.3f})",
+        color=COLOR_CYCLE[0],
+        linewidth=2.6,
     )
-    ax.set_ylabel("Accuracy (%)")
-    ax.set_title("Ablation study on knowledge integration and distillation")
-    ax.bar_label(bars, fmt="%.1f", padding=3, fontsize=BASE_FONT_SIZE - 1)
-    _save_figure(fig, "results_ablation")
+    ax.set_xlabel("False positive rate")
+    ax.set_ylabel("True positive rate")
+    ax.set_xlim(0.0, 1.0)
+    ax.set_ylim(0.0, 1.02)
+    ax.set_title("Macro ROC curve (multiclass, one-vs-rest)")
+    _format_legend(ax, loc="lower right")
+    _save_figure(fig, "results_roc_curve")
+
+
+def plot_pr_curve() -> None:
+    """Macro precision-recall curve derived from CSV data."""
+    fig, ax = _create_axes(figsize=(5.9, 5.3), grid_axis="both", add_minor=True)
+    recall = PR["Recall"].to_numpy()
+    precision = PR["Precision"].to_numpy()
+    sort_idx = np.argsort(recall)
+    ap_score = np.trapezoid(precision[sort_idx], recall[sort_idx])
+
+    ax.plot(
+        recall,
+        precision,
+        label=f"PR (AP = {ap_score:.3f})",
+        color=COLOR_CYCLE[1],
+        linewidth=2.6,
+    )
+    ax.set_xlabel("Recall")
+    ax.set_ylabel("Precision")
+    ax.set_xlim(0.0, 1.0)
+    ax.set_ylim(0.0, 1.02)
+    ax.set_title("Macro precision-recall curve")
+    _format_legend(ax, loc="lower left")
+    _save_figure(fig, "results_pr_curve")
 
 
 def main() -> None:
-    """Entrypoint for regenerating all figures in results set 1."""
+    """Entrypoint for regenerating all figures in results set 2."""
     plot_segmentation_boxplot()
     plot_domain_shift()
     plot_confusion_matrix()
-    plot_reliability_diagram()
+    plot_reliability_pre_post()
     plot_ep_throughput()
-    plot_ablation()
+    plot_batch_throughput()
+    plot_segmentation_macro_bars()
+    plot_roc_curve()
+    plot_pr_curve()
     print(f"Figures saved to {FIG_DIR} (.pdf/.svg).")
 
 
