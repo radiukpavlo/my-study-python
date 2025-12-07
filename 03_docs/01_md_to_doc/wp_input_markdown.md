@@ -1,53 +1,38 @@
-# References
+Ось оновлений календарний план, сформований з акцентом на наукоємність результатів (методи, моделі, алгоритми) та чіткі форми звітності, згідно з вашими вимогами та наданим планом дисертації.
 
-1. Tsanakas, J., Ha, L., & Buerhop, C. Faults and infrared thermographic diagnosis in operating c‐Si photovoltaic modules: a review of research and future challenges. *Renewable and Sustainable Energy Reviews*. 2016, vol. 62, pp. 695–709. doi: 10.1016/j.rser.2016.04.079.
-2. Grimaccia, F., Leva, S., Dolara, A., & Aghaei, M. Survey on PV modules common faults after an O&M flight extensive campaign over different plants in Italy. *IEEE Journal of Photovoltaics*. 2017, vol. 7, no. 3, pp. 810–816. doi: 10.1109/JPHOTOV.2017.2674977.
-3. Kandeal, A., Elkadeem, M., Thakur, A., Abdelaziz, G., Sathyamurthy, R., Kabeel, A., Yang, N., & Sharshir, S. Infrared thermography-based condition monitoring of solar photovoltaic systems: a mini review of recent advances. *Solar Energy*. 2021, vol. 223, pp. 33–43. doi: 10.1016/j.solener.2021.05.032.
-4. Gallardo-Saavedra, S., Hernández-Callejo, L., & Duque-Pérez, O. Technological review of the instrumentation used in aerial thermographic inspection of photovoltaic plants. *Renewable and Sustainable Energy Reviews*. 2018, vol. 93, pp. 566–579. doi: 10.1016/j.rser.2018.05.027.
-5. Zefri, Y., ElKettani, A., Sebari, I., & Ait Lamallam, S. Thermal infrared and visual inspection of photovoltaic installations by UAV photogrammetry—application case: Morocco. *Drones*. 2018, vol. 2, no. 4, p. 41. doi: 10.3390/drones2040041.
-6. Melnychenko, O., Scislo, L., Savenko, O., Sachenko, A., & Radiuk, P. Intelligent integrated system for fruit detection using multi-UAV imaging and deep learning. *Sensors*. 2024, vol. 24, no. 6, p. 1913. doi: 10.3390/s24061913.
-7. Michail, A., Livera, A., Tziolis, G., Georghiou, G., Panayiotou, C., Loutsiou, A., & Lilli, C. A comprehensive review of unmanned aerial vehicle-based approaches to support photovoltaic plant diagnosis. *Heliyon*. 2024, vol. 10, no. 1, p. e023983. doi: 10.1016/j.heliyon.2024.e23983.
-8. Lee, D., & Park, J. Developing inspection methodology of solar energy plants by thermal infrared sensor on board unmanned aerial vehicles. *Energies*. 2019, vol. 12, no. 15, p. 2928. doi: 10.3390/en12152928.
-9. Aghaei, M., Dolara, A., Leva, S., & Grimaccia, F. Image resolution and defects detection in PV inspection by unmanned technologies. In: *Proceedings of the 2016 IEEE Power and Energy Society General Meeting (PESGM)*. Boston, MA, USA, 2016, pp. 1–5. doi: 10.1109/PESGM.2016.7741605.
-10. Buerhop-Lutz, C., Bommes, L., Schlipf, J., Pickel, T., Fladung, A., & Peters, I. Infrared imaging of photovoltaic modules: A review of the state of the art and future challenges facing gigawatt-scale PV power stations. *Progress in Energy*. 2022, vol. 4, no. 4, p. 042010. doi: 10.1088/2516-1083/ac890b.
-11. Phoolwani, U., Sharma, T., Singh, A., & Gawre, S. IoT based solar panel analysis using thermal imaging. In: *Proceedings of the 2020 IEEE International Students’ Conference on Electrical, Electronics and Computer Science (SCEECS)*. Bhopal, India, 2020, pp. 1–6. doi: 10.1109/SCEECS48394.2020.114.
-12. Lysyi, A., Sachenko, A., Radiuk, P., Lysyi, M., Melnychenko, O., Ishchuk, O., & Savenko, O. Enhanced fire hazard detection in solar power plants: An integrated UAV, AI, and SCADA-based approach. *Radioelectronic and Computer Systems*. 2025, vol. 2025, no. 2, pp. 99–117. doi: 10.32620/reks.2025.2.06.
-13. Wang, B., Chen, Q., Wang, M., Chen, Y., Zhang, Z., Liu, X., Gao, W., Zhang, Y., & Zhang, H. PVF-10: a high-resolution unmanned aerial vehicle thermal infrared image dataset for fine-grained photovoltaic fault classification. *Applied Energy*. 2024, vol. 376, p. 124187. doi: 10.1016/j.apenergy.2024.124187.
-14. Alfaro-Mejía, E., Loaiza-Correa, H., Franco-Mejía, E., Restrepo-Girón, A., & Nope-Rodríguez, S. Dataset for recognition of snail trails and hot spot failures in monocrystalline Si solar panels. *Data in Brief*. 2019, vol. 26, p. 104441. doi: 10.1016/j.dib.2019.104441.
-15. Morando, L., Recchiuto, C., Calla, J., Scuteri, P., & Sgorbissa, A. Thermal and visual tracking of photovoltaic plants for autonomous UAV inspection. *Drones*. 2022, vol. 6, no. 11, p. 347. doi: 10.3390/drones6110347.
-16. Svystun, S., Scislo, L., Pawlik, M., Melnychenko, O., Radiuk, P., Savenko, O., & Sachenko, A. DyTAM: Accelerating wind turbine inspections with dynamic UAV trajectory adaptation. *Energies*. 2025, vol. 18, no. 7, p. 1823. doi: 10.3390/en18071823.
-17. Vlaminck, M., Heidbuchel, R., Philips, W., & Luong, H. Region-based CNN for anomaly detection in PV power plants using aerial imagery. *Sensors*. 2022, vol. 22, no. 3, p. 1244. doi: 10.3390/s22031244.
-18. Di Tommaso, A., Genduso, F., Miceli, R., & Galluzzo, G. A multi-stage model based on YOLOv3 for defect detection in PV panels using IR and visible imaging by UAV. *Renewable Energy*. 2022, vol. 193, pp. 941–962. doi: 10.1016/j.renene.2022.04.046.
-19. Su, Y., Tao, F., Jin, J., & Zhang, C. Automated overheated region object detection of photovoltaic module with thermography image. *IEEE Journal of Photovoltaics*. 2021, vol. 11, no. 2, pp. 535–544. doi: 10.1109/JPHOTOV.2020.3045680.
-20. Duranay, Z. B. Fault detection in solar energy systems: a deep learning perspective. *Electronics*. 2023, vol. 12, no. 21, p. 4397. doi: 10.3390/electronics12214397.
-21. Meng, S., Yue, Y., & Xu, T. Enhanced yolov11 method for accurate multi-fault detection in UAV photovoltaic inspection. *Sensors*. 2025, vol. 25, no. 17, p. 5311. doi: 10.3390/s25175311.
-22. Tan, M., Pang, R., & Le, Q. EfficientDet: scalable and efficient object detection. In: *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition*. Seattle, WA, USA, 2020, pp. 10778–10787. doi: 10.1109/CVPR42600.2020.01079.
-23. Akram, M., Li, G., Jin, Y., Chen, X., Zhu, H., Ahmad, A., & Riaz, F. Automatic detection of photovoltaic module defects in infrared images with deep learning. *Solar Energy*. 2020, vol. 198, pp. 175–186. doi: 10.1016/j.solener.2020.01.055.
-24. Zefri, Y., Sebari, I., Hajji, H., & Aniba, G. Developing a deep learning-based layer-3 solution for thermal infrared large-scale photovoltaic module inspection from orthorectified big UAV imagery data. *International Journal of Applied Earth Observation and Geoinformation*. 2022, vol. 106, p. 102652. doi: 10.1016/j.jag.2021.102652.
-25. Jia, Y., Chen, G., & Zhao, L. Defect detection of photovoltaic modules based on improved VarifocalNet. *Scientific Reports*. 2024, vol. 14, p. 15170. doi: 10.1038/s41598-024-66234-3.
-26. Qureshi, U., Rashid, A., Altini, N., Bevilacqua, V., & La Scala, M. Explainable intelligent inspection of solar photovoltaic systems with deep transfer learning: considering warmer weather effects using aerial radiometric infrared thermography. *Electronics*. 2025, vol. 14, no. 4, p. 755. doi: 10.3390/electronics14040755.
-27. Oulefki, A., Agaian, S., El Afou, Y., Djahel, S., Zenkouar, K., & Taleb-Ahmed, A. Detection and analysis of deteriorated areas in solar PV modules using unsupervised sensing algorithms and 3D augmented reality. *Heliyon*. 2024, vol. 10, no. 6, p. e27973. doi: 10.1016/j.heliyon.2024.e27973.
-28. Liao, K-C., & Lu, J-H. Using UAV to detect solar module fault conditions of a solar power farm with IR and visual image analysis. *Applied Sciences*. 2021, vol. 11, no. 4, p. 1835. doi: 10.3390/app11041835.
-29. Svystun, S., Melnychenko, O., Radiuk, P., Savenko, O., Sachenko, A., & Lysyi, A. Thermal and RGB images work better together in wind turbine damage detection. *International Journal of Computing*. 2024, vol. 23, no. 4, pp. 526–535. doi: 10.47839/ijc.23.4.3752.
-30. Rohith, G., Rajalakshmi, R., Manish, D., & Narasimhan, R. Fusion-Solar-Net for solar panel fault detection. *Results in Engineering*. 2025, vol. 27, p. 106513. doi: 10.1016/j.rineng.2025.106513.
-31. Lai, Y-S., Hsieh, C-C., Liao, T-W., Huang, C-Y., Yeh, C-H., & Chen, W-H. Deep learning-based automatic defect detection of photovoltaic modules in infrared, electroluminescence, and red–green–blue images. *Energy Conversion and Management*. 2025, vol. 332, p. 119783. doi: 10.1016/j.enconman.2025.119783.
-32. Niccolai, A., Grimaccia, F., & Leva, S. Advanced asset management tools in photovoltaic plant monitoring: UAV-based digital mapping. *Energies*. 2019, vol. 12, no. 24, p. 4736. doi: 10.3390/en12244736.
-33. Bommes, L., Pickel, T., Buerhop-Lutz, C., Hauch, J., Brabec, C., & Peters, I. Computer vision tool for detection, mapping, and fault classification of photovoltaics modules in aerial IR videos. *Progress in Photovoltaics: Research and Applications*. 2021, vol. 29, no. 12, pp. 1236–1251. doi: 10.1002/pip.3448.
-34. Kolahi, M., Esmailifar, S. M., Moradi Sizkouhi, A. M., & Aghaei, M. Digital-PV: a digital twin-based platform for autonomous aerial monitoring of large-scale photovoltaic power plants. *Energy Conversion and Management*. 2024, vol. 321, p. 118963. doi: 10.1016/j.enconman.2024.118963.
-35. Kishor, I., Mamodiya, U., Patil, V., Naik, N., Kumar, S., & Yadav, R. AI-integrated autonomous robotics for solar panel cleaning and predictive maintenance using drone and ground-based systems. *Scientific Reports*. 2025, vol. 15, p. 32187. doi: 10.1038/s41598-025-17313-6.
-36. DJI. *Matrice 300 RTK* [Computer program]. 2020. Available at: https://www.dji.com/global/support/product/matrice-300 (accessed 3 November 2025).
-37. DJI. *Zenmuse H20T* [Computer program]. 2020. Available at: https://enterprise.dji.com/zenmuse-h20-series (accessed 1 November 2025).
-38. NVIDIA Corporation. *Jetson AGX Orin 32GB Module* [Computer program]. 2022. Available at: https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/ (accessed 1 November 2025).
-39. Canonical Ltd. *Ubuntu* [Computer program]. Version 20.04.6 LTS (Focal Fossa). 2022. Available at: https://releases.ubuntu.com/focal/ (accessed 4 November 2025).
-40. Open Robotics. *ROS Noetic Ninjemys* [Computer program]. 2020. Available at: https://www.openrobotics.org/ (accessed 3 November 2025).
-41. DJI. *DJI Onboard SDK* [Computer program]. Version 4.1.0. 2021. Available at: https://github.com/dji-sdk/Onboard-SDK (accessed 30 October 2025).
-42. DJI. *DJI Payload SDK* [Computer program]. Version 3.12.0. 2025. Available at: https://developer.dji.com/payload-sdk/ (accessed 3 November 2025).
-43. Python Software Foundation. *Python 3 Programming Language* [Computer program]. Version 3.12.0. 2023. Available at: https://www.python.org/ (accessed 22 October 2025).
-44. OpenCV Development Team. *OpenCV* [Computer program]. Version 4.9.0. 2023. Available at: https://opencv.org/ (accessed 30 October 2025).
-45. NumPy Developers. *NumPy* [Computer program]. Version 2.3.0. 2025. Available at: https://numpy.org/ (accessed 2 November 2025).
-46. PyTorch Foundation. *PyTorch* [Computer program]. Version 2.0. 2023. Available at: https://pytorch.org/ (accessed 1 November 2025).
-47. Ultralytics. *YOLOv11m-seg Architecture* [Computer program]. 2024. Available at: https://docs.ultralytics.com/models/yolo11/ (accessed 31 October 2025).
-48. ZeroMQ Project. *ZeroMQ* [Computer program]. Version 4.3.5. 2023. Available at: https://zeromq.org/ (accessed 1 November 2025).
-49. Microsoft Corporation. *Microsoft Azure Cloud Platform* [Computer program]. 2010. Available at: https://azure.microsoft.com/ (accessed 1 November 2025).
-50. ZigBee Alliance. *ZigBee Specification* [Standard]. Document No. 053474r20. 2005. Available at: https://zigbeealliance.org/ (accessed 3 November 2025).
-51. Rainio, O., Teuho, J., & Klén, R. Evaluation metrics and statistical tests for machine learning. *Scientific Reports*. 2024, vol. 14, no. 1, p. 6086. doi: 10.1038/s41598-024-56706-x.
+**Уточнена назва етапу 2026 року:**
+Синтез та експериментальне дослідження методів інтерпретації рішень у задачах медичної діагностики та текстової аналітики
+
+### Таблиця 1. Основні види наукової роботи (400 годин)
+
+| № | Найменування розділів робіт запланованого етапу наукової роботи | Які наукові результати планується отримати від виконання запланованого розділу роботи | Форма звіту | Години |
+|:-:|:---|:---|:---:|:---:|
+| 1 | Розроблення методу інтерпретації рішень для електрокардіографічного аналізу (Розділ 3) | **Метод** інтерпретації рішень класифікації серцевої патології за сигналами ЕКГ; **формальна модель** переходу від ознакового простору DL до клінічно зрозумілих ознак | Розділ звіту | 70 |
+| 2 | Адаптація методології інтерпретації для задач аналізу МРТ-зображень серця (Розділ 4) | **Алгоритм** узгодження візуальних пояснень (Heatmaps) з клінічними правилами; **критерії** клінічної відповідності та вимірюваності для зображень | Розділ звіту, рукопис статті | 70 |
+| 3 | Створення методу виявлення недостовірних новин на основі LLM (Розділ 5) | **Метод** виявлення фейкових новин через ментальну апроксимацію; **процедура** обчислення інтерпретованих лінгвістичних ознак у поєднанні з ембеддингами LLM | Розділ звіту | 70 |
+| 4 | Проєктування інтегрованої інтелектуальної інформаційної технології (Розділ 6) | **Об’єктно-орієнтована модель** системи та **схема даних**; **архітектура** програмного комплексу для уніфікованого синтезу пояснень у різних доменах | Технічний опис, розділ звіту | 60 |
+| 5 | Експериментальне дослідження стабільності та чутливості розроблених методів (Розділ 7) | **Кількісні залежності** між збуреннями вхідних даних та стабільністю пояснень; результати абляційного аналізу компонентів методу | Протокол випробувань | 65 |
+| 6 | Валідація результатів із залученням профільних експертів (лікарів, редакторів) | **Коефіцієнти узгодженості** (Каппа) між автоматичними поясненнями та експертними висновками; **метрики** довіри та корисності | Розділ звіту, рукопис статті | 65 |
+| | **Всього годин:** | | | **400** |
+
+---
+
+### Таблиця 2. Інші види наукової роботи (100 годин)
+
+| № | Інші види наукової роботи: Назва рівня конференції, олімпіади, конкурсу, виставки | Кількість осіб, одиниць, штук тощо | Години |
+|:-:|:---|:---:|:---:|
+| 1 | Підготовка та подання статті до фахового міжнародного журналу (Scopus/WoS Q1-Q2) за результатами методів для ЕКГ/МРТ | 1 стаття | 30 |
+| 2 | Участь у міжнародній конференції з медичної інформатики (презентація методу візуалізації рішень) | 1 доповідь | 10 |
+| 3 | Підготовка статті до міжнародного видання за результатами методу виявлення фейкових новин (NLP domain) | 1 стаття | 30 |
+| 4 | Апробація результатів на літньому науковому семінарі (презентація проміжних результатів аналізу чутливості) | 1 презентація | 10 |
+| 5 | Підготовка та подання розширених тез на конференцію з обробки природної мови (Computational Linguistics) | 1 тези доповіді | 15 |
+| 6 | Презентація консолідованих результатів етапу на кафедральному науковому семінарі | 1 звітна доповідь | 5 |
+| | **Всього годин:** | | **100** |
+
+---
+
+### Підсумкова інформація (для формату PDF):
+*   **Тема етапу 2026 р.:** Синтез та експериментальне дослідження методів інтерпретації рішень у задачах медичної діагностики та текстової аналітики.
+*   **Всього годин (Таблиця 1):** 400
+*   **Всього годин (Таблиця 2):** 100
+*   **Разом годин:** 500
