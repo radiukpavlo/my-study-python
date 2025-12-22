@@ -1,0 +1,17 @@
+corrected the HTML file title, i.e., `CEUR-WS.org/Vol-4141 - Advanced AI in Explainability and Ethics for the Sustainable Development Goals 2025`
+added CEUR page span `<span class="CEURPAGES">1-14</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">15-27</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">28-37</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">38-51</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">52-66</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">67-77</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">78-91</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">92-106</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">107-116</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">117-129</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">130-141</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">142-152</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">153-167</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">168-182</span>` in `index.html`
+added CEUR page span `<span class="CEURPAGES">183-195</span>` in `index.html`
+added the CEUR logo as a workshop sponsor in `preface.pdf`
