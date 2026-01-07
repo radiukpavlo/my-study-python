@@ -43,8 +43,8 @@ uav_pv_results_package/
 ## How to regenerate figures/tables
 ```
 cd scripts
-python make_figs.py
-python export_payloads.py
+python scripts/make_figs.py
+python scripts/export_payloads.py
 ```
 Artifacts are placed into `../figs`, `../tables`, `../data`, and `../payloads`.
 

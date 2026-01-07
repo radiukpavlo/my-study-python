@@ -144,7 +144,7 @@ def save_precision_recall_curves() -> None:
     for dataset, lifts, csv_name, stem in configs:
         csv_path = _write_pr_curve_csv(dataset, lifts, csv_name)
         df = pd.read_csv(csv_path)
-        fig, ax = _create_axes(figsize=(6.0, 4.0), grid_axis="both", add_minor=True)
+        fig, ax = _create_axes(figsize=(6.0, 4.0), grid_axis="y")
         labels = [
             ("thermal_only", "Thermal-only", COLOR_CYCLE[0]),
             ("rgb_only", "RGB-only", COLOR_CYCLE[1]),
@@ -165,6 +165,7 @@ def save_precision_recall_curves() -> None:
             )
         ax.set_xlim(0.0, 1.0)
         ax.set_ylim(0.4, 1.02)
+        ax.set_yticks(np.arange(0.4, 1.01, 0.1))
         ax.set_xlabel("Recall")
         ax.set_ylabel("Precision")
         ax.set_title(f"{dataset}: Precision vs. recall", pad=12)
