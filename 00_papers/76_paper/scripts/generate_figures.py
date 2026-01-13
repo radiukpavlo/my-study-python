@@ -44,7 +44,7 @@ WEATHER = [("Clear", 92, 89), ("Cloudy", 96, 94)]
 SOTA_MAP = [
     ("Di Tommaso et al. (IR hotspots) AP@0.5", 0.669),
     ("Dotenco et al. (defect cls) F1", 0.939),
-    ("Dey et al. ST-YOLO mAP@0.5", 0.966),
+    ("Xie et al. ST-YOLO mAP@0.5", 0.966),
     ("This work (ensemble) mAP@0.5", 0.960),
 ]
 

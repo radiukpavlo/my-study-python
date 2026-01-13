@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-01-12T17:42:06.755899</dc:date>
+    <dc:date>2026-01-13T21:03:50.843372</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -38,7 +38,7 @@ L 149.388929 247.724995
 L 149.388929 95.668575 
 L 146.315448 95.668575 
 z
-" clip-path="url(#p3998fe890c)" style="fill: #1f2937; stroke: #1f2937; stroke-linejoin: miter"/>
+" clip-path="url(#p4a5f362c64)" style="fill: #1f2937; stroke: #1f2937; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 133.374476 231.54878 
@@ -49,7 +49,7 @@ L 52.644382 21.199917
 L 130.041303 222.431911 
 L 132.909923 221.328596 
 z
-" clip-path="url(#p3998fe890c)" style="fill: #1f2937; stroke: #1f2937; stroke-linejoin: miter"/>
+" clip-path="url(#p4a5f362c64)" style="fill: #1f2937; stroke: #1f2937; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 246.607981 53.610416 
@@ -60,7 +60,7 @@ L 133.238004 231.461934
 L 241.26074 61.711919 
 L 238.667763 60.061843 
 z
-" clip-path="url(#p3998fe890c)" style="fill: #1f2937; stroke: #1f2937; stroke-linejoin: miter"/>
+" clip-path="url(#p4a5f362c64)" style="fill: #1f2937; stroke: #1f2937; stroke-linejoin: miter"/>
    </g>
    <g id="patch_5">
     <path d="M 278.960411 199.19635 
@@ -71,12 +71,12 @@ L 133.339385 231.39087
 L 269.450713 201.143908 
 L 268.783981 198.143616 
 z
-" clip-path="url(#p3998fe890c)" style="fill: #1f2937; stroke: #1f2937; stroke-linejoin: miter"/>
+" clip-path="url(#p4a5f362c64)" style="fill: #1f2937; stroke: #1f2937; stroke-linejoin: miter"/>
    </g>
    <g id="line2d_1">
     <path d="M 20.140972 247.724995 
 L 278.960411 247.724995 
-" clip-path="url(#p3998fe890c)" style="fill: none; stroke: #1f2937; stroke-width: 2; stroke-linecap: square"/>
+" clip-path="url(#p4a5f362c64)" style="fill: none; stroke: #1f2937; stroke-width: 2; stroke-linecap: square"/>
    </g>
    <g id="text_1">
     <!-- PV module plane -->
@@ -608,7 +608,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p3998fe890c">
+  <clipPath id="p4a5f362c64">
    <rect x="7.2" y="9.873663" width="284.701383" height="249.177586"/>
   </clipPath>
  </defs>
