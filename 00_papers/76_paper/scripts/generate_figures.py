@@ -115,7 +115,7 @@ def _save_figure(fig: plt.Figure, stem: str) -> None:
     fig.tight_layout()
     for ax in fig.axes:
         _enforce_bold_text(ax)
-    for ext in ("pdf", "svg"):
+    for ext in ("pdf", "svg", "png", "jpg"):
         fig.savefig(FIGS_DIR / f"{stem}.{ext}", format=ext, bbox_inches="tight")
     plt.close(fig)
 
@@ -302,16 +302,16 @@ def _plot_param(
 ) -> None:
     if isinstance(data[0][0], str):
         labels = [str(entry[0]) for entry in data]
-        accuracy = [float(entry[1]) for entry in data]
+        precision = [float(entry[1]) for entry in data]
         recall = [float(entry[2]) for entry in data]
         x = np.arange(len(labels))
         width = 0.35
         fig, ax = _create_axes(figsize=(6, 3.5), grid_axis="y")
         ax.bar(
             x - width / 2,
-            accuracy,
+            precision,
             width,
-            label="Accuracy (%)",
+            label="Precision (%)",
             edgecolor=DARK_EDGE_COLOR,
             linewidth=1.0,
         )
@@ -327,10 +327,10 @@ def _plot_param(
         ax.set_xticklabels(labels, rotation=15, ha="right")
     else:
         xvals = [float(entry[0]) for entry in data]
-        accuracy = [float(entry[1]) for entry in data]
+        precision = [float(entry[1]) for entry in data]
         recall = [float(entry[2]) for entry in data]
         fig, ax = _create_axes(figsize=(6, 3.5), grid_axis="y")
-        ax.plot(xvals, accuracy, marker="o", linewidth=2.4, label="Accuracy (%)")
+        ax.plot(xvals, precision, marker="o", linewidth=2.4, label="Precision (%)")
         ax.plot(xvals, recall, marker="o", linewidth=2.4, label="Recall (%)")
         ax.set_xticks(xvals)
     ax.set_xlabel(xlabel)
@@ -378,7 +378,7 @@ def main() -> None:
     fig_hardware_tradeoff()
     fig_flight_params()
     fig_sota_comparison()
-    print(f"Done. Figures written to: {FIGS_DIR} (.pdf/.svg)")
+    print(f"Done. Figures written to: {FIGS_DIR} (.pdf/.svg/.png/.jpg)")
 
 
 if __name__ == "__main__":
