@@ -1,726 +1,458 @@
-# Equivariant Transition Matrices for Explainable Deep Learning: A Lie Group Linearization Approach
+# WEDD-RST: An Interpretable Framework for Defect Detection in Solar Cyber-Physical Systems
+
+Pavlo Radiuk$^{1,*}$, Anatoliy Sachenko$^{2,3}$, Oleksandr Melnychenko$^{1}$, Antonina Kashtalian$^{1}$
+
+$^1$ Khmelnytskyi National University, 11, Instytutska Str., Khmelnytskyi, 29016, Ukraine
+$^2$ Casimir Pulaski Radom University, 29, Malczewskiego str., Radom, 26-600, Poland
+$^3$ West Ukrainian National University, 11, Lvivska str., Ternopil, 46009, Ukraine
+
+$^*$ Corresponding author.
+
+---
+
+### Abstract
+
+The rapid proliferation of cyber-physical systems in renewable energy infrastructure has generated vast quantities of continuous sensor data, necessitating advanced monitoring solutions to mitigate safety risks such as photovoltaic fires. However, prevailing deep learning approaches for defect detection often operate as opaque black boxes, lacking the reasoning transparency required for safety-critical decision-making and regulatory compliance. In this work, a novel production knowledge base methodology is proposed for constructing interpretable, rule-based classification systems directly from continuous sensor measurements. The approach integrates rough set theory with a newly developed Weighted Entropy-Density Discretization method to generate production rules that are simultaneously accurate, concise, and human-readable. By optimizing discretization thresholds based on a dual criterion of information entropy and local probability density, the system recovers natural data structures that standard methods often miss. Validated on a simulated SCADA dataset for fire hazard detection, the methodology achieves 96.2% overall accuracy, with a perfect 100% accuracy for deterministic rules and a macro F1-score of 0.960. Notably, the critical Fire Hazard class achieved a 98.0% recall rate, ensuring high reliability in emergency scenarios. Further benchmarking on the Iris and Wine datasets demonstrates competitive performance (93.3% and 87.6% accuracy, respectively) against Decision Tree and Naive Bayes baselines. The resulting knowledge base is self-contained and lightweight, enabling deployment on resource-constrained edge devices where it provides fully auditable IF-THEN rules with explicit confidence scores, effectively bridging the gap between high-performance artificial intelligence and the rigorous requirements for transparent industrial automation.
+
+Keywords: production knowledge base, rough set theory, discretization, information granulation, reduct, classification, cyber-physical systems, photovoltaic monitoring, SCADA
+
+---
 
 ## 1. Introduction
 
-Стрімкий розвиток глибокого навчання (DL) призвів до впровадження високоефективних моделей у критично важливих сферах, таких як медицина, криміналістика та автономні системи. Проте природа цих моделей як «чорних скриньок» залишається фундаментальним бар'єром для їх широкого впровадження, оскільки розробники та зацікавлені сторони вимагають не лише точності, але й прозорості та довіри [1,2]. Пояснюваний штучний інтелект (XAI) виник як життєво необхідна галузь, покликана подолати розрив між складними формальними моделями (FM) та ментальними моделями людини (MM) [3].
+The proliferation of cyber-physical systems (CPS) in industrial environments, particularly in renewable energy infrastructure, has generated unprecedented volumes of continuous sensor data that require intelligent analysis for real-time decision-making. Photovoltaic (PV) power stations represent a critical application domain where thermal defects in modules, including overheating bypass diodes and localized hot spots, can escalate to catastrophic fire incidents if not detected and classified promptly [1], [2]. Modern PV monitoring architectures employ Supervisory Control and Data Acquisition (SCADA) systems that integrate diverse sensor modalities, including thermal imaging from Unmanned Aerial Vehicle (UAV) platforms, bypass diode temperature sensors, and fire detection sensors [3], [4].
 
-У нашому попередньому дослідженні [4,5] ми запропонували підхід візуальної аналітики, заснований на матрицях переходу для відображення високовимірного простору ознак DL-моделі на інтерпретований простір машинного навчання (ML). Хоча цей підхід продемонстрував ефективність для завдань класифікації, у його основі неявно закладено припущення, що перехід між двома поданнями ознак може бути описаний лінійним відображенням, тобто що зв’язок між просторами ознак є лінійним або достатньо близьким до лінійного в робочій області даних. У реальності ж зв'язки між латентними ознаками глибокої нейронної мережі та зрозумілими людині атрибутами часто є нелінійними [6]. Важливо, що ці нелінійності не є випадковими: у багатьох задачах вони відображають наявність прихованої геометричної структури та симетрій у даних, тобто дій неперервних груп перетворень, які на рівні об’єктів можуть реалізовуватися як складні (нелінійні) деформації [7], але водночас мають керовану локальну структуру, описувану генераторами алгебри Лі.
+The fundamental challenge in these cyber-physical environments is the transformation of raw continuous sensor measurements into actionable knowledge that operators can interpret, verify, and trust. While deep learning methods such as You Only Look Once (YOLO)-family architectures have demonstrated impressive detection accuracy [5], [6], they operate as nontransparent "black boxes" that cannot explain their reasoning. In safety-critical domains such as fire hazard assessment, this opacity creates regulatory, operational, and ethical concerns [7]. An operator receiving a fire hazard alert needs to understand why the system classified a condition as dangerous—not merely accept a probability score from an inscrutable neural network.
 
-У цьому контексті природним способом обмежити нелінійність є не намагатися апроксимувати її довільною функцією, а вимагати структурної узгодженості з геометрією даних. Саме тому сучасні результати геометричного глибокого навчання підкреслюють важливість еквіваріантності – властивості, за якої перетворення у вхідному просторі спричиняє передбачуване перетворення у просторі ознак [8], тобто нелінійний зв’язок між поданнями підпорядковується дії симетрій, а не є довільним.
+The task of building production rules from sensor data is a classic problem of inductive learning, i.e., machine learning based on symbolic computing [8], [9]. Given a feature matrix $B$ (where rows represent measurement samples and columns represent sensor features) and a class label vector $Y$ (operational states), the goal is to construct logical rules of the form:
 
-Однак більшість методів XAI не накладає явних обмежень симетрійної узгодженості. Якщо модель глибокого навчання є чутливою до певної симетрійної варіації об’єкта, тобто її внутрішні ознаки змінюються узгоджено з дією перетворень у вхідному просторі, то інтерпретована сурогатна модель має відтворювати цю зміну структурно коректно: однакові перетворення об’єкта повинні приводити до передбачуваної та математично узгодженої трансформації пояснюваних ознак. Матриці переходу, побудовані під неявним припущенням глобальної лінійності зв’язку між поданнями ознак, не здатні адекватно врахувати структурно зумовлені нелінійні ефекти, спричинені симетріями та геометрією даних; унаслідок цього отримані пояснення можуть втрачати інтерпретаційний зміст або ставати внутрішньо неузгодженими вже за малих перетворень у вхідному просторі.
+> IF (Feature$_1 \in$ Range$_1$) AND (Feature$_2 \in$ Range$_2$) $\ldots$ THEN Class $= k$
 
-Для усунення цього обмеження в даній роботі представлено вдосконалений підхід до пояснюваності моделей через лінеаризацію індукованих еквіваріантних дій групи в просторах ознак. У нашій постановці ключова нелінійність пов’язана не з самою матрицею переходу, а з неперервною дією групи Лі на об’єктах та індукованою дією в просторах ознак; саме цю дію ми лінеаризуємо через алгебру Лі.
+with associated metrics of confidence (certainty) and support (statistical significance). This transition from tabular data to logical constructions requires addressing several interconnected challenges: discretization of continuous features into meaningful categories, identification of redundant features, resolution of contradictory patterns, and design of inference mechanisms for new observations.
 
-Використовуючи апарат груп Лі та їхніх алгебр Лі, ми переходимо від підбору матриці переходу лише за критерієм узгодження значень ознак до структурного узгодження двох просторів подань: латентного простору ознак (формальна модель) та простору інтерпретованих ознак (ментальна модель). Це дозволяє сконструювати матрицю переходу, яка не лише забезпечує високу фіделіті перекладу між поданнями, але й є сумісною з інфінітезимальною дією симетрій, тобто поважає генератори алгебри Лі в обох просторах (наприклад, для $SO(2)$ – генератор поворотів).
+Classical approaches to this problem include decision tree algorithms, such as ID3 [9], C4.5 [10], and CART [11], sequential covering algorithms (CN2, PRISM, RIPPER), and Rough Set Theory (RST) methods [12]. Each has notable limitations:
 
-Гіпотезою дослідження є припущення, що зв'язок між просторами ознак глибокого навчання та інтерпретованими ментальними моделями може бути більш точно та надійно представлений матрицею переходу, яка задовольняє умову переплітання (intertwining condition) для дій груп симетрії. Лінеаризуючи дії групи в обох просторах через генератори алгебри Лі, ми одержуємо структурне відображення, стійке до варіацій, що породжуються симетріями даних (не лише геометричними, а й іншими доменно-специфічними перетвореннями, які описуються дією групи), і тим самим забезпечуємо більш достовірні та внутрішньо узгоджені пояснення порівняно з підходами, що використовують лише фіксований лінійний переклад без урахування симетрійної структури.
+Decision tree algorithms construct rules greedily, selecting locally optimal splits at each node without guaranteeing globally optimal rule sets. The resulting rules may be unnecessarily long or miss important feature interactions [13]. Sequential covering algorithms build rules directly but are sensitive to the order of class selection and may produce overlapping or contradictory rules.
 
-Ключові внески цього дослідження полягають у наступному:
+Standard RST methods provide rigorous mathematical foundations for handling uncertainty through lower and upper approximations [8], [14] but traditionally rely on simple equal-width or equal-frequency discretization that ignores the natural structure of the data. The Fayyad-Irani entropy-based discretization [15], while effective for class separation, does not consider the density distribution of feature values, leading to cut points that bisect natural data clusters and produce rules sensitive to noise.
 
-1. Запропоновано метод трансформації результатів формальної моделі в ознаки ментальної моделі із збереженням структурних симетрій даних.
-2. Впроваджено методику обчислення інфінітезимальних генераторів як для формальних, так і для ментальних моделей, що дозволяє використовувати лінійні співвідношення переплетення навіть тоді, коли відповідні перетворення на рівні об’єктів є нелінійними.
-3. Запропоновано стійкий математичний апарат на основі сингулярного розкладу (SVD) для пошуку оптимальної матриці переходу, що балансує між точністю (fidelity) та еквіваріантністю (структурною відповідністю).
+This paper proposes a Production Knowledge Base (PKB) Methodology that addresses these limitations through a hybrid approach combining enhanced discretization with RST. The key scientific contributions are:
 
-Решта цієї статті організована наступним чином. У Розділі 2 «Related Works» проведено аналіз сучасного стану досліджень у галузях пояснюваного штучного інтелекту (XAI), геометричного глибокого навчання та застосування матриць переходу. У Розділі 3 «Матеріали та методи» викладено математичний фундамент методу на основі теорії алгебр Лі, деталізовано алгоритм лінеаризації та побудови еквіваріантної матриці переходу; також тут наведено чисельний приклад на синтетичних даних для валідації математичного апарату та описано методику експериментальних досліджень на датасеті MNIST. Розділ 4 «Результати» присвячений аналізу отриманих даних та кількісному порівнянню стійкості запропонованого підходу з існуючими базовими методами. У Розділі 5 «Дискусія» обговорюються теоретичні та практичні імплікації отриманих результатів, а також обмеження методу. Нарешті, у розділі «Висновки» підсумовано внесок роботи та окреслено перспективні напрямки майбутніх досліджень.
+1Weighted Entropy-Density Discretization (WEDD): A novel multi-criteria discretization method that simultaneously minimizes information entropy with respect to class labels and local probability density at threshold positions. This dual-criterion approach places cut points in natural "valleys" between data clusters, producing rules that are robust to statistical outliers.
+2An improved heuristic for finding minimal feature subsets (reducts) that incorporates information-capacity weights derived from the discretization stage, reducing rule complexity by up to 40–60% while preserving classification capability.
+3A conflict resolution mechanism based on an integral class support score that combines rule confidence, support, and interval reliability weights, enabling accurate classification even when multiple contradictory rules are activated.
+
+The remainder of this paper is organized as follows: Section 2 surveys related work. Section 3 presents the complete mathematical framework of the PKB methodology. Section 4 reports experimental results. Section 5 discusses findings and implications. Section 6 concludes the paper.
 
 ## 2. Related Works
 
-Сучасні дослідження в області пояснюваного штучного інтелекту (XAI) та геометричного глибокого навчання (Geometric Deep Learning, GDL) спрямовані на подолання обмежень традиційних моделей глибокого навчання (DL), таких як їхня "чорна скринька" природа та відсутність врахування симетрій даних [1,2,3]. Цей розділ оглядає ключові роботи, пов'язані з матрицями переходу для пояснюваності, еквіваріантними нейронними мережами, групами Лі та їх алгебрами, а також інтеграцією симетрій у XAI. Особлива увага приділяється продовженню попередніх досліджень авторів, де запропоновано базовий підхід до матриць переходу для візуальної аналітики DL-моделей [4,5].
-
-У контексті XAI, традиційні методи, такі як SHAP, LIME та інтегровані градієнти, фокусуються на локальних поясненнях, але часто ігнорують глобальну структуру даних, включаючи симетрії [6,7,8]. Глибокі моделі потребують механізмів, що забезпечують стабільність пояснень при геометричних трансформаціях, таких як повороти чи зсуви [9,10]. Геометричне глибоке навчання (GDL) пропонує уніфікований фреймворк для врахування симетрій через групову еквіваріантність, де моделі зберігають інваріантність або еквіваріантність щодо дій груп, таких як SO(3) для ротацій [11,12]. Це дозволяє моделям ефективніше обробляти неевклідові дані, такі як графи чи 3D-структури, і покращує генералізацію [13,14].
-
-Еквіваріантні нейронні мережі (Equivariant Neural Networks, ENN) є ключовим елементом GDL, де симетрії інтегруються безпосередньо в архітектуру [15,16]. Наприклад, у роботах з групами Лі запропоновано фреймворки для еквіваріантних мереж на редуктивних групах Лі, що узагальнюють конволюційні шари для довільних симетрій, включаючи Лоренца чи унітарні групи [17,18]. Інші дослідження фокусуються на алгебрах Лі для канонізації мереж, дозволяючи еквіваріантність без повного знання групової структури [19,20]. Такі підходи застосовуються в фізиці та хімії, де симетрії (наприклад, ротації та трансляції) критичні для моделювання молекул [21,22]. У контексті XAI, алгебраїчні атаки на пояснювальні моделі з використанням груп Лі підкреслюють вразливість традиційних методів до симетрій, пропонуючи геометричні перспективи для стійкості [23,24].
-
-Матриці переходу (transition matrices) були запропоновані для пояснюваності DL у попередніх роботах авторів [25,26]. У [4] розроблено візуальну аналітику з матрицями переходу для відображення ознак DL-моделей на інтерпретовані простори ML-моделей, з використанням HITL та SVD для задач класифікації на датасетах MNIST, FNC-1 та Iris. У [5] цей підхід адаптовано для медичних даних (ECG та MRI), де матриці переходу транслюють рішення DL у користувацькі ознаки, сумісні з клінічними рекомендаціями, досягаючи високої узгодженості з експертними анотаціями (Cohen’s Kappa 0.89 та 0.80). Однак ці методи базуються на лінійних апроксимаціях і не враховують нелінійні симетрії даних, що призводить до нестійкості при геометричних збуреннях [27,28].
-
-Інші роботи з матрицями переходу в XAI обмежені, але включають фази переходу для оцінки втрат в DL [23], або нечіткі матриці для оцінки втручань у соціальних мережах [23]. У GDL, симетрії через групи Лі застосовуються для еквіваріантних CNN з розподілом Лапласа [2], або для квантових мереж [5,13]. Проте інтеграція матриць переходу з алгебрами Лі для XAI залишається недостатньо дослідженою [8,28].
-
-Для ілюстрації прогалин у літературі наведено **Таблицю 1**, яка порівнює існуючі методи з запропонованим підходом, враховуючи гіпотезу дослідження: зв'язок між просторами ознак DL та MM може бути точно представлений матрицею переходу, що задовольняє умову переплітання для дій груп симетрій, з лінеаризацією через алгебри Лі для стабільності при геометричних трансформаціях.
-
-**Таблиця 1. Порівняння існуючих методів з запропонованим підходом**
-
-| Аспект | Існуючі методи (XAI, GDL, ENN) | Підхід цієї роботи | Прогалина |
-| :--- | :--- | :--- | :--- |
-| **Врахування симетрій** | Здебільшого ігнорують нелінійні симетрії; фокус на локальних поясненнях або базових групах (наприклад, SO(3)) [1,6,10] | Еквіваріантна матриця переходу з алгебрами Лі для структурної узгодженості [7,15] | Відсутність інтеграції симетрій у глобальні пояснення; нестійкість до геометричних збурень |
-| **Лінеаризація нелінійних зв'язків** | Суто лінійні апроксимації в матрицях переходу [4,5] | Лінеаризація через інфінітезимальні генератори груп Лі [8,16] | Обмежена точність у нелінійних даних; відсутність "поваги" до симетрій |
-| **Пояснюваність у критичних сферах** | Локальні методи без глобальної стабільності [2,9] | Структурна узгодженість для консистентних пояснень у медицині, фізиці [3,17] | Недостатня стабільність пояснень при трансформаціях даних |
-| **Обчислювальна стійкість** | Залежність від даних без симетрій [11,18] | SVD з ваговим коефіцієнтом для балансу fidelity та equivariance [12,19] | Перевизначені системи без регуляризації симетрій |
-| **Застосування в біології та хімії** | Обмежене використання симетрій для молекулярного моделювання [13,20] | Інтеграція з дифузійними моделями для генерації структур [14,21] | Відсутність еквіваріантних пояснень для біомедичних даних |
-| **Універсальність мереж** | Фокус на конкретних групах без узагальнення [22,25] | Універсальні класи еквіваріантних мереж [23,26] | Обмежена генералізація до довільних симетрій |
-| **Практичні додатки** | Теоретичні фреймворки без широкого тестування [24,27] | Практичні алгоритми для реальних даних [28] | Недостатнє емпіричне підтвердження стійкості |
-
-Метою роботи є побудова матриці переходу між латентним простором ознак формальної моделі та простором інтерпретованих ознак, яка забезпечує стабільні й внутрішньо узгоджені пояснення під дією симетрій даних, шляхом лінеаризації індукованих групових перетворень у просторах ознак за допомогою апарату груп Лі та їхніх алгебр Лі.
-
-Завдання дослідження:
-
-1. Розробити підхід до побудови матриці переходу між латентним простором ознак формальної моделі та простором інтерпретованих ознак ментальної моделі, який узгоджується зі спільною симетрійною структурою даних та забезпечує структурно коректний «переклад» між поданнями.
-2. Запропонувати та реалізувати методику емпіричного оцінювання інфінітезимальних генераторів дії групи симетрій у просторі латентних ознак і у просторі інтерпретованих ознак, що дозволяє формулювати та використовувати лінійні співвідношення переплетення для матриці переходу навіть у випадках, коли перетворення на рівні об’єктів є нелінійними.
-3. Запропонувати стійкий математичний апарат на основі сингулярного розкладу (SVD) для пошуку оптимальної матриці переходу, що балансує між точністю (fidelity) та еквіваріантністю (структурною відповідністю симетріям).
-
-## 3. Матеріали та методи
-
-У роботі запропоновано розширений підхід до пояснюваного штучного інтелекту, в якому перехід між латентним простором ознак глибокої (формальної) моделі та простором інтерпретованих (ментальних) ознак будується не лише за критерієм фіделіті, а із явним урахуванням симетрій даних: ключовим кроком є лінеаризація індукованої дії групи Лі в обох просторах ознак через генератори алгебри Лі та подальша побудова матриці переходу, сумісної з цією симетрійною структурою. На відміну від базового підходу [4], де матриця переходу оцінюється лише як лінійне відображення між двома просторами, у запропонованій постановці додатково враховується внутрішня симетрія даних, припускаючи, що на даних діє деяка група Лі перетворень.
-
-### 3.1. Формалізація задачі
-
-Розглянемо простір даних $X$ і нехай $A \in \mathbb{R}^{m \times k}$ – матриця ознак даних, отриманих із згорткових шарів глибокої нейронної мережі (Formal Model, FM), де $m$ – кількість зразків, а $k$ – розмірність простору глибоких ознак. Паралельно розглянемо матрицю $B \in \mathbb{R}^{m \times l}$ відповідних інтерпретованих ознак (Mental Model, MM), де $l$ – кількість параметрів, що мають чітку семантику для експерта. Для зразка $x \in X$ відповідні йому рядки в матрицях $A$ та $B$ позначимо через $a(x) \in \mathbb{R}^k$ та $b(x) \in \mathbb{R}^l$.
-
-Шукана матриця переходу $T \in \mathbb{R}^{l \times k}$ трактується як лінійний оператор, що відображає глибокі ознаки в інтерпретовані. На рівні всіх зразків це задається наближеною рівністю
-$$
-B \approx A T^\top. \quad (1)
-$$
-На відміну від стандартних підходів XAI, які встановлюють лише статичну відповідність між просторами ознак, ми додатково накладаємо гіпотезу структурної узгодженості з симетріями даних: для об’єкта $x \in X$ його подання $a(x)$ та $b(x)$ не є незалежними статистичними сутностями, а мають трансформуватися узгоджено під дією симетрій.
-
-Більш точніше, ми припускаємо, що на просторі $X$ локально діє деяка група Лі $G$,
-$$
-G \curvearrowright X, \quad (g, x) \mapsto g \cdot x,
-$$
-а подання $a: X \rightarrow \mathbb{R}^k$ та $b: X \rightarrow \mathbb{R}^l$ є принаймні наближено еквіваріантними щодо цієї дії. Тобто існують лінійні представлення (тобто гомоморфізми в групи невироджених матриць)
-$$
-\rho_A: G \rightarrow GL(k), \quad \rho_B: G \rightarrow GL(l),
-$$
-такі що для всіх $g \in G$ та $x \in X$ виконується
-$$
-a(g \cdot x) \approx \rho_A(g) \, a(x), \quad b(g \cdot x) \approx \rho_B(g) \, b(x).
-$$
-Інтуїтивно це означає: якщо об’єкт змінюється лише “дозволеною” симетрією $g$, то обидва простори ознак змінюються узгоджено, хоча й у різних координатизаціях. У такій ситуації природно вимагати, щоб матриця перекладу $T$ була переплітачем (Intertwiner) індукованих дій групи, тобто
-$$
-T \, \rho_A(g) \approx \rho_B(g) \, T, \quad \forall g \in G.
-$$
-Ця умова є стандартною в теорії представлень груп і формалізує твердження, що $T$ “поважає симетрії” та не руйнує інформацію про те, як саме діє група на даних.
-
-У термінах машинного навчання близьку ідею реалізують еквіварантні шари: наприклад, згортка в згорткових мережах є еквіварантним перетворенням до зсувів, тобто переносить структуру симетрій між шарами, зберігаючи релевантний зміст представлення.
-
-Нехай $\mathfrak{g}$ – алгебра Лі $r$-параметричної групи Лі $G$, $\{\xi_i\}_{i=1}^r$ – базис інфінітезимальних генераторів, а $J_i^A \in \mathbb{R}^{k \times k}$ та $J_i^B \in \mathbb{R}^{l \times l}$ – відповідні матриці диференціалів представлень $d\rho_A(\xi_i)$ та $d\rho_B(\xi_i)$ у просторах ознак. Тоді узгодженість дії симетрій у лінеаризованій формі записується як
-$$
-T J_i^A \approx J_i^B T, \quad i = 1, \dots, r. \quad (2)
-$$
-Отже, матриця $T$ має задовольняти дві принципові вимоги: точність відображення, що забезпечує близькість (1), та структурну узгодженість із симетріями, що задається співвідношеннями (2).
-
-На практиці кожного зразка $x_j$ ми будуємо кілька його трохи змінених копій
-$$
-x_{j,i} = \exp(\varepsilon \xi_i) \cdot x_j,
-$$
-де $\varepsilon > 0$ – малий крок, а $\xi_i$ – «напрям симетрії» (наприклад, дуже малий поворот, зсув або масштабування). Після цього обчислюємо ознаки для оригіналу та копій: $a(x_j), a(x_{j,i})$ і $b(x_j), b(x_{j,i})$, та оцінюємо їхні малі зміни (скінченні різниці)
-$$
-\Delta a_{j,i} = \frac{a(x_{j,i}) - a(x_j)}{\varepsilon}, \quad \Delta b_{j,i} = \frac{b(x_{j,i}) - b(x_j)}{\varepsilon}.
-$$
-Ці величини показують, як саме ознаки реагують на «майже непомітне» симетрійне збурення даних.
-
-Найважливіший крок полягає в тому, що ми відновлюємо матриці $J_i^A$ та $J_i^B$, які можна інтерпретувати як *лінійні правила локальної реакції ознак на симетрію* $\xi_i$:
-$$
-\Delta a_{j,i} \approx J_i^A \, a(x_j), \quad \Delta b_{j,i} \approx J_i^B \, b(x_j).
-$$
-Після цього ми шукаємо матрицю $T$ наближеними методами так, щоб вона виконувала дві вимоги одночасно:
-
-*   **Якість перекладу:** $T$ має добре відтворювати $b(x)$ з $a(x)$ на даних.
-*   **Узгодження симетрій:** якщо в просторі латентних ознак відбувся «малий симетрійний крок», то після перекладу в інтерпретовані ознаки має відбутися відповідний «малий симетрійний крок» у їхньому сенсі, тобто переклад має бути узгоджений із локальною дією симетрій.
-
-У результаті отримуємо переклад $T$, який є не лише точним на даних, але й стійким до природних варіацій, що породжуються симетріями. Це підвищує надійність пояснення: інтерпретовані ознаки відображають не випадковий підгін, а структуру, узгоджену з геометрією даних.
-
-**Приклад: група поворотів площини $SO(2)$.**
-Як типовий приклад симетрій розглянемо групу поворотів площини з центром в початку координат:
-$$
-SO(2) = \left\{ R(\theta) = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} : \theta \in \mathbb{R} \right\}.
-$$
-Вона діє на точках площини $x \in \mathbb{R}^2$ за правилом
-$$
-SO(2) \curvearrowright \mathbb{R}^2, \quad (\theta, x) \mapsto R(\theta)x.
-$$
-Алгебра Лі $\mathfrak{so}(2)$ є одновимірною і породжується матрицею
-$$
-\xi = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}, \quad \text{так що} \quad R(\theta) = \exp(\theta \, \xi).
-$$
-Якщо подання ознак $a(x)$ та $b(x)$ є еквіварантними щодо цієї дії, то існують представлення
-$$
-\rho_A: SO(2) \rightarrow GL(k), \quad \rho_B: SO(2) \rightarrow GL(l),
-$$
-для яких виконується умова еквіварантності
-$$
-a(R(\theta)x) \approx \rho_A(R(\theta)) \, a(x), \quad b(R(\theta)x) \approx \rho_B(R(\theta)) \, b(x).
-$$
-Відповідна лінеаризована (інфінітезимальна) форма цієї умови задається через диференціали
-$$
-J^A = d\rho_A(\xi) \in \mathbb{R}^{k \times k}, \quad J^B = d\rho_B(\xi) \in \mathbb{R}^{l \times l},
-$$
-і записується як умова переплітання для матриці переходу:
-$$
-T J^A \approx J^B T.
-$$
-Введення умови еквіваріантності перетворює матрицю $T$ зі звичайного регресійного коефіцієнта на структурний міст між моделями. Наприклад, якщо в глибокій моделі FM певна комбінація нейронів відповідає за розпізнавання нахилу об’єкта, то умова еквіваріантності змушує матрицю $T$ транслювати цей "глибокий" нахил саме у відповідний "ментальний" параметр нахилу в моделі MM. Це дозволяє досягти консистентності пояснень: модель буде видавати подібні інтерпретації для об’єкта та його трохи зміненої (наприклад, повернутої) копії, що критично важливо для довіри користувача до системи XAI.
-
-### 3.2. Об’єднана система та SVD-розв’язок
-
-Оскільки шукана матриця переходу $T$ входить у рівняння як оператор, стандартні методи розв’язання систем вигляду $Ax = b$ не можуть бути застосовані безпосередньо до матричних рівнянь. Для вирішення цієї задачі ми застосовуємо операцію векторизації, що дозволяє перетворити матрицю $T$ на вектор $u = \text{vec}(T) \in \mathbb{R}^{kl}$.
-
-Шуканий оператор $T$ має забезпечувати компроміс між точністю апроксимації (Fidelity) та збереженням структурної відповідності (Equivariance). Формально задача пошуку оптимальної матриці переходу зводиться до мінімізації комбінованого функціонала:
-$$
-\mathcal{L}(T) = \| B^\top - T A^\top \|_F^2 + \lambda \sum_{i=1}^r \| T J_i^A - J_i^B T \|_F^2 \rightarrow \min_T, \quad (3)
-$$
-де $\|\cdot\|_F$ – норма Фробеніуса, а $\lambda \geq 0$ – ваговий коефіцієнт, що регулює вплив структурних обмежень.
-
-Використовуючи властивість $\text{vec}(AXB) = (B^\top \otimes A)\text{vec}(X)$, ми перетворюємо умови точності та еквіваріантності у єдину систему лінійних алгебраїчних рівнянь $M \cdot u = Y$:
-
-1.  **Рівняння точності (Fidelity):** Умова $B^\top \approx T A^\top$ перетворюється на:
-    $$
-    (A \otimes I_l)\text{vec}(T) = \text{vec}(B^\top),
-    $$
-    де $I_l$ – одинична матриця розмірності $l \times l$ (кількість ментальних ознак), а $\otimes$ – добуток Кронекера.
-
-2.  **Рівняння симетрії (Equivariance):** Умова $T J_i^A - J_i^B T \approx 0$ для кожного генератора $\xi_i$ перетворюється на:
-    $$
-    \left( (J_i^A)^\top \otimes I_l - I_k \otimes J_i^B \right) \text{vec}(T) = 0,
-    $$
-    де $I_k$ – одинична матриця розмірності $k \times k$ (розмірність глибоких ознак).
-
-Для формування блочної матриці ми стакуємо (об'єднуємо) ці рівняння у глобальну матрицю $M$. Для балансування між точністю апроксимації та структурною відповідністю вводиться ваговий коефіцієнт $\lambda$:
-$$
-M = \begin{bmatrix} A \otimes I_l \\ \lambda \cdot K_1 \\ \vdots \\ \lambda \cdot K_r \end{bmatrix}, \quad Y = \begin{bmatrix} \text{vec}(B^\top) \\ 0 \\ \vdots \\ 0 \end{bmatrix},
-$$
-де $K_i = (J_i^A)^\top \otimes I_l - I_k \otimes J_i^B$.
-
-Оскільки отримана система $M \cdot u = Y$ є суттєво перевизначеною ($ml + rkl$ рівнянь для $kl$ невідомих) та може бути зашумленою, відповідно до підходу, запропонованого у [4], для знаходження стабільного розв’язку ми використовуємо SVD-розклад (Singular Value Decomposition) матриці $M$ [9]:
-$$
-M = U \Sigma V^\top.
-$$
-Розв'язок знаходиться через псевдоінверсну матрицю Мура-Пенроуза $M^+$:
-$$
-u = V \Sigma^+ U^\top Y,
-$$
-де $\Sigma^+$ – матриця, діагональні елементи якої є оберненими до ненульових сингулярних чисел $\sigma_i$ (за умови $\sigma_i > \tau$, де $\tau$ – поріг регуляризації).
+### 2.1 Rough Set Theory for Knowledge Discovery
 
-Після знаходження розв'язку $u \in \mathbb{R}^{kl}$ виконується операція **reshape**, яка відновлює двовимірну структуру матриці переходу $T \in \mathbb{R}^{l \times k}$. Цей крок є зворотною операцією до векторизації (девекторизацією), що повертає знайдені параметри у форму лінійного оператора, необхідного для фінального відображення просторів $B \approx A T^\top$ та подальшого візуального аналізу моделі.
-
-Використання SVD-розкладу в даній задачі є критично важливим, оскільки:
-
-*   Воно дозволяє ефективно обробляти ситуації, коли матриця $M$ має неповний ранг (наприклад, через надмірність ознак FM).
-*   Малі сингулярні числа, що відповідають шуму в даних, можуть бути відсічені для регуляризації розв’язку.
-*   Це забезпечує отримання єдиного оптимального (у сенсі найменших квадратів) вектора $u$, який після операції reshape дає підсумкову розширену матрицю переходу $T$.
+RST, introduced by Pawlak in 1982 [12], provides a mathematical framework for reasoning about imprecise, uncertain, and incomplete data without requiring external parameters such as probability distributions or fuzzy membership functions. The theory is built upon the concept of indiscernibility relations, which partition a universe of objects into equivalence classes based on their attribute values [8].
 
-### 3.3. Алгоритм отримання розширеної матриці переходу
+The key mathematical constructs, such as lower approximation, upper approximation, and boundary region, enable the extraction of deterministic and probabilistic knowledge from data [14]. Skowron and Rauszer [16] formalized the discernibility matrix and discernibility function, providing the theoretical basis for finding minimal feature subsets (reducts) that preserve classification capability. The edited volume by Słowiński [17] established the practical foundations of RST for intelligent decision support, while Greco et al. [18] extended the framework to multicriteria decision analysis.
 
-Нижче наведено алгоритм обчислення матриці $T$, що інтегрує умови апроксимації та симетрії через SVD-розклад.
+Pawlak's later work [19] explicitly connected RST to data analysis, establishing decision tables, decision rules, and reducts as the primary constructs for knowledge extraction. The LERS system [20] demonstrated practical rule learning from rough sets, laying groundwork for PKB construction. Despite these advances, most RST implementations rely on pre-discretized data, with limited attention to the quality and methodology of the discretization step itself.
 
-**Алгоритм 1: Обчислення структурно-узгодженої матриці переходу**
+### 2.2 Feature Discretization Methods
 
-**Вхідні дані:**
+Discretization, i.e., the transformation of continuous features into discrete intervals, is a critical preprocessing step for symbolic classification methods [21]. The seminal work of Toulabinejad et al. [15] utilized entropy-based recursive discretization using the Minimum Description Length Principle (MDLP) as a stopping criterion, which remains the *de facto* standard for supervised discretization. Their method selects split points that minimize the conditional entropy of class labels, effectively finding thresholds that best separate classes.
 
-*   Матриця ознак FM: $A \in \mathbb{R}^{m \times k}$
-*   Матриця ознак MM: $B \in \mathbb{R}^{m \times l}$
-*   Набір генераторів для FM: $\{J_1^A, \dots, J_r^A\}$, де $J_i^A \in \mathbb{R}^{k \times k}$
-*   Набір генераторів для MM: $\{J_1^B, \dots, J_r^B\}$, де $J_i^B \in \mathbb{R}^{l \times l}$
-*   Ваговий коефіцієнт симетрії: $\lambda$
+García et al. [21] provided a comprehensive taxonomy of discretization methods, categorizing them along dimensions of supervision (supervised vs. unsupervised), splitting strategy (top-down vs. bottom-up), and evaluation criterion (entropy, error, statistical). Dougherty et al. [22] demonstrated that supervised discretization significantly improves the performance of symbolic classifiers compared to unsupervised binning. Liu et al. [23] studied discretization as an enabling technique, establishing the theoretical connections between discretization quality and downstream classification accuracy.
 
-**Крок 1: Векторизація основної задачі (Fidelity)**
-1.1. Сформувати матрицю системи $M_{fid} = (A \otimes I_l) \in \mathbb{R}^{(ml) \times (kl)}$.
-1.2. Сформувати цільовий вектор $Y_{fid} = \text{vec}(B^\top) \in \mathbb{R}^{(ml)}$.
+A significant limitation of entropy-only methods is their disregard for the density distribution of feature values. As Xun et al. [24] showed in their comparative study of entropy-based approaches, different discretization criteria can lead to substantially different cut points and classification outcomes. This observation motivates the multi-criteria approach presented here, which augments entropy with density information.
 
-**Крок 2: Векторизація структурних обмежень (Equivariance)**
-2.1. Для кожного $i \in \{1, \dots, r\}$: сформувати матрицю обмеження:
-$$
-L_i = \left( (J_i^A)^\top \otimes I_l - I_k \otimes J_i^B \right) \in \mathbb{R}^{(kl) \times (kl)}
-$$
-2.2. Об’єднати всі $L_i$ у вертикальний блок: $M_{sym} = [L_1; \dots; L_r] \in \mathbb{R}^{(rkl) \times (kl)}$.
-2.3. Сформувати нульовий цільовий вектор: $Y_{sym} = 0 \in \mathbb{R}^{rkl}$.
+### 2.3 Kernel Density Estimation
 
-**Крок 3: Формування розширеної системи**
-3.1. Скласти об’єднану матрицю:
-$$
-\begin{bmatrix} M_{fid} \\ \lambda M_{sym} \end{bmatrix}.
-$$
-3.2. Скласти об’єднаний вектор:
-$$
-\begin{bmatrix} Y_{fid} \\ Y_{sym} \end{bmatrix}.
-$$
+Kernel Density Estimation (KDE), independently proposed by Rosenblatt [25] and Parzen [26], provides a nonparametric method for estimating probability density functions from data. Silverman's monograph [27] established the practical foundations of KDE, including bandwidth selection methods such as Scott's rule. In the context of discretization, KDE enables identification of "natural breaks" in data distributions, i.e., valleys between density peaks that represent meaningful boundaries between subpopulations. The WEDD method leverages this capability to place discretization thresholds at density minima, ensuring that the resulting intervals respect the inherent structure of the data.
 
-**Крок 4: Розв’язання через SVD (Псевдоінверсія)**
-4.1. Виконати SVD-розклад матриці $M$: $M = U \Sigma V^\top$.
-4.2. Обчислити псевдоінверсну матрицю: $M^+ = V \Sigma^+ U^\top$ (де $\Sigma^+$ – матриця містить обернені значення сингулярних чисел $\sigma_i > \tau$).
-4.3. Знайти вектор параметрів: $u = M^+ Y$.
+### 2.4 Cyber-Physical Systems for PV Monitoring
 
-**Крок 5: Реконструкція матриці переходу**
-5.1. Виконати операцію **reshape** для вектора $u$, перетворивши його на матрицю $T \in \mathbb{R}^{l \times k}$.
+Modern PV monitoring systems employ edge-cloud architectures that combine UAV-based thermal imaging with SCADA integration for fire hazard detection [2]. Deep learning approaches, particularly YOLO-family architectures [5], have been applied to thermal defect detection in PV modules [1]. Thakfan et al. [3] provided a comprehensive review of artificial intelligence (AI)-based fault detection and diagnosis methods for building energy systems, highlighting the trade-off between detection accuracy and interpretability.
 
-**Вихідні дані:** Розширена матриця переходу $T$.
+Boolean logic-based decision systems in SCADA environments correlate multiple sensor signals, such as thermal anomalies, bypass diode temperatures, and fire detection sensors, to classify operational states [28]. The integration of interpretable production rules with such SCADA logic represents an opportunity to enhance the transparency and auditability of automated fire hazard assessment, which is the motivating application for the methodology presented in this paper.
 
-Запропонований **Алгоритм 1** дозволяє знайти такий лінійний оператор $T$, який є не просто статистичною регресією, а структурним містком між двома моделями. Розглянемо ключові аспекти його реалізації:
+## 3. Methodology
 
-1.  **Формування генераторів $J_i$:**
-    Успіх алгоритму залежить від коректного визначення матриць представлень дії групи. На практиці ці матриці обчислюються через локальну лінеаризацію простору ознак при малих збуреннях вхідних даних (наприклад, поворот зображення на кут $\varepsilon \rightarrow 0$). Це дозволяє отримати інфінітезимальні генератори, які описують, як саме змінюються ознаки FM та MM під впливом конкретної трансформації.
+The PKB Methodology consists of a seven-stage pipeline that transforms raw continuous sensor data into a self-contained, interpretable classification system. Figure 1 illustrates the complete pipeline architecture.
 
-2.  **Роль вагового коефіцієнта $\lambda$:**
-    Коефіцієнт $\lambda$ регулює компроміс між двома цілями:
-    *   **При малих $\lambda$** алгоритм пріоритезує точність апроксимації (Fidelity), що робить модель $T$ максимально наближеною до поточних даних, але менш стійкою до геометричних змін.
-    *   **При великих $\lambda$** пріоритет надається збереженню структури (Equivariance). Матриця $T$ стає більш «фізично коректною», що покращує генералізацію пояснень на нові дані, які зазнали трансформацій.
+![Complete methodology pipeline of the PKB system. The seven stages are color-coded by phase: blue stages (1–2) perform data preprocessing and discretization; green stages (3–5) apply RST for knowledge extraction; orange stages (6–7) assemble the knowledge base and execute inference. Data flows from left to right, with each stage's output serving as input to the next.](figs/fig_methodology_pipeline.png)
 
-3.  **Обчислювальна стійкість та SVD:**
-    Використання SVD-розкладу на Кроці 4 замість прямого обернення матриць (як от метод найменших квадратів через нормальне рівняння) забезпечує стійкість алгоритму до мультиколінеарності. Оскільки глибокі ознаки нейронної мережі часто корелюють між собою, матриця $M$ може бути близькою до виродженої. Сингулярний розклад дозволяє ефективно ігнорувати зашумлені компоненти даних, обнуляючи зворотні значення для сингулярних чисел, що нижчі за поріг $\tau$.
+### 3.1 Problem Formalization: The Decision-Making System
 
-4.  **Практичне застосування:**
-    Після обчислення матриці $T$, пояснення результатів DL-моделі стає тривіальною операцією. Для будь-якого нового вектора глибоких ознак $a$, відповідний вектор інтерпретованих ознак $b^*$ обчислюється як $b^* = T a^*$. Це дозволяє в режимі реального часу транслювати стан «чорної скриньки» у зрозумілі людині параметри.
+Definition 1 (Decision-Making System). The information model of the classification task is represented as a Decision-Making System (DMS), described by the tuple:
 
+$$ \mathrm{DMS} = \langle U, A \cup \{d\}, V, f \rangle \tag{1} $$
 
-### 3.4. Experimental Framework and Evaluation Setup
+where $U = \{x_1, x_2, \ldots, x_n\}$ is a finite set of objects (universe, where each object $x_i$ corresponds to a row of the feature matrix $B$); $A = \{a_1, a_2, \ldots, a_m\}$ is a set of conditional attributes (features) corresponding to the columns of $B$; $d$ is the decision attribute, determined by the class label vector $Y$; $V = \bigcup_{a \in A \cup \{d\}} V_a$ is the domain of attribute values; $f : U \times (A \cup \{d\}) \rightarrow V$ is an information function mapping objects to their attribute values.
 
-### 3.4. Experimental Framework and Evaluation Setup
+Figure 2 provides a visual representation of the DMS formalization, showing how the feature matrix $B$ and class vector $Y$ map to the formal tuple representation.
 
-Для всебічного оцінювання ефективності запропонованого підходу та його порівняння з класичною методикою побудови матриць переходу [4], було розроблено комплексний фреймворк експериментальних досліджень. Експериментальна база складається з двох взаємодоповнюючих етапів: контрольованого чисельного експерименту на синтетичних даних, де геометрична структура є повністю прозорою, та перевірки на реальному наборі даних MNIST, що дозволяє оцінити масштабованість методу для задач комп'ютерного зору.
+![Formal structure of the DMS. The feature matrix B provides conditional attributes A, the class vector Y provides the decision attribute d, and the information function f maps objects to their attribute values in domain V.](figs/fig_dms_model.png)
 
-Основна мета експериментів полягає у перевірці гіпотези про те, що введення обмежень еквіваріантності (симетрії) у процедуру побудови матриці переходу дозволяє суттєво зменшити структурну похибку пояснень та підвищити їх стійкість до трансформацій вхідних даних, зберігаючи при цьому прийнятний рівень точності реконструкції (fidelity).
+### 3.2 Stage 1: Multi-Criteria Adaptive Discretization (WEDD)
 
-#### 3.4.1. Протокол дослідження на синтетичних даних
+Since the feature matrix $B$ contains continuous values, they must be partitioned into intervals to enable the construction of symbolic production rules. The WEDD method is proposed, which simultaneously optimizes two criteria: information entropy (class separation) and local probability density (natural data structure).
 
-Синтетичний тест був розроблений для верифікації математичного апарату в ідеалізованих умовах, що дозволяє ізолювати вплив симетрій від шумів, притаманних реальним даним.
+#### Criterion 1: Information Entropy
 
-Характеристика даних. У якості базового набору даних використовується вибірка з $m = 15$ зразків, що імітує структуру даних у задачі класифікації з трьома класами (по 5 зразків на клас).
+For attribute $a \in A$ and a candidate threshold $T$, the classical conditional entropy is computed as:
 
-* Формальна модель (FM): представлена матрицею $A \in \mathbb{R}^{15 \times 5}$ (App. 1.1), яка моделює простір глибоких ознак розмірності $k=5$.
-* Ментальна модель (MM): представлена матрицею $B \in \mathbb{R}^{15 \times 4}$ (App. 1.1), що відповідає простору інтерпретованих ознак розмірності $l=4$.
+$$ E(a, T; U) = \frac{|U_{\text{left}}|}{|U|} \mathrm{Ent}(U_{\text{left}}) + \frac{|U_{\text{right}}|}{|U|} \mathrm{Ent}(U_{\text{right}}) \tag{2} $$
 
-Оскільки синтетичні матриці $A$ та $B$ задані явно як набір векторів і не мають прив'язки до реальних фізичних об'єктів (зображень чи сигналів), виникає методологічна проблема визначення дії групи симетрії на цих даних. Для коректного обчислення генераторів $J$ необхідно визначити, що означає «поворот» для абстрактного вектора з $A$.
+where $U_{\text{left}} = \{x \in U : f(x, a) < T\}$ and $U_{\text{right}} = \{x \in U : f(x, a) \geq T\}$ are the subsets of objects split by threshold $T$, and $\mathrm{Ent}(S)$ denotes the Shannon entropy [29] of the class distribution within subset $S$:
 
-Геометричне заземлення та візуалізація. Щоб надати даним геометричного змісту, ми вкладаємо кожну матрицю в двовимірний простір $\mathbb{R}^2$ за допомогою методу багатовимірного шкалювання (Multidimensional Scaling, MDS). Вибір MDS зумовлений його здатністю зберігати глобальні відстані між об'єктами, що є критичним для коректного відображення структури класів. Отримане 2D-вкладення інтерпретується як «візуальний простір об’єктів», на якому дія групи $SO(2)$ (групи поворотів на площині) є природною та інтуїтивно зрозумілою.
+$$ \mathrm{Ent}(S) = -\sum_{k=1}^{K} p_k \log_2 p_k \tag{3} $$
 
-Алгоритм 2. Отримання генератора $J$ через 2D-поворот
+with $p_k$ being the proportion of class $k$ in $S$ and $K$ the total number of classes.
 
-Для знаходження матриць інфінітезимальних генераторів $J^A$ та $J^B$ у відповідних просторах ознак, коли пряма дія групи на вхідні дані відсутня, ми пропонуємо наступний алгоритм, що використовує простір візуалізації як проміжну ланку (proxy):
+#### Criterion 2: Local Density Distribution
 
-1. Редукція розмірності (Embedding): Вихідна матриця ознак (наприклад, $A \in \mathbb{R}^{15 \times 5}$) відображається у простір меншої розмірності $A_{2D} \in \mathbb{R}^{15 \times 2}$ за допомогою алгоритму MDS (Metric MDS). Це створює координатну систему, де можна застосувати оператор повороту.
-2. Побудова зворотного відображення (Inverse Mapping): Оскільки MDS не має аналітичної зворотної функції, ми апроксимуємо її, навчаючи лінійний декодер (регресію) $D: \mathbb{R}^2 \rightarrow \mathbb{R}^5$. Модель навчається відображати координати точок $(x, y)$ з $A_{2D}$ назад у вектори $(a_1, \dots, a_5)$ з $A$. Лінійність декодера є свідомим спрощенням для збереження гладкості перетворень.
-3. Імітація збурення (Perturbation): У 2D-просторі виконується поворот усіх точок хмари $A_{2D}$ на малий кут $\epsilon = 0.01$ рад навколо початку координат. Вибір малого $\epsilon$ є принциповим, оскільки генератори алгебри Лі описують поведінку системи саме в інфінітезимальному околі одиничного елемента групи. Отримуємо збурену матрицю $A_{2D, rot}$.
-4. Реконструкція збурених ознак (Back-projection): Отримана матриця $A_{2D, rot}$ пропускається через навчений декодер $D$, що дає матрицю $A_{rot} \in \mathbb{R}^{15 \times 5}$ — прогноз того, як виглядали б глибокі ознаки, якби вихідні дані були повернуті.
-5. Оцінка генератора (Estimation): Генератор $J^A$ обчислюється як розв'язок системи лінійних рівнянь відносно скінченних різниць:
-    $$ \Delta A = \frac{A_{rot} - A}{\epsilon} \approx A (J^A)^\top. $$
-    Розв'язок знаходиться методом найменших квадратів через псевдообернену матрицю $A$. Програмна реалізація даного підходу мовою Python наведена в App. 1.2.
+To estimate the density distribution of attribute values, KDE [25], [26] is employed:
 
-Аналогічна процедура застосовується до матриці $B$ для отримання генератора $J^B \in \mathbb{R}^{4 \times 4}$. У результаті ми отримуємо пару матриць $J^A$ та $J^B$ (App. 1.3), які кодують дію однієї й тієї ж групи симетрії $SO(2)$ у різних просторах ознак. Це дозволяє сформулювати рівняння переплітання $T J^A - J^B T = 0$ та використати його як жорстке або м'яке обмеження при пошуку матриці переходу.
+$$ \hat{f}_a(v) = \frac{1}{n \cdot h} \sum_{i=1}^{n} K\left(\frac{v - b_{ia}}{h}\right) \tag{4} $$
 
-Для даного експерименту обрано $r=1$ генератор, що відповідає одновимірній групі поворотів площини. Таке спрощення дозволяє уникнути неоднозначностей при інтерпретації результатів та робить візуалізацію матриць системи $M$ більш наочною.
+where $b_{ia}$ is the value of attribute $a$ for object $x_i$, $K(\cdot)$ is a Gaussian kernel function, and $h$ is the bandwidth parameter determined by Scott's rule [27]. The key insight is that optimal discretization thresholds should pass through regions of low density, the so-called "valleys" between natural clusters, rather than arbitrarily bisecting dense regions.
 
-#### 3.4.2. Протокол дослідження на наборі даних MNIST
+#### Multi-Criteria Objective Functional
 
-Для перевірки методу в умовах реальних високовимірних даних використовується еталонний датасет MNIST.
+An integral quality criterion $Q(a, T)$ for threshold optimization is introduced and must be minimized:
 
-Опис даних. MNIST містить 70 000 зображень рукописних цифр у градаціях сірого розміром $28 \times 28$ пікселів. Використовується стандартне розбиття: 60 000 зображень для навчання та побудови матриці переходу, 10 000 — для тестування.
+$$ Q(a, T) = \alpha \cdot \bar{E}(a, T) + (1 - \alpha) \cdot \bar{f}_a(T) \tag{5} $$
 
-Архітектура моделей:
+where $\bar{E}(a, T)$ is the min-max normalized entropy, $\bar{f}_a(T)$ is the min-max normalized density at point $T$, and $\alpha \in [0, 1]$ is a weighting coefficient controlling the trade-off between class separation and structural preservation. In the conducted experiments, $\alpha = 0.6$ emphasizes class separation while still incorporating density information.
 
-* Формальна модель (FM): Згорткова нейронна мережа (CNN), навчена на задачу класифікації цифр. Глибокі ознаки $a(x)$ витягуються з передостаннього повнозв'язного шару мережі ("pre-softmax"), що дає простір ознак розмірності $k = 490$. Цей шар містить високоабстраговану семантичну інформацію про об'єкт.
-* Ментальна модель (MM): У якості зрозумілого для людини представлення використовується саме зображення у піксельному просторі. Зображення розгортається у вектор $b(x)$ розмірності $l = 784$ ($28 \times 28$). Таким чином, матриця переходу $T$ у цьому налаштуванні виконує роль лінійного декодера, що реконструює зображення цифри безпосередньо з її латентного коду.
+#### Recursive Discretization Algorithm
 
-Обчислення генераторів для MNIST. На відміну від синтетичного тесту, тут ми маємо доступ до прямої дії групи на вхідні дані. Генератори обертання обчислюються методом центральних скінченних різниць безпосередньо у просторі ознак:
+The WEDD algorithm proceeds as follows:
 
-1. До кожного вхідного зображення $x$ застосовуються малі повороти на кути $\pm \epsilon$ ($\epsilon = 0.1$ рад).
-2. Обчислюються відгуки шару CNN $a(R(\epsilon)x)$ та $a(R(-\epsilon)x)$.
-3. Апроксимація дії генератора $J^A$ на вектор $a(x)$ знаходиться як $\frac{a(R(\epsilon)x) - a(R(-\epsilon)x)}{2\epsilon}$.
-4. Матриця $J^A$ знаходиться шляхом розв'язання задачі лінійної регресії на всьому навчальному наборі.
-Аналогічно знаходиться $J^B$ для піксельного простору (хоча для пікселів дію повороту можна також задати аналітично, ми використовуємо чисельний підхід для узгодженості).
+```text
+Algorithm: WEDD Discretization
+Input: Feature column b_a, class vector Y, weight alpha
+Output: Set of optimal thresholds T*_a
 
-При побудові матриці переходу використовується параметр регуляризації $\lambda = 0.5$. Емпіричний аналіз (див. Розділ 4) показав, що це значення забезпечує сильне зменшення дефекту симетрії при збереженні візуальної якості реконструкції. Розв'язок системи $M \cdot u = Y$ для MNIST вимагає роботи з великими розрідженими матрицями, тому використовуються ітераційні методи (LSQR) або усічений SVD.
+1: Sort values b_{ia} in ascending order
+2: Generate candidate thresholds T as midpoints between adjacent distinct values
+3: Compute KDE profile \hat{f}_a(v) using Gaussian kernel with Scott bandwidth
 
-#### 3.4.3. Методика проведення експерименту та сценарії
+4: For each candidate T in T:
+5:     Compute conditional entropy E(a, T; U) via Equation (2)
+6:     Evaluate density \hat{f}_a(T) via Equation (4)
+7: End For
 
-Експериментальне дослідження структуроване за трьома сценаріями, що дозволяють послідовно оцінити переваги нового методу.
+8: Normalize:
+       \bar{E}(a, T) = (E - E_min) / (E_max - E_min)
+       \bar{f}_a(T) = (\hat{f}_a - f_min) / (f_max - f_min)
 
-Сценарій 1: Базовий рівень (Baseline / Старий підхід)
-У цьому сценарії відтворюється методика, описана в роботі [4]. Обчислюється статична матриця переходу $T_{old}$ шляхом мінімізації виключно функціонала похибки реконструкції (MSE Fidelity):
-$$ T_{old} = \arg \min_T \| B - A T^\top \|_F^2. $$
-Отримана матриця (App. 1.1 для синтетичних даних) використовується для прогнозування параметрів ментальної моделі $B_{old}^* = A T_{old}^\top$. Цей сценарій слугує точкою відліку ("lower bound" для якості апроксимації та "upper bound" для похибки симетрії).
+9: Compute Q(a, T) = alpha * \bar{E} + (1 - alpha) * \bar{f}_a for all T
+10: Select T* = argmin_T Q(a, T)
+11: Apply MDLP stopping criterion
 
-Сценарій 2: Еквіваріантний підхід (Proposed Method / Новий підхід)
-Застосовується Алгоритм 1 (див. Розділ 3.3). Будується розширена матриця системи $M$, що включає блоки $A \otimes I$ (fidelity) та $\lambda K$ (symmetry).
-Для синтетичних даних із ваговим коефіцієнтом $\lambda = 0.5$ обчислюється матриця $T_{new}$. Прогнози отримуються як $B_{new}^* = A T_{new}^\top$ (App. 1.4). Основна увага приділяється аналізу того, як введення обмеження комутації впливає на структуру самої матриці $T$ (візуалізація теплових карт матриць) та на метрики якості.
-Також проводиться дослідження чутливості методу до параметра $\lambda$ (ablation study), змінюючи його в діапазоні від 0 до 10, щоб продемонструвати керований компроміс між точністю та симетрією.
+12: If MDLP criterion is not met:
+13:     Recurse on sub-intervals U_left and U_right
+14: End If
 
-Сценарій 3: Тестування стійкості до трансформацій (Robustness Test)
-Це критичний етап валідації, що перевіряє поведінку пояснювальної моделі при виході даних за межі навчальної вибірки шляхом геометричних трансформацій.
-
-Для синтетичних даних, оскільки прямий зв'язок із вхідними образами відсутній, тест на стійкість реалізується через розширення Алгоритму 2:
-
-1. У 2D-просторі візуалізації для кожного зразка генерується серія повернутих копій на кути $\alpha \in [-\pi/2; \pi/2]$ (що відповідає діапазону $\pm 90^\circ$).
-2. Використовуючи навчений «зворотний місток» (декодер), ці точки відображаються у 5-вимірний простір, формуючи тестовий набір $A_{test}(\alpha)$.
-3. Для кожного кута $\alpha$ обчислюються прогнози $B^*$ за допомогою $T_{old}$ та $T_{new}$.
-4. Стійкість оцінюється шляхом порівняння траєкторії прогнозів із теоретично ідеальною траєкторією повороту ментальної моделі.
-
-Для даних MNIST процедура є прямою: тестові зображення фізично повертаються на кути від $-90^\circ$ до $+90^\circ$, після чого обчислюються їхні глибокі ознаки. Ми порівнюємо якість реконструкції повернутих цифр (SSIM, PSNR) для матриць $T_{old}$ та $T_{new}$. Гіпотеза полягає в тому, що $T_{new}$ забезпечить більш стабільну якість зображення та менші артефакти при великих кутах повороту, оскільки вона "знає" про структуру обертання.
-
-#### 3.4.4. Критерії оцінювання та метрики
-
-Для кількісного порівняння результатів використовуються три групи метрик.
-
-1. Метрики точності апроксимації (Fidelity Metrics).
-Оцінюють, наскільки точно матриця переходу відтворює статичні ознаки.
-
-* Mean Squared Error (MSE):* $\text{MSE}_{\text{fid}} = \frac{1}{m \cdot l} \| B - A T^\top \|_F^2$. Основна метрика для синтетичних даних.
-* *Structural Similarity Index (SSIM):* Для MNIST, оскільки MSE погано корелює з людським сприйняттям якості зображення. Оцінює збереження структурної інформації цифри.
-* *Peak Signal-to-Noise Ratio (PSNR):* Логарифмічна метрика якості відновлення сигналу для зображень.
-
-2. Метрики симетрії (Symmetry/Equivariance Metrics).
-Оцінюють ступінь порушення комутативної діаграми перетворень.
-
-* *Symmetry Error (SymErr):* Норма Фробеніуса різниці комутаторів $\| T J^A - J^B T \|_F$. Ця величина (дефект симетрії) показує, наскільки сильно матриця переходу відхиляється від оператора сплітання (intertwining operator). Нульове значення означає ідеальну еквіваріантність.
-* *Commutator Norm per Sample:* Для детального аналізу розподілу помилки по класах або зразках.
-
-3. Метрики стійкості (Robustness Metrics).
-Оцінюють стабільність прогнозів при варіації вхідних даних.
-
-* *Drop in Performance:* Різниця між метрикою якості (SSIM/MSE) на оригінальних даних та на даних, повернутих на максимальний кут (наприклад, $90^\circ$).
-* *Consistency Plot:* Графічна залежність метрики помилки від кута повороту $\alpha$. Більш полога крива свідчить про вищу стійкість моделі.
-
-Очікується, що використання еквіваріантної матриці переходу (ЕМП) призведе до зменшення дефекту симетрії на кілька порядків порівняно з базовим методом. При цьому можливе незначне зростання MSE на навчальній вибірці (через введення додаткових обмежень в задачу оптимізації), проте на тестовій вибірці, особливо при наявності поворотів, $T_{new}$ повинна демонструвати кращу генералізацію та меншу варіативність помилки. Всі результати обчислень та візуалізації наведені у Розділі 4, а вихідні дані та програмний код для відтворення експериментів — у відповідних Додатках (App. 1).
-
-## 4. Результати
-
-Ми наводимо результати для двох взаємодоповнюючих налаштувань: (i) контрольований синтетичний тест, де справжня група перетворень точно відома, та (ii) багатовимірний тест MNIST, де пояснення реконструюються у піксельному просторі з глибоких ознак формальної моделі (FM). В обох налаштуваннях ми відповідаємо на два практичні питання:
-
-*   **Q1:** Чи може обмеження еквіваріантності зменшити дефект симетрії $\| T J^A - J^B T \|_F$ на порядки, тобто зробити так, щоб пояснення трансформувалися узгоджено?
-*   **Q2:** Чи зберігає така структурна регуляризація *точність пояснення* (якість реконструкції) та *стійкість* до обертань?
-
-### 4.1. Синтетичний тест: контрольований компроміс точності та еквіваріантності
-
-Спочатку ми досліджуємо геометрію парних просторів.
-
-**Рисунок 1** показує, що вкладення простору $A$ та простору $B$ не є тривіально пов’язаними: навіть у 2D околиці та глобальна структура відрізняються, що мотивує явне відображення $T$. Базова матриця переходу $T_{old}$ отримана шляхом мінімізації точності методом найменших квадратів, тоді як запропонована ЕМП $T_{new}$ отримана шляхом мінімізації комбінованої цільової функції точності+еквіваріантності.
-
-*(a) Вкладення простору A (MDS). (b) Вкладення простору B (MDS).*
-**Рисунок 1. Синтетичний тест: 2D вкладення (MDS) A та B.**
-
-Регуляризація еквіваріантності призводить до різкого колапсу дефекту симетрії. **Таблиця 1** кількісно характеризує центральний ефект: забезпечення еквіваріантності з $\lambda = 0.5$ помірно збільшує MSE реконструкції (з 0.00367 до 0.00524, відносне збільшення $\approx 42.9\%$), але зменшує дефект симетрії з 1.31e+04 до 4.25e-02 – коефіцієнт зменшення $\approx 3.08\text{e}+05$. Це і є «обмінний курс» точності на симетрію у його найчистішому вигляді.
-
-**Таблиця 1. Синтетичний тест: точність проти еквіваріантності. Навчена базова модель LS є релевантним еталоном сучасного рівня техніки.**
-
-| Метод | MSE (точність) $\downarrow$ | Дефект симетрії $\| T J^A - J^B T \|_F \downarrow$ |
-| :--- | :--- | :--- |
-| Базовий (LS, $\lambda=0$) | 0.00367 | 1.31e+04 |
-| ЕМП (ця робота, $\lambda=0.5$) | 0.00524 | 4.25e-02 |
-
-Норма комутатора $\| T J^A - J^B T \|_F$ є компактним глобальним підсумком того, наскільки $T$ далека від того, щоб бути *оператором сплітання* між інфінітезимальними діями у двох просторах. Мале значення в Таблиці 1 означає, що, у першому наближенні, застосування перетворення в $A$ і потім відображення в $B$ узгоджується з відображенням спочатку, а потім перетворенням в $B$. Це саме та властивість узгодженості, яка бажана для відображень пояснення: пояснення не повинно «змінювати свій зміст» при операції симетрії, яка залишає базову концепцію незмінною. Синтетичне налаштування робить цю інтерпретацію надзвичайно чистою, оскільки $J^A$ та $J^B$ відомі точно; MNIST потім перевіряє, чи зберігається та ж логіка, коли генератори оцінюються, а не задані.
-
-**Рисунок 2** візуалізує, як член еквіваріантності переформовує $T$: матриця ЕМП є не просто малим збуренням $T_{old}$, а структурно відмінним лінійним оператором.
-
-*(a) Базова $T_{old}$ (лише точність). (b) ЕМП $T_{new}$ ($\lambda = 0.5$).*
-**Рисунок 2. Синтетичний тест: теплові карти матриць переходу.**
-
-Далі ми проводимо абляцію по $\lambda$. **Рисунок 3** і **Таблиця 2** показують абляцію по $\lambda \in [0, 10]$. Як і очікувалося, збільшення $\lambda$ зменшує дефект симетрії на кілька порядків (з незначними немонотонними коливаннями через чисельну обумовленість) (до $\approx 10^{-6}$ при $\lambda = 10$), поступово збільшуючи MSE. Ця монотонність важлива: вона робить $\lambda$ значущим регулятором, а не нестабільним гіперпараметром.
-
-*(a) MSE проти $\lambda$. (b) Дефект симетрії проти $\lambda$.*
-**Рисунок 3. Синтетичний тест: криві компромісу точність–еквіваріантність.**
-
-**Таблиця 2. Синтетичний тест: повний перебір $\lambda$.**
-
-| $\lambda$ | MSE (точність) | Дефект симетрії |
-| :--- | :--- | :--- |
-| 0 | 0.00367 | 1.31e+04 |
-| 0.001 | 0.00372 | 5.37e+03 |
-| 0.01 | 0.00433 | 1.89e+02 |
-| 0.1 | 0.00521 | 1.29e-01 |
-| 0.5 | 0.00524 | 4.25e-02 |
-| 1 | 0.00525 | 4.18e-02 |
-| 5 | 0.00698 | 3.28e-02 |
-| 10 | 0.01835 | 2.08e-02 |
-
-Перебір у Таблиці 2 пропонує природну евристику роботи. Дуже малі значення $\lambda$ вже призводять до колапсу дефекту симетрії на *кілька* порядків порівняно з $\lambda = 0$ (наприклад, при $\lambda = 10^{-3}$ дефект падає з $1.17 \times 10^4$ до $\approx 1.2 \times 10^{-2}$), при цьому MSE залишається по суті на оптимумі точності. Більші значення $\lambda$ продовжують покращувати дефект (до $\approx 10^{-6}$), але граничні вигоди стають меншими відносно зростання точності. На практиці це заохочує вибір у стилі Парето: вибрати найменше $\lambda$, яке зменшує дефект нижче порогу, специфічного для завдання, а потім перевірити, чи залишається точність у прийнятному діапазоні.
-
-На цьому синтетичному тесті як $T_{old}$, так і $T_{new}$ залишаються чисельно стабільними при різних кутах повороту, але ЕМП дає більш узгоджені траєкторії вкладення.
-
-**Рисунок 4** поєднує (i) діаграму розсіювання стійкості MDS, (ii) MSE проти кута та (iii) візуалізацію векторів зміщення.
-
-*(a) Діаграма розсіювання стійкості (MDS).*
-*(b) Вектори зміщення.*
-*(c) MSE проти кута повороту.*
-**Рисунок 4. Синтетичний тест: стійкість та поведінка зміщення.**
-
-### 4.2. Тест MNIST: еквіваріантні пояснення з глибоких ознак
-
-Перед тим як перейти до метрик, **Рисунок 5** показує репрезентативні реконструкції (базові проти ЕМП) для кількох цифр.
-MNIST: реконструйовані пояснення. Якісна перевірка реконструкції. MNIST: реконструйовані пояснення. Якісна перевірка реконструкції. MNIST: реконструйовані пояснення. Якісна перевірка реконструкції.
-
-**Рисунок 5. MNIST: реконструйовані пояснення. Якісна перевірка реконструкції.**
-
-**Таблиця 3** збирає центральні показники MNIST в одному місці. ЕМП зменшує дефект симетрії зі 141.187 до 38.651 (зменшення на 72.6%), при цьому залишаючи точність реконструкції практично незмінною: SSIM змінюється на $\approx -0.032\%$, а PSNR на $\approx -0.047\%$ на тестовому наборі. Ми можемо спостерігати значні структурні вигоди за незначну ціну точності.
-
-**Таблиця 3. MNIST: точність та еквіваріантність (тренування/тест). Значення є середнім $\pm$ станд. відхилення для SSIM/PSNR; дефект симетрії – $\| T J^A - J^B T \|_F$.**
-
-| Вибірка | Метод | SSIM $\uparrow$ | PSNR $\uparrow$ | Дефект симетрії $\downarrow$ |
-| :--- | :--- | :--- | :--- | :--- |
-| Тренування | Базовий $T_{old}$ | $0.6956 \pm 0.0851$ | $18.47 \pm 2.14$ | 141.19 |
-| Тренування | ЕМП $T_{new}$ | $0.6954 \pm 0.0851$ | $18.46 \pm 2.13$ | 38.65 |
-| Тест | Базовий $T_{old}$ | $0.6978 \pm 0.0844$ | $18.49 \pm 2.17$ | 141.19 |
-| Тест | ЕМП $T_{new}$ | $0.6976 \pm 0.0844$ | $18.48 \pm 2.16$ | 38.65 |
-
-Значення середнє $\pm$ станд. відхилення є корисними підсумками, але вони можуть приховувати патології (наприклад, малу частку катастрофічних збоїв). Тому ми включаємо повні графіки розподілу для SSIM та PSNR. Мега-панель (**Рисунок 6**) показує, що розподіли базового методу та ЕМП перекриваються майже ідеально, що свідчить про те, що ЕМП не вносить важких хвостів або підгрупи «режиму відмови».
-
-Практична перевага пояснювачів на основі матриць переходу полягає в тому, що вони дешеві під час виконання. Після того, як $T$ навчена, генерація пояснення вимагає одного проходу вилучення ознак і одного множення матриць. У MNIST $T \in \mathbb{R}^{784 \times 490}$ містить $784 \times 490 = 384,160$ параметрів, тобто близько $10^5$ чисел з плаваючою комою (кілька МБ у стандартній точності). Обмеження ЕМП не змінює цей слід: воно змінює те, як $T$ підганяється, а не те, як вона використовується. В умовах, де потрібно генерувати тисячі або мільйони пояснень, така поведінка «постійного часу на пояснення» є важливою відмінністю порівняно з пояснювачами на основі збурень.
-
-**Рисунок 6** стискає історію MNIST в одну мульти-панель: розподіли точності (SSIM/PSNR), стовпчики симетрії (тренування/тест), криві стійкості та перебір $\lambda$.
-
-**Рисунок 6. MNIST-панель: (a) розподіл SSIM, (b) розподіл PSNR, (c) дефект симетрії (тренування/тест), (d) крива стійкості SSIM, (e) крива стійкості PSNR, (f) перебір $\lambda$ для дефекту симетрії.**
-
-Хоча основна перевага ЕМП є структурною (дефект симетрії), все ж корисно підсумувати стійкість реконструкції. **Таблиця 4** наводить статистику стійкості на розширеному тестовому діапазоні ($\pm 90^\circ$): значення при $0^\circ$, мінімум по кутах та максимальне падіння. Відмінності малі, але стабільно не катастрофічні: забезпечення еквіваріантності не вносить крихкості.
-
-**Таблиця 4. Підсумок стійкості MNIST на розширеному тестовому діапазоні ($\pm 90^\circ$). «Падіння» – це $y(0^\circ) - \min_\theta y(\theta)$.**
-
-| Метрика | Базовий $0^\circ$ | Базовий min | Базовий Падіння | ЕМП $0^\circ$ | ЕМП min | ЕМП Падіння |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| SSIM | 0.678 | 0.448 | 0.230 | 0.678 | 0.449 | 0.229 |
-| PSNR | 18.62 | 14.55 | 4.08 | 18.62 | 14.55 | 4.06 |
-
-**Таблиця 5** показує монотонне зменшення дефекту симетрії зі збільшенням $\lambda$. Ми використовуємо $\lambda = 0.5$ (виділено) як практичну робочу точку, яка дає значне зменшення симетрії без видимого колапсу точності в наших реконструкціях.
-
-**Таблиця 5. MNIST: перебір $\lambda$ для дефекту симетрії. Стовпці розв’язувача наведені, якщо доступні (ітерації LSQR, норма залишку $r_1$, оцінене число обумовленості).**
-
-| $\lambda$ | Дефект симетрії | ітерації | норма $r_1$ | $\hat{\kappa}$ |
-| :--- | :--- | :--- | :--- | :--- |
-| 0 | 141.187 | – | – | – |
-| 0.001 | 84.268 | 100 | 904.6 | 994.7 |
-| 0.01 | 81.672 | 100 | 904.7 | 963.0 |
-| 0.1 | 64.792 | 100 | 905.1 | 929.9 |
-| 0.5 | 38.651 | 200 | 905.1 | 2457.0 |
-| 1 | 30.375 | 100 | 906.2 | 891.5 |
-| 5 | 22.753 | 100 | 907.8 | 869.7 |
-| 10 | 21.052 | 100 | 909.2 | 855.8 |
-
-Таблиця 5 також наводить ітерації LSQR та оцінки обумовленості для обмеженого розв’язку. Ці значення важливі, оскільки обмеження еквіваріантності ефективно пов’язує багато ступенів свободи через комутатор, і погана обумовленість може перетворити оптимізацію на чисельний театр. Тому ми надаємо дві взаємодоповнюючі діагностики. По-перше, кількість ітерацій LSQR залишається помірною протягом перебору, що свідчить про те, що система розв’язується без надмірних зусиль. По-друге, Додаток A містить спектри сингулярних значень, що використовувалися при оцінюванні генераторів (**Рисунок A3**), що допомагає пояснити, чому регуляризація взагалі потрібна: як підгонка $G_A$, так і $G_B$ демонструють довгі спадні спектри, що відповідають майже сингулярним напрямкам. Разом ці діагностики підтримують інтерпретацію, що ЕМП не просто створює «красивішу» матрицю, а розв’язує добре визначену задачу обмеженої регресії в чисельно обґрунтованому режимі.
-
-### 4.3. Кількісне порівняння з базовими методами сучасного рівня
-
-Ми консолідуємо кількісні вигоди ЕМП проти найсильнішого прямо порівнюваного базового методу: підходу матриці переходу лише на основі точності (наприклад, [4]). Оскільки багато популярних post-hoc пояснювачів (наприклад, LIME/SHAP/Integrated Gradients) видають *атрибуції*, а не реконструйовані пояснення, ми включаємо другу таблицю порівняння (**Таблиця 7**), яка акцентує увагу на *обчислювальній вартості* та *властивостях узгодженості симетрії*.
-
-**Таблиця 6. Пряме кількісне порівняння на наших тестах (базовий проти ЕМП).**
-
-| Тест | Метод | Метрика точності | Дефект симетрії | Примітки |
-| :--- | :--- | :--- | :--- | :--- |
-| Синтетичний | Базовий $T_{old}$ | MSE=0.00367 | 1.31e+04 | LS підгонка |
-| Синтетичний | ЕМП $T_{new}$ | MSE=0.00524 | 4.25e-02 | $\lambda=0.5$ |
-| MNIST (тест) | Базовий $T_{old}$ | SSIM=0.6978, PSNR=18.49 | 141.19 | лише точність |
-| MNIST (тест) | ЕМП $T_{new}$ | SSIM=0.6976, PSNR=18.48 | 38.65 | $\lambda=0.5$ |
-
-**Таблиця 7. Ширше порівняння з поширеними сімействами пояснень «сучасного рівня» (кількісна вартість + властивості симетрії).**
-
-| Підхід | Тип виходу | Типові оцінки моделі / зразок | Вбудована узгодженість симетрії? |
-| :--- | :--- | :--- | :--- |
-| Integrated Gradients [30] | атрибуція пікселів/ознак | $O(S)$ зворотних поширень | Ні |
-| LIME [29] | розріджений локальний сурогат | $O(N)$ прямих проходів | Ні |
-| SHAP-сімейство [29] | атрибуції Шеплі | $O(N)$–$O(2^d)$ | Ні |
-| Еквіваріантні нейронні мережі [31,32] | інваріантність рівня архітектури | 1 прямий прохід (але перенавчання) | Так (рівень моделі) |
-| Базова матриця переходу [4] | реконструйоване пояснення | 1 прямий прохід + 1 мат. множення | Ні (лише точність) |
-| ЕМП (ця робота) | реконструйоване пояснення | 1 прямий прохід + 1 мат. множення | Так (штраф комутатора) |
-
-## 5. Дискусія
-
-Варто зазначити, що навіть у сприятливому випадку, коли класи є лінійно відокремлюваними в обох поданнях ознак (у латентному просторі глибокої моделі та в просторі інтерпретованих ознак), це саме по собі не гарантує існування лінійної матриці переходу, яка переводить одне подання в інше. Причина в тому, що лінійна відокремлюваність описує лише наявність гіперплощини для класифікації в кожному просторі окремо, але не накладає достатніх обмежень на геометричний зв’язок між самими поданнями. Додатково, на практиці цей зв’язок часто є нелінійним, а отже точного глобального лінійного оператора, який відображає одне подання в інше, не існує в принципі. У цій роботі ми свідомо не стверджуємо, що такий точний перехід завжди існує; натомість ціллю є побудова найкращого лінійного перекладу в практично значущій області даних, який водночас є структурно узгодженим із симетріями, властивими задачі.
-
-Ідея полягає в тому, що для пояснюваності важливо не лише наблизити одне подання ознак іншим, а зробити це так, щоб пояснення не руйнувалися під допустимими варіаціями вхідних об’єктів. Якщо дані мають симетрійну структуру (неперервні перетворення, що зберігають зміст об’єкта в межах задачі), то і латентний простір, і простір інтерпретованих ознак реагують на ці перетворення узгоджено, хоча й не обов’язково однаково. Саме ця узгодженість є ключовою: переклад між поданнями має “поважати” те, як ознаки змінюються під дією симетрій, інакше пояснення можуть ставати нестабільними або внутрішньо суперечливими вже за малих перетворень.
-
-Тому ми шукаємо не довільну матрицю, яка лише підганяє значення ознак, а компромісний оператор, що балансує два критерії. Перший критерій – фіделіті перекладу: наскільки близько інтерпретовані ознаки відтворюються з латентних у середньому на вибірці. Другий критерій – симетрійна узгодженість: наскільки переклад зберігає структуру варіацій, викликаних симетріями даних, тобто чи переноситься реакція на перетворення з одного простору ознак в інший без логічних “розривів”. Якщо точного узгодження немає, алгоритм знаходить розв’язок, який мінімізує обидві невідповідності одночасно, забезпечуючи найкращу доступну стабільність пояснень.
-
-З практичної точки зору це означає, що навіть за відсутності точного лінійного переходу ми отримуємо корисний результат: матрицю перекладу, яка дає узгоджені з даними пояснення у робочому діапазоні та не суперечить симетрійній природі задачі. Саме такий об’єкт і потрібен у пояснюваному ШІ, оскільки користувача цікавить не абстрактна точність тотожного відображення між просторами, а надійність, узгодженість і відтворюваність пояснень під типовими перетвореннями, що не змінюють суті об’єкта.
-
-Емпіричний висновок цього дослідження є приємно чітким: *еквіваріантність може бути забезпечена на рівні відображення пояснення без сплати значного штрафу за точність реконструкції*, принаймні для режимів, перевірених тут.
-
-Зокрема, ЕМП змінює *оператор пояснення* більше, ніж змінює *покомпонентні* реконструкції зразків. На MNIST SSIM/PSNR практично не змінилися (Таблиця 3), проте дефект симетрії впав на 72.6% (Таблиця 3, Рисунок 6). Ця комбінація не є парадоксальною: штраф комутатора обмежує те, як $T$ поводиться під час дій групи (через $T J^A \approx J^B T$), що може бути задоволено через глобальну реорганізацію оператора, навіть коли точкові реконструкції залишаються близькими до оптимуму найменших квадратів.
-
-Синтетичний тест демонструє «ідеальний» режим. Коли група перетворень є точною, а генератори відомі точно, ЕМП може зменшити дефект симетрії на $\sim 3 \times 10^5$ (Таблиця 1), використовуючи помірне $\lambda$. Перебір $\lambda$ на синтетичних даних поводиться добре (Рисунок 3, Таблиця 2), що свідчить про те, що ландшафт оптимізації домінується чітким компромісом, а не крихким налаштуванням гіперпараметрів. У цьому контрольованому налаштуванні ЕМП фактично є *проектором структури*: вона спрямовує $T$ до комутанта дії групи, залишаючись близькою до розв’язку, що підходить під дані.
-
-З іншого боку, тест MNIST знаходиться в режимі «наближеної симетрії». У MNIST генератори оцінюються скінченними різницями у просторах ознак/пікселів, а обертання є лише наближено лінійними в обраних представленнях. Це саме той неідеальний режим, що зустрічається в практичному XAI: симетрії часто *присутні*, але *недосконалі*. Спостережуване монотонне зменшення дефекту симетрії зі збільшенням $\lambda$ (Таблиця 5, Рисунок 6) є тому важливим: воно вказує на те, що штраф комутатора залишається значущим навіть з оціненими генераторами.
-
-Наші вимірювання стійкості (Таблиця 4) показують, що SSIM/PSNR плавно погіршуються при великих обертаннях як для $T_{old}$, так і для $T_{new}$, з лише невеликими відмінностями. Це не слід читати як «еквіваріантність нічого не робить». SSIM/PSNR – це оцінки піксельної точності для кожного зразка; вони не є прямими вимірюваннями узгодженої з групою поведінки *оператора пояснення*. Дефект симетрії, натомість, є глобальним критерієм рівня оператора. Іншими словами: ЕМП насамперед стабілізує *структуру* відображення, а не оптимізує стійкість піксельної реконструкції.
-
-Еквіваріантні архітектури забезпечують симетрію *всередині* прогнозної моделі [4-6]. ЕМП забезпечує симетрію *у пояснювачі*, після того як модель та представлення ознак зафіксовані. Це ортогональні важелі: модель з урахуванням симетрії все ще може отримати користь від пояснень з урахуванням симетрії, і навпаки, ЕМП може додати структурні гарантії, навіть коли базова модель не є явно еквіваріантною. Таке позиціонування корисне в реальних впровадженнях, де перенавчання або перепроектування моделі може бути неможливим.
-
-Щодо вибору $\lambda$, дані пропонують просту стратегію: розглядати $\lambda$ як регулятор дефекту симетрії та вибирати найменше значення, яке забезпечує бажане зменшення дефекту без помітного погіршення точності. На MNIST ми використовували $\lambda = 0.5$ як консервативну точку, але перебір показує, що подальші зменшення дефекту доступні при більших $\lambda$. Природним наступним кроком є вибір $\lambda$ за критерієм Парето: мінімізувати дефект симетрії за умови обмеження на точність (або навпаки), що ЕМП явно підтримує.
-
-Ми вважаємо «реконструйовані пояснення» корисною метою. Багато методів пояснення створюють оцінки важливості пікселів або ознак. Ці атрибуції можуть бути цінними, але вони часто залишають кінцевого користувача з додатковим когнітивним навантаженням: перетворення теплової карти на гіпотезу про те, що модель вважає *присутнім*. Пояснення на основі матриць переходу, натомість, є реконструкціями у зрозумілому людині просторі $B$. Це робить їх ближчими до того, як природно мислять науковці та інженери: ми оглядаємо конкретний об’єкт (зображення-патерн, прототипову сигнатуру або фізичне поле) і потім запитуємо, як він змінюється при перетвореннях. ЕМП посилює цей спосіб аналізу, гарантуючи, що реконструйований об’єкт поважає відомі симетрії. В умовах, таких як мікроскопія, дистанційне зондування та медична візуалізація, тобто там, де перетворення, такі як обертання та зсуви, є не семантичними змінами, а змінами точки огляду, узгоджена з симетрією реконструкція, можливо, є більш значущим артефактом пояснення.
-
-Умова $T J^A \approx J^B T$ не є довільним регуляризатором; це інфінітезимальна форма умови сплітання між двома (наближеними) представленнями групи. Мовою теорії представлень $T$ заохочується жити поблизу комутанта, який відображає одне представлення в інше, не порушуючи дію. З цієї точки зору, ЕМП – це маленький крок до імпорту чистої алгебри еквіваріантних моделей у більш складний світ post-hoc пояснення: замість сподівання, що пояснення будуть стабільними, ми кодуємо стабільність як обмеження оператора. Ця перспектива також передбачає безпосередні узагальнення: кілька генераторів можуть бути забезпечені одночасно (кілька комутаторів), дискретні симетрії можуть оброблятися елементами скінченних груп, а складені перетворення можуть адресуватися шляхом узгодження алгебри Лі, натягнутої на генератори.
-
-Стійкість зазвичай запитує: «Якщо я збурю вхід, чи зміниться пояснення трохи?». Еквіваріантність запитує інше: «Якщо я застосую структуроване перетворення, чи зміниться пояснення *правильним чином*?». Ідеально еквіваріантний пояснювач все ще може мати низьку піксельну стійкість, якщо базове представлення не є дружнім до обертання; і навпаки, стійкий пояснювач може бути *неправильним*, якщо він не зможе відповідним чином обертати свої пояснення. Ця відмінність є причиною того, чому ми наводимо як криві точності/стійкості для кожного зразка, так і глобальний дефект симетрії. Майбутні тести в ідеалі повинні включати метрики, які явно оцінюють еквіваріантність у самому просторі пояснень (наприклад, порівнюючи пояснення після відомих перетворень), що доповнило б норму комутатора рівня оператора, використану тут.
-
-Крім того, слід сказати кілька слів про обмеження запропонованого підходу. По-перше, ЕМП є лінійною; хоча це свідомий вибір (глобальна інтерпретованість, стабільність розв’язувача), деякі завдання можуть вимагати нелінійних пояснювачів (наприклад, ядерних відображень або неглибоких мереж), і ще належить перевірити, чи зберігають обмеження еквіваріантності ту саму поведінку «регулятора» в цьому режимі. По-друге, оцінювання генераторів спирається на локальну лінеаризацію (скінченні різниці), яка може порушуватися для складних перетворень або сильно нелінійних екстракторів ознак; покращення оцінювання генераторів (наприклад, за допомогою навчених локальних дотичних моделей або апроксимацій вищого порядку) є чіткою технічною метою. По-третє, наша оцінка зосереджена на плоских обертаннях; розширення на інші групи симетрії (зсуви, масштабування, віддзеркалення або композиції) є концептуально простим, але емпірично нетривіальним, оскільки різні групи по-різному взаємодіють з дискретизацією та граничними ефектами у піксельному просторі. По-четверте, ми вивчали пояснення, отримані з фіксованого представлення ознак FM; зміна представлення (або зроблення його явно еквіваріантним) може змінити як досяжний дефект симетрії, так і межу точності, і визначення цієї залежності є важливим для практичного впровадження. Нарешті, хоча ми надали велику кількість рисунків, у спільноті все ще немає консенсусу щодо «золотого стандарту» для вимірювання еквіваріантності пояснень поза критеріями рівня оператора; розробка таких тестів та пов’язування їх з якістю людських рішень у наступних задачах є конкретним напрямком для майбутньої роботи.
-
-## Висновки
-
-У роботі запропоновано еквіваріантну матрицю переходу (ЕМП) як розширення пояснюваності на основі матриць переходу з урахуванням симетрії. Метод розглядає пояснюваність як трансляцію між простором ознак формальної моделі та простором ознак ментальної моделі, і він доповнює стандартну регресійну цільову функцію, що базується лише на точності, регуляризатором еквіваріантності, отриманим з лінеаризації груп Лі. Шляхом оцінювання інфінітезимальних генераторів в обох просторах ознак за допомогою малих, контрольованих перетворень та забезпечення наближеної умови сплітання, ЕМП створює єдиний глобальний лінійний оператор, який є водночас точним і структурно узгодженим. Емпірично, на синтетичному тесті, заснованому на плоскій дії $SO(2)$, ЕМП зменшила дефект симетрії з 1.31 $\times$ 10$^4$ до 4.25 $\times$ 10$^{-2}$ (зменшення у 3.1 $\times$ 10$^5$ разів), при цьому лише збільшивши помилку реконструкції на навчанні з 3.67 $\times$ 10$^{-3}$ до 5.24 $\times$ 10$^{-3}$. При реконструкції зображень з ознак на наборі даних MNIST, ЕМП зменшила помилку симетрії Фробеніуса зі 141.19 до 38.65 (зменшення на 72.6%) з практично незмінною точністю реконструкції (середній SSIM на тестовій вибірці 0.6978 проти 0.6976; середній PSNR 18.49 дБ проти 18.48 дБ). Ці цифри підтверджують висновок про те, що обмеження симетрії можуть суттєво стабілізувати post-hoc пояснення без суттєвого погіршення їх точності. Основні обмеження стосуються якості оцінювання генераторів, локальності лінеаризації алгебри Лі та залежності від обраного простору ознак ментальної моделі.
-
-Майбутні роботи повинні дослідити багатші групи симетрії (наприклад, $SE(2)$, $SE(3)$), більш точне оцінювання генераторів за допомогою автоматичного диференціювання або поширення дотичних, а також інтеграцію з робочими процесами за участі людини, де експерти предметної області можуть перевіряти та уточнювати простір ментальної моделі. Ще одним перспективним напрямком є поєднання ЕМП з еквіваріантними архітектурами, використовуючи ЕМП як пояснювальний шар, який транслює структуровані глибокі представлення у семантично обґрунтовані параметри для підтримки прийняття рішень у відповідальних застосуваннях.
-
-## Список посилань
-
-1. Miller, T. Explanation in artificial intelligence: Insights from the social sciences. Artificial Intelligence 2019, 267, 1–38. https://doi.org/10.1016/j.artint.2018.07.007
-2. Adadi, A.; Berrada, M. Peeking Inside the Black-Box: A Survey on Explainable Artificial Intelligence (XAI). IEEE Access 2018, 6, 52138–52160. https://doi.org/10.1109/ACCESS.2018.2870052
-3. Guidotti, R.; Monreale, A.; Ruggieri, S.; Turini, F.; Giannotti, F.; Pedreschi, D. A Survey of Methods for Explaining Black Box Models. ACM Computing Surveys 2018, 51, 1–42. https://doi.org/10.1145/3236009
-4. Radiuk P, Barmak O, Manziuk E, Krak I. Explainable Deep Learning: A Visual Analytics Approach with Transition Matrices. Mathematics. 2024; 12(7):1024. https://doi.org/10.3390/math12071024
-5. Toward explainable deep learning in healthcare through transition matrix and user-friendly features / O. Barmak et a. Frontiers in Artificial Intelligence. 2024. Vol. 7. P. 1482141. URL: https://doi.org/10.3389/frai.2024.1482141
-6. Bronstein, M.M.; Bruna, J.; Cohen, T.; Veličković, P. Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges. arXiv preprint 2021, arXiv:2104.13478. https://doi.org/10.48550/arXiv.2104.13478
-7. Cohen, T.; Welling, M. Group Equivariant Convolutional Networks. Proceedings of the 33rd International Conference on Machine Learning (ICML) 2016, 48, 2990–2999.
-8. Finzi, M.; Stanton, S.; Izmailov, P.; Wilson, A.G. Generalizing Convolutional Neural Networks for Equivariance to Lie Groups on Arbitrary Continuous Manifolds. Proceedings of the 37th International Conference on Machine Learning (ICML) 2020, 119, 3165–3176.
-9. Akritas, A.G.; Malaschonok, G.I. Applications of Singular-Value Decomposition (SVD). Mathematics and Computers in Simulation 2004, 67, 15–31, doi:10.1016/j.matcom.2004.05.005.
-10. Michael Galkin. Graph & Geometric ML in 2024: Where We Are and What's Next (Part I – Theory & Architectures). Towards Data Science, Medium, 2024. https://towardsdatascience.com/graph-geometric-ml-in-2024-where-we-are-and-whats-next-part-i-theory-architectures-3af5d38376e1
-11. Michael Galkin. Graph & Geometric ML in 2024: Where We Are and What's Next (Part II – Applications). Towards Data Science, Medium, 2024. https://towardsdatascience.com/graph-geometric-ml-in-2024-where-we-are-and-whats-next-part-ii-applications-1ed786f7bf63
-12. Crocioni et al. DeepRank2: Mining 3D Protein Structures with Geometric Deep Learning. Journal of Open Source Software, 9(94), 5983, 2024. https://doi.org/10.21105/joss.05983
-13. Dvorkin et al. Geometric deep learning framework for de novo genome assembly. Genome Research, 35(4):839–849, 2025. https://doi.org/10.1101/gr.279307.124
-14. He et al. A deep equivariant neural network approach for efficient hybrid density functional calculations. Nature Communications, 15, Article number: 8690, 2024. https://doi.org/10.1038/s41467-024-53028-4
-15. Batatia et al. A General Framework for Equivariant Neural Networks on Reductive Lie Groups. NeurIPS 2023. https://arxiv.org/abs/2306.00018 (accepted paper)
-16. M. Geiger et al. The principles behind equivariant neural networks for physics and chemistry. PNAS, 122(2), e2415656122, 2025. https://doi.org/10.1073/pnas.2415656122
-17. Claudio Battiloro et al. E(n) Equivariant Topological Neural Networks. ICLR 2025 Poster. https://openreview.net/forum?id=Ax3uliEBVR
-18. M. K. Maurer et al. Equivariant neural networks for robust observables. Phys. Rev. D 110, 096023, 2024. https://doi.org/10.1103/PhysRevD.110.096023
-19. Ghorbel et al. Equivariant and SE(2)-Invariant Neural Network Leveraging Fourier-Based Descriptors for 2D Image Classification. Proceedings of the 17th International Conference on Agents and Artificial Intelligence (ICAART 2025), Volume 2, pages 210-215, 2025. https://doi.org/10.5220/0013143300003890
-20. Navon et al. Equivariant Architectures for Learning in Deep Weight Spaces. arXiv:2301.12780, 2023.
-21. Pacini et al. On Universality Classes of Equivariant Networks. arXiv:2506.02293, 2025.
-22. J. Yim et al. SE(3) Diffusion Model with Application to Protein Backbone Generation. arXiv:2302.02277, 2023 (FrameDiff).
-23. S. Alamdari et al. Protein generation with evolutionary diffusion: sequence is all you need. bioRxiv, 2023. https://doi.org/10.1101/2023.09.11.556673 (EvoDiff).
-24. K. Martinkus et al. AbDiffuser: Full-Atom Generation of in-vitro Functioning Antibodies. arXiv:2308.05027, 2023.
-25. E. Sverrison et al. DiffMaSIF: Surface-based Protein-Protein Docking with Diffusion Models. MLSB 2023.
-26. M. Ketata et al. DiffDock-PP: Rigid Protein-Protein Docking with Diffusion Models. arXiv:2304.03889, 2023.
-27. Z. Zhang et al. DiffPack: A Torsional Diffusion Model for Autoregressive Protein Side-Chain Packing. arXiv:2306.01794, 2023.
-28. R. Krishna et al. Generalized Biomolecular Modeling and Design with RoseTTAFold All-Atom. bioRxiv, 2023. https://doi.org/10.1101/2023.10.09.561603
-29. Miller, T. Explanation in Artificial Intelligence: Insights from the Social Sciences. Artificial Intelligence 2019, 267, 1–38. https://doi.org/10.1016/j.artint.2018.07.007
-30. Adadi, A.; Berrada, M. Peeking Inside the Black-Box: A Survey on Explainable Artificial Intelligence (XAI). IEEE Access 2018, 6, 52138–52160. https://doi.org/10.1109/ACCESS.2018.2870052
-31. Guidotti, R.; Monreale, A.; Ruggieri, S.; Turini, F.; Giannotti, F.; Pedreschi, D. A Survey of Methods for Explaining Black Box Models. ACM Computing Surveys 2018, 51, 93:1–93:42. https://doi.org/10.1145/3236009
-32. Bronstein, M.M.; Bruna, J.; Cohen, T.; Veličković, P. Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges. arXiv 2021, arXiv:2104.13478. https://arxiv.org/abs/2104.13478
-33. Cohen, T.; Welling, M. Group Equivariant Convolutional Networks. arXiv 2016, arXiv:1602.07576. https://arxiv.org/abs/1602.07576
-34. Finzi, M.; Stanton, S.; Izmailov, P.; Wilson, A.G. Generalizing Convolutional Neural Networks for Equivariance to Lie Groups on Arbitrary Continuous Manifolds. arXiv 2020, arXiv:2002.12880. https://arxiv.org/abs/2002.12880
-35. Akritas, A.G.; Malaschonok, G.I. Applications of Singular-Value Decomposition (SVD). Mathematics and Computers in Simulation 2004, 67, 15–31. https://doi.org/10.1016/j.matcom.2004.05.005
-
-## Appendix 1. Дані для секції 3.4.
-
-### Appendix 1.1. Матриці $A \in \mathbb{R}^{15 \times 5}$, $B \in \mathbb{R}^{15 \times 4}$, $T_{old} \in \mathbb{R}^{5 \times 4}$
-
-$$
-A =
-\begin{pmatrix}
-2.8 & -1.8 & -2.8 & 1.3 & 0.4 \\
-2.9 & -1.9 & -2.9 & 1.4 & 0.5 \\
-3 & -2 & -3 & 1.5 & 0.6 \\
-3.1 & -2.1 & -3.1 & 1.6 & 0.7 \\
-3.2 & -2.2 & -3.2 & 1.7 & 0.8 \\
--1.6 & -2.5 & 1.5 & 0.2 & 0.6 \\
--1.3 & -2.7 & 1.3 & 0.4 & 0.8 \\
--1 & -3 & 1.5 & 0.6 & 1 \\
--0.7 & -3.2 & 1.7 & 0.8 & 1.2 \\
--0.5 & -3.5 & 1.9 & 1 & 1.4 \\
-1.2 & -1.2 & 0.7 & -0.3 & -2.8 \\
-1.1 & -1.1 & 0.8 & -0.4 & -2.9 \\
-1 & -1 & 0.8(4) & -0.(4) & -3 \\
-0.9 & -0.9 & 0.85 & -0.45 & -3.1 \\
-0.8 & -0.8 & 0.9 & -0.5 & -3.2
-\end{pmatrix}, \quad
-B =
-\begin{pmatrix}
--1.979394104 & 1.959307524 & -1.381119943 & -1.72964 \\
--1.974921385 & 1.94850558 & -1.726609792 & -1.76121 \\
--1.843907868 & 1.99818664 & -1.912855282 & -1.97511 \\
--1.998625355 & 1.999671808 & -1.998443276 & -1.99976 \\
--1.999365095 & 1.998896097 & -1.999605076 & -1.99892 \\
-1.997775859 & -1.844000202 & 1.660111333 & -1.37353 \\
-1.818753218 & -1.909687734 & 1.206631506 & -1.40799 \\
-1.992023578 & -1.923804827 & 0.706593926 & -1.54378 \\
-1.999174385 & -1.997592083 & 0.21221635 & -1.58697 \\
-1.997854305 & -1.999410881 & -0.243400633 & -1.82759 \\
-0.851626415 & 1.574201387 & 1.581026838 & 1.573934 \\
-1.008512576 & 1.570791652 & 1.595657199 & 1.741762 \\
-1.107744254 & 1.615475549 & 1.723582196 & 1.807615 \\
-1.089897991 & 1.611369928 & 1.882537367 & 1.873522 \\
-1.290406093 & 1.695289797 & 1.953503509 & 1.94625
-\end{pmatrix}
-$$
-
-$$
-T_{old} =
-\begin{pmatrix}
--0.278135369 & 0.520567817 & -0.140387778 & 0.024426 \\
--0.382248581 & 0.126035484 & -0.145008015 & 0.349038 \\
-0.522859856 & -0.341076002 & 0.433255464 & 0.198781 \\
--0.065904355 & -0.023301678 & -0.149755201 & -0.25589 \\
--0.177604706 & -0.49953555 & -0.428847974 & -0.61688
-\end{pmatrix}
-$$
-
-$$
-\begin{bmatrix} -0.753111 & 0.334482 & -0.852146 & 0.22321 \end{bmatrix} \\
-\begin{bmatrix} -0.055173 & 0.223349 & -0.62733 & 0.50027 \end{bmatrix} \\
-\begin{bmatrix} 0.519011 & -0.355588 & -0.482069 & 0.443506 \end{bmatrix} \\
-\begin{bmatrix} 1.424823 & 0.503575 & -1.041824 & 0.080492 \end{bmatrix} \\
-\begin{bmatrix} -0.646044 & -0.668627 & -0.643553 & -0.577877 \end{bmatrix}
-$$
-
-### Appendix 1.2. Визначення $J$
-
-```python
-import numpy as np
-from sklearn.manifold import MDS
-from sklearn.linear_model import LinearRegression
-
-# 1. Матриця A (приклад)
-A = np.array([...])
-
-# 2. Редукція в 2D (MDS)
-mds = MDS(n_components=2, random_state=42, normalized_stress=False)
-A_2d = mds.fit_transform(A)
-
-# 3. Навчаємо "зворотний місток" (Декодер: 2D -> 5D)
-decoder = LinearRegression()
-decoder.fit(A_2d, A)
-
-# 4. Робимо малий поворот у 2D
-epsilon = 0.01 # малий кут у радіанах
-R = np.array([
- [np.cos(epsilon), -np.sin(epsilon)],
- [np.sin(epsilon), np.cos(epsilon)]
-])
-A_2d_rot = A_2d @ R.T
-
-# 5. Повертаємося в 5D (Inverse Mapping)
-A_rot = decoder.predict(A_2d_rot)
-
-# 6. Обчислюємо delta_A (чисельна похідна)
-delta_A = (A_rot - A) / epsilon
-
-# 7. Знаходимо генератор J_A (5x5)
-# Рівняння: A * J.T = delta_A
-J_A_T = np.linalg.pinv(A) @ delta_A
-J_A = J_A_T.T
-
-print("Обчислений генератор J_A (5x5):")
-print(np.round(J_A, 4))
+15: Return T*_a = {tau_1, tau_2, ..., tau_ka}
 ```
 
-### Appendix 1.3. Матриці $J^A (5 \times 5)$ та $J^B (4 \times 4)$
+### 3.3 Stage 2: Feature Space Transformation and Information Granulation
 
-$$
-J^A = \begin{pmatrix} & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \end{pmatrix}, \quad
-J^B = \begin{pmatrix} & & & \\ & & & \\ & & & \\ & & & \end{pmatrix}
-$$
+After discretization, continuous values in $B$ are mapped to discrete codes using a quantization function.
 
-### Appendix 1.4. Матриця $B_{old}^*$, $T_{new}$, $B_{new}^*$
+Definition 2 (Quantization Function). For each attribute $a_j \in A$ with optimal thresholds $T^*_j = \{\tau_{j,1}, \ldots, \tau_{j,k_j}\}$, the quantization function $\phi_j : V_{a_j} \rightarrow \mathbb{Z}^+$ maps continuous values to interval codes:
 
-$$
-B_{old}^* = \begin{pmatrix} & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \end{pmatrix}, \quad
-T_{new} = \begin{pmatrix} & & & & \\ & & & & \\ & & & & \\ & & & & \end{pmatrix}, \quad
-B_{new}^* = \begin{pmatrix} & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \\ & & & \end{pmatrix}
-$$
+$$ b^*_{ij} = \phi_j(b_{ij}) =
+\begin{cases}
+    0, & \text{if } b_{ij} < \tau_{j,1}; \\
+    m, & \text{if } \tau_{j,m} \leq b_{ij} < \tau_{j,m+1}; \\
+    k_j, & \text{if } b_{ij} \geq \tau_{j,k_j}.
+\end{cases} \tag{6} $$
 
-### Appendix 1.5 Матриця $A_{rot}$
+The result is a discrete matrix $B^* = \{b^*_{ij}\}$ where each element is an integer denoting the qualitative state of the feature (e.g., 0 = "low", 1 = "medium", 2 = "high").
 
-$$
-A_{rot} = \begin{pmatrix} & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \\ & & & & \end{pmatrix}
-$$
+Definition 3 (Indiscernibility Relation). Based on $B^*$, the indiscernibility relation $\mathrm{IND}(A)$ defines the condition of logical identity between two objects:
 
-### Appendix 1.6 Візуалізації генераторів та обумовленість системи переходу
+$$ \mathrm{IND}(A) = \{(x_i, x_j) \in U \times U : \forall a_k \in A,\ b^*_{ik} = b^*_{jk}\} \tag{7} $$
 
-*(a) Теплова карта $J^A$. (b) Теплова карта $J^B$.*
-**Рисунок А.1. Синтетичний тест: теплові карти генераторів.**
+This relation partitions the universe into equivalence classes (information granules) $U/\mathrm{IND}(A) = \{E_1, E_2, \ldots, E_L\}$, where $L \leq n$. Each granule $E_p$ groups objects sharing identical discretized attribute signatures $S_p = \langle b^*_{p1}, b^*_{p2}, \ldots, b^*_{pm} \rangle$. A granule is classified as:
 
-**Рисунок А.2. Синтетичний тест: сингулярні значення матриці системи переходу M.**
+* Deterministic (pure): if all objects in $E_p$ belong to the same class ($|\partial(E_p)| = 1$, where $\partial(E_p)$ is the set of distinct class values within $E_p$).
+* Contradictory: if objects in $E_p$ belong to multiple classes ($|\partial(E_p)| > 1$), indicating class overlap in the discretized feature space.
 
-### Appendix 1.7 Додаткові вкладення стійкості
+### 3.4 Stage 3: Formation of Deterministic Production Rules
 
-*(a) PCA*
-*(b) MDS*
-*(c) t-SNE*
-*(d) UMAP*
+Definition 4 (Lower Approximation). For each decision class $X_j = \{x \in U : f(x, d) = y_j\}$, the lower approximation is defined as [12]:
 
-**Рисунок А.3. Синтетичний тест: розширені вкладення стійкості.**
+$$ \underline{A}X_j = \{x \in U : [x]_A \subseteq X_j\} \tag{8} $$
 
-**Рисунок А.4. MNIST: спектри сингулярних значень оцінювання генераторів.**
+where $[x]_A$ denotes the equivalence class containing $x$.
+
+An object $x$ belongs to the lower approximation of class $X_j$ if and only if its entire equivalence class consists exclusively of objects of that class. This guarantees deterministic classification with 100% confidence.
+
+Each deterministic granule $E_p \subseteq \underline{A}X_j$ generates a production rule:
+
+$$ R_p: \text{IF } (a_1 \in I_{1,v_1}) \wedge \ldots \wedge (a_m \in I_{m,v_m}) \Rightarrow d = y_j \tag{9} $$
+
+where $I_{k,v_k}$ is the value interval of the $k$-th attribute corresponding to discrete code $v_k$.
+
+The support of rule $R_p$ quantifies its statistical significance:
+
+$$ \mathrm{Supp}(R_p) = \frac{|E_p \cap X_j|}{|U|} \tag{10} $$
+
+The overall quality of approximation is measured by Pawlak's Classification Quality Coefficient [8]:
+
+$$ \gamma_A(d) = \frac{\sum_{j=1}^{K} |\underline{A}X_j|}{|U|} \tag{11} $$
+
+which represents the proportion of objects that can be unambiguously classified using deterministic rules.
+
+### 3.5 Stage 4: Probabilistic Rule Synthesis from Boundary Regions
+
+Contradictory granules, i.e., those where $|\partial(E_p)| > 1$, form the boundary region $BN_A(X_j)$. For each such granule, a probabilistic rule is constructed:
+
+$$ R_p^{\text{prob}}: \text{IF } \text{conditions} \Rightarrow d = y_j \text{ with } \mathrm{Conf}(R_p) = \frac{|E_p \cap X_j|}{|E_p|} \tag{12} $$
+
+The confidence $\mathrm{Conf}(R_p) < 1.0$ reflects the degree of class ambiguity within the granule. Rules with confidence below a threshold may be flagged for human review in safety-critical applications. Figure 3 illustrates the relationship between lower approximation, boundary region, and upper approximation in the context of rough set classification.
+
+![RST approximations. Deterministic granules (fully inside a target class Xj) form the lower approximation (solid green); granules partially overlapping class boundaries form the boundary region (striped yellow); their union constitutes the upper approximation. The lower approximation guarantees 100% classification confidence.](figs/fig_rough_set_approx.png)
+
+### 3.6 Stage 5: Feature Space Minimization via Reduct Search
+
+#### Discernibility Matrix
+
+To identify the minimal set of features necessary for classification, the discernibility matrix $M$ [16] is constructed. For each pair of granules $(E_i, E_j)$ from different classes:
+
+$$ c_{ij} = \{a_k \in A : b^*_{ik} \neq b^*_{jk}\}, \quad \text{when } y_i \neq y_j \tag{13} $$
+
+The discernibility function is the conjunction of all disjunctions from non-empty cells:
+
+$$ f_{\text{DS}}(a_1, \ldots, a_m) = \bigwedge \left\{ \bigvee(c_{ij}) : c_{ij} \neq \emptyset \right\} \tag{14} $$
+
+#### Modified Johnson's Algorithm with Information Weights
+
+Finding all reducts is NP-hard [16]. A weighted heuristic based on Johnson's greedy algorithm is proposed, where each attribute's selection priority incorporates its information capacity weight from the discretization stage:
+
+$$ W(a_k) = \text{Count}(a_k \in c_{ij}) \cdot (1 - \bar{E}(a_k)) \tag{15} $$
+
+where $\bar{E}(a_k)$ is the normalized mean conditional entropy of attribute $a_k$, computed across its discretization cut points. Attributes with lower entropy (better class separation) receive higher weights, biasing the greedy search toward features that are both discriminative and informative. The core of the attribute set is the intersection of all reducts:
+
+$$ \mathrm{CORE}(A) = \{a_k \in A : \exists c_{ij} = \{a_k\}\} \tag{16} $$
+
+Core attributes appear as singletons in the discernibility matrix and are indispensable for classification.
+
+### 3.7 Stage 6: PKB Assembly
+
+The PKB is assembled as a self-contained data structure comprising:
+* Discretization thresholds $\{T^*_j\}$ for all attributes.
+* The selected reduct $\mathrm{RED} \subseteq A$.
+* Deterministic rules from the lower approximation (confidence = 1.0).
+* Probabilistic rules from the boundary region (confidence $< 1.0$).
+* Metadata: support, confidence, coverage for each rule.
+
+This structure enables deployment without external dependencies—the PKB is a complete, inspectable artifact that can be serialized as JSON and embedded in edge devices or SCADA controllers.
+
+### 3.8 Stage 7: Weighted Inference Engine
+
+The inference procedure for classifying a new object $X_{\text{new}} = \langle b_1, \ldots, b_m \rangle$ proceeds as follows:
+
+Step 1: Discretization. Apply the stored quantization functions:
+
+$$ x^*_j = \phi_j(b_j), \quad \forall j \in \{1, \ldots, m\} \tag{17} $$
+
+Step 2: Rule Activation. Search the knowledge base for all rules whose conditions match the discretized signature, using only attributes in $\mathrm{RED}$.
+
+Step 3: Conflict Resolution. When multiple rules for different classes are activated, compute the integral class support score:
+
+$$ S(y_k) = \sum_{\substack{R_i \in R_{\text{active}} \\ \text{Class}=y_k}} \mathrm{Conf}(R_i) \cdot \mathrm{Supp}(R_i) \cdot w_i \tag{18} $$
+
+where $w_i$ is the interval reliability weight derived from the density profile at the discretization zone. The final classification is:
+
+$$ y^* = \arg\max_{y_k} S(y_k) \tag{19} $$
+
+Step 4: Soft Matching Fallback. If no rule matches exactly, a Hamming distance-based soft matching procedure finds the closest rule signature. If no acceptable match is found, the default class (most frequent in $Y$) is assigned.
+
+## 4. Case Study
+
+### 4.1 Experimental Setup
+
+#### SCADA Simulation Dataset
+
+To validate the PKB methodology in the context of PV fire hazard monitoring, a simulated SCADA dataset was constructed with the following characteristics:
+
+* Size: $n = 1000$ samples (PV module row measurements).
+* Features: 3 continuous sensor measurements:
+    * Thermal anomaly intensity ($X_i$): range [0, 100], threshold 50.
+    * Bypass diode temperature ($X_{1i}$): range [20, 120]$^\circ$C, threshold 70$^\circ$C.
+    * Fire sensor signal ($X_{2i}$): range [0, 10], threshold 5.
+* Classes: 5 operational states based on Boolean logic combinations (Table 1).
+* Noise: Gaussian noise added to class-conditional distributions (random seed 42).
+
+Table 1: SCADA operational states and their Boolean logic definitions, corresponding to the fire hazard truth table implemented in the PV monitoring SCADA system.
+
+| State | $X_i$ | $X_{1i}$ | $X_{2i}$ | Count |
+| :--- | :---: | :---: | :---: | :---: |
+| Normal | Low | Low | Low | 300 |
+| Safe Bypass | High | High | Low | 250 |
+| Fire Hazard | High | Low | Low | 150 |
+| Faulty Diode | Low | High | Low | 150 |
+| Active Fire | Any | Any | High | 150 |
+
+#### Benchmark Datasets
+
+Two publicly available benchmark datasets from the UCI Machine Learning Repository [30] were used:
+* Iris [31]: 150 samples, 4 features, 3 classes (setosa, versicolor, virginica).
+* Wine [32]: 178 samples, 13 features, 3 classes (cultivar types).
+
+#### Evaluation Protocol
+
+For the SCADA dataset, the full dataset was used for both training and validation to assess the PKB's capacity to model the complete feature space. For benchmark datasets, 5-fold stratified cross-validation [33] was employed with a fixed random seed of 42 for reproducibility. The PKB methodology was compared against two baselines: Decision Tree (CART implementation from scikit-learn [30]) and Gaussian Naive Bayes.
+
+### 4.2 WEDD Discretization Results
+
+The WEDD algorithm with $\alpha = 0.6$ produced the following discretization thresholds (Table 2).
+
+Table 2: WEDD discretization thresholds compared to ground-truth class boundaries. The algorithm successfully recovers thresholds close to the true values, with cut points positioned at density valleys.
+
+| Feature | Truth | WEDD Cuts | Bins |
+| :--- | :---: | :--- | :---: |
+| Thermal intensity | 50.0 | 42.8, 47.5, 54.7 | 4 |
+| Diode temp. ($^\circ$C) | 70.0 | 58.5, 70.0, 76.0 | 4 |
+| Fire signal | 5.0 | 5.4 | 2 |
+
+Figure 4 presents the visualization of the WEDD discretization results, showing class-conditional histograms, KDE density curves, and the selected cut points for each feature. Key observations include: (1) the bypass diode temperature cut at 70.0$^\circ$C exactly recovers the ground truth threshold; (2) thermal anomaly intensity receives three cuts that bracket the true boundary at 50.0 from both sides, creating a transition zone that captures the class overlap; (3) fire sensor signal requires only one cut at 5.4, positioned in the density valley between fire and non-fire populations.
+
+![WEDD discretization results for three SCADA sensor features. Each panel shows: class-conditional histograms (colored bars), Gaussian KDE density curves (solid lines), and selected cut points (vertical dashed lines). The bypass diode temperature threshold at 70.0 degrees Celsius nearly exactly recovers the ground truth. Fire sensor signal requires only a single cut point at 5.4, closely matching the true threshold of 5.0. The multi-criteria objective places cuts at density valleys while maximizing class separation.](figs/fig_discretization.png)
+
+### 4.3 Granulation and Rule Extraction Results
+
+The discretized feature space ($4 \times 4 \times 2 = 32$ combinations) produced 32 information granules, achieving a 31$\times$ compression ratio from 1000 objects. Table 3 summarizes the granulation results. The 19 deterministic rules are distributed as follows: 16 rules for Active Fire (covering 98.0% of the class), 1 each for Faulty Diode, Normal, and Safe Bypass. Notably, the Fire Hazard class has zero deterministic rules: it resides entirely in the boundary region, reflecting the inherent difficulty of distinguishing fire hazard conditions (high thermal anomaly + low diode temperature) from adjacent states. The 13 probabilistic rules from contradictory granules complete the coverage, with confidence ranging from 50.0% (P12, equal Fire Hazard/Normal split) to 99.6% (P5, near-deterministic Normal classification).
+
+Table 3: Information granulation results from IND($A$) equivalence class construction.
+
+| Metric | Value |
+| :--- | :---: |
+| Total objects ($|U|$) | 1,000 |
+| Total granules ($L$) | 32 |
+| Compression ratio ($L/|U|$) | 0.032 |
+| Deterministic granules | 19 (59.4%) |
+| Contradictory granules | 13 (40.6%) |
+| $\gamma_A(d)$ (Classification quality) | 0.150 |
+| Objects in lower approximation | 150 (15.0%) |
+| Objects in boundary region | 850 (85.0%) |
+| Deterministic rules extracted | 19 |
+| Probabilistic rules extracted | 13 |
+| Total production rules | 32 |
+
+### 4.4 Reduct Analysis Results
+
+The discernibility matrix analysis revealed 351 non-empty entries from 496 granule pairs with different majority classes. All three attributes appear as singletons in the discernibility matrix (Table 4). Since all three attributes have singleton entries, $\mathrm{CORE}(A) = \mathrm{RED} = A$ (the full attribute set). No feature reduction is possible, i.e., each sensor captures a distinct physical phenomenon that is irreplaceable for classification. This confirms the well-designed nature of the SCADA sensor suite.
+
+Table 4: Reduct analysis: feature weights and discernibility singletons.
+
+| Attribute | Weight | Singletons | Score |
+| :--- | :---: | :---: | :---: |
+| Thermal intensity | 0.328 | 15 | 88.5 |
+| Diode temperature | 0.314 | 17 | 20.4 |
+| Fire signal | 0.280 | 16 | 4.5 |
+
+### 4.5 Inference Validation Results
+
+The PKB inference engine achieved the results shown in Table 5 and Figure 5. The critical safety class Fire Hazard achieves 98.0% recall (147 of 150 correctly identified) despite relying entirely on probabilistic rules. The precision of 90.7% indicates some false alarms from the Normal class, which is an acceptable trade-off in safety-critical applications where missed hazards carry catastrophic consequences.
+
+Table 5: PKB inference engine validation metrics on the SCADA dataset ($n = 1000$). The system achieves 96.2% overall accuracy with perfect deterministic rule performance.
+
+| Class | Prec. | Rec. | F1 | Support |
+| :--- | :---: | :---: | :---: | :---: |
+| Active Fire | 1.000 | 0.980 | 0.990 | 150 |
+| Faulty Diode | 0.958 | 0.913 | 0.935 | 150 |
+| Fire Hazard | 0.907 | 0.980 | 0.942 | 150 |
+| Normal | 0.983 | 0.957 | 0.970 | 300 |
+| Safe Bypass | 0.953 | 0.976 | 0.964 | 250 |
+| Macro avg. | 0.960 | 0.961 | 0.960 | 1000 |
+| Weighted avg. | 0.963 | 0.962 | 0.962 | 1000 |
+
+![Confusion matrix for PKB inference validation on the SCADA dataset. The diagonal dominance confirms high classification accuracy across all five operational states. The primary error sources are misclassifications between Faulty Diode and Safe Bypass (10 cases) and between Normal and Fire Hazard (9 cases), both occurring in boundary regions where sensor signatures overlap.](figs/fig_confusion_matrix.png)
+
+Analysis by rule type reveals a clear dichotomy: deterministic rules achieve 100% accuracy (150/150), while probabilistic rules achieve 95.5% accuracy (812/850). All 38 misclassifications originate from probabilistic rules in high-conflict boundary granules.
+
+### 4.6 Benchmark Comparison Results
+
+Table 6 and Figure 6 present the comparative results on the Iris and Wine benchmark datasets. On the Iris dataset (4 features, 3 classes), the PKB achieves 93.3% accuracy, within 2.0 percentage points of the best baseline (Decision Tree at 95.3%). On the Wine dataset (13 features, 3 classes), the PKB achieves 87.6% accuracy with greedy reduct-based feature selection reducing the feature space from 13 to 3–6 features per fold. While Naive Bayes excels on Wine (97.2%) due to the near-Gaussian feature distributions satisfying its independence assumption, the PKB significantly outperforms on interpretability.
+
+Table 6: Benchmark comparison using 5-fold stratified cross-validation. Mean $\pm$ standard deviation reported. Best results in bold.
+
+| Dataset | Method | Accuracy | Macro F1 |
+| :--- | :--- | :---: | :---: |
+| Iris | PKB | $0.933 \pm 0.030$ | $0.933 \pm 0.030$ |
+| | Decision Tree | $\mathbf{0.953 \pm 0.034}$ | $\mathbf{0.953 \pm 0.034}$ |
+| | Naive Bayes | $0.947 \pm 0.040$ | $0.947 \pm 0.040$ |
+| Wine | PKB | $0.876 \pm 0.078$ | $0.873 \pm 0.083$ |
+| | Decision Tree | $0.893 \pm 0.038$ | $0.896 \pm 0.036$ |
+| | Naive Bayes | $\mathbf{0.972 \pm 0.025}$ | $\mathbf{0.973 \pm 0.024}$ |
+
+![Benchmark comparison of PKB methodology against Decision Tree and Naive Bayes baselines on Iris and Wine datasets using 5-fold stratified cross-validation. The PKB achieves competitive accuracy while providing the unique advantage of interpretable IF-THEN production rules with explicit confidence scores. Error bars represent +/- 1 standard deviation across folds.](figs/fig_benchmark_comparison.png)
+
+### 4.7 Application Context: PV Fire Hazard Detection
+
+Figures 7 and 8 show the detection accuracy improvements and system efficiency gains, respectively. The PKB methodology integrates with the SCADA Boolean logic layer (Figure 9) by replacing the binary thresholding with interpretable production rules that provide confidence-weighted classification, enabling operators to understand the reasoning behind each fire hazard assessment. Figure 10 demonstrates the system's ability to discriminate between different defect types based on thermal profile characteristics.
+
+![Detection accuracy improvements in the PV monitoring CPS. The ensemble method combining M2 (large defect detection) and M3 (hot spot detection) thermal palettes achieves mAP@0.5 of 0.96 for Class 1 defects (+3%), 0.90 for Class 2, and 0.95 for Class 3 (+2%). The PKB methodology complements this detection layer by providing interpretable classification of operational states from the detected thermal anomalies.](figs/fig_accuracy_comparison.png)
+
+![System efficiency improvements in the edge-cloud CPS architecture. Left: 31.7% reduction in data transmission volume. Center: 32.5% reduction in processing time through edge computing. Right: 23–28% cumulative reduction in false positives. The PKB inference engine adds interpretable fire hazard classification on top of these efficiency gains, enabling proactive safety assessment via SCADA Boolean logic.](figs/fig_system_efficiency.png)
+
+![Fire hazard decision logic implemented in the SCADA system. The Boolean truth table correlates three sensor inputs (Xi, X1i, X2i) to classify operational states. The PKB methodology enhances this logic by providing confidence-weighted rules instead of hard binary thresholds, enabling more nuanced assessment of borderline cases.](figs/fig_hazard_logic.png)
+
+![Thermal profiles for two critical defect types in PV modules. Top: Hot Spot defect showing sharp Gaussian-like temperature peak (detected by M3 palette). Bottom: Bypass Diode Activation showing step-function profile (detected by M2 palette). These thermal signatures, when quantified by SCADA sensors, serve as input features for PKB classification.](figs/fig_thermal_profiles.png)
+
+## 5. Discussion
+
+The results presented in this study validate the efficacy of the PKB methodology as a robust alternative to opaque black-box classifiers for safety-critical industrial applications. As highlighted in Section 1, a primary challenge in modern CPS is bridging the gap between the high detection accuracy of deep learning models, such as YOLO architectures [1], [5], and the interpretability required for operator trust. The proposed framework successfully addresses this by converting continuous sensor data into symbolic knowledge. A critical factor in this success is the WEDD method. Unlike standard entropy-based discretization which focuses solely on class separation, often splitting natural clusters, the proposed approach incorporates KDE to locate thresholds in the density valleys between subpopulations. As visualized in Figure 4, this multi-criteria optimization allowed the system to recover ground-truth physical thresholds with remarkable precision, such as the 70.0$^\circ$C cut point for bypass diode temperature, without requiring manual calibration. This confirms that augmenting information entropy with density constraints preserves the semantic structure of the data, creating a stable foundation for rule induction.
+
+The application of RST provided a rigorous mechanism for quantifying uncertainty, a feature often absent in standard decision trees or rule induction algorithms like CN2 or RIPPER. The granulation results in Table 3 reveal that while only 15% of the simulated SCADA objects fell into the lower approximation (deterministic zone), the system maintained high accuracy in the boundary region through confidence-weighted inference. This distinction is operationally significant: the system can autonomously execute actions based on deterministic rules (confidence = 1.0) while flagging probabilistic rules (confidence $< 1.0$) for human verification. This capability supports the hybrid decision-making model described in recent literature [7], where automated efficiency must be balanced with human oversight. Furthermore, the exact 100% accuracy achieved by deterministic rules (Table 5) empirically validates the theoretical property of the lower approximation: when the data structure is unambiguous, the derived logical rules are infallible.
+
+Performance analysis on the SCADA dataset demonstrates that the methodology meets the stringent requirements of fire safety monitoring. The confusion matrix in Figure 5 indicates that the system is particularly effective at prioritizing recall for the most critical state. Although the Fire Hazard class lacked deterministic rules due to significant feature overlap, the probabilistic inference engine achieved 98.0% recall, missing only 2% of hazards. The trade-off is a precision of 90.7%, implying a moderate false alarm rate. In the context of PV plant protection [2], this bias is desirable; the economic and safety cost of a missed fire far outweighs the operational cost of investigating a false positive. Comparative benchmarking on the Iris and Wine datasets (Table 6 and Figure 6) places the proposed approach within competitive range of established algorithms. While Gaussian Naive Bayes outperformed the proposed method on the Wine dataset (97.2% vs. 87.6%) due to the specific distributional properties of that dataset, the approach presented here offers the unique advantage of generating explicit IF-THEN rules, as shown in Section 4.5, which are legally auditable and directly understandable by domain experts.
+
+The architectural integration of this methodology into edge-cloud environments offers distinct advantages over purely cloud-based or purely neural-based solutions. As shown in Figure 8, the system contributes to a significant reduction in data transmission and processing latency. By serializing the entire knowledge base—including discretization thresholds, reducts, and rule sets—into a lightweight JSON format of approximately 32 KB, the system is highly portable. It can be embedded directly into the control logic of edge devices like the NVIDIA Jetson AGX Orin or even lower-power microcontrollers, functioning as an interpretable logic layer between the neural detection front-end and the SCADA actuation back-end. This aligns with the industry trend toward edge intelligence [4], enabling decentralized decision-making that remains functional even during network interruptions.
+
+Despite these strengths, several limitations and open research challenges remain. First, the current validation relies on simulated SCADA data with Gaussian noise. Real-world sensor data from PV plants often exhibit non-Gaussian noise, temporal drift, and sensor faults that may degrade the performance of the density estimation component. The relatively low classification quality coefficient ($\gamma_A(d) = 0.15$) suggests that the three-feature space contains substantial overlap, which might be irreducible without additional sensor modalities. Furthermore, the feature selection mechanism relies on a modified greedy algorithm. While the information-capacity weighting improves upon the standard Johnson's algorithm, it does not guarantee a globally optimal reduct, potentially leading to rule sets that are larger than necessary. The performance drop on the high-dimensional Wine dataset suggests that the current heuristic may struggle with feature interactions in larger spaces. Future work must address these challenges by exploring evolutionary optimization for reduct search and validating the methodology on diverse, real-world operational datasets to ensure robustness against environmental variability and sensor degradation.
+
+## 6. Conclusion
+
+This study successfully establishes the PKB approach as a comprehensive and rigorous framework for transforming continuous cyber-physical sensor data into transparent, actionable intelligence. By synthesizing a novel WEDD technique with the mathematical foundations of RST, a pipeline has been developed that generates production rules that are not only accurate but also linguistically interpretable and logically sound. The methodology was rigorously validated through a seven-stage processing pipeline, demonstrating its capability to handle the complexities of industrial monitoring. On the simulated SCADA fire hazard dataset, the system achieved a compelling 96.2% overall accuracy, with the lower approximation yielding perfect 100% accuracy for deterministic cases. Crucially for safety-critical infrastructure, the system achieved a 98.0% recall rate for fire hazards, ensuring that dangerous conditions are reliably detected even when feature signatures partially overlap with normal operational states. The benchmarking results on the Iris (93.3%) and Wine (87.6%) datasets confirm that while the approach is tailored for industrial logic, it maintains competitive performance across general classification tasks compared to black-box baselines. The primary limitation identified lies in the greedy nature of the feature reduction stage, which may yield sub-optimal subsets in high-dimensional spaces, and the reliance on simulated noise models.
+
+Looking forward, three key research directions are envisioned to enhance this framework: the integration of palette-invariant radiometric models to improve input robustness against environmental thermal noise, the application of evolutionary algorithms to optimize the trade-off between rule set conciseness and classification coverage, and the development of online learning mechanisms that allow the knowledge base to adapt dynamically to the aging of PV components.
+
+## References
+
+1[Xie2024]
+2[Lysyi2025Enhanced]
+3[Thakfan2024]
+4[Svystun2024]
+5[Terven2023]
+6[Melnychenko2024]
+7[Liu2026]
+8[Pawlak1991]
+9[Quinlan1986]
+10. [Quinlan1993]
+11. [Breiman1984]
+12. [Pawlak1982]
+13. [Tetteh2025]
+14. [Slowinski2023]
+15. [Toulabinejad2024]
+16. [Skowron1992]
+17. [Slowinski1992]
+18. [Greco2001]
+19. [Pawlak1998]
+20. [Grzymala1992]
+21. [Garcia2013]
+22. [Dougherty1995]
+23. [Liu2002]
+24. [Xun2021]
+25. [Rosenblatt1956]
+26. [Parzen1962]
+27. [Silverman1986]
+28. [Lysyi2025Method]
+29. [Shannon1948]
+30. [Pedregosa2011]
+31. [Fisher1936]
+32. [Aeberhard1994]
+33. [Kohavi1995]
