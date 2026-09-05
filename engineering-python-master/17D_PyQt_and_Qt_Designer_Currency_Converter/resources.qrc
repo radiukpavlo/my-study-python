@@ -1,7 +1,0 @@
-<RCC>
-  <qresource prefix="newPrefix">
-    <file>dollar.png</file>
-    <file>download.png</file>
-    <file>exit.png</file>
-  </qresource>
-</RCC>
